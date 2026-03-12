@@ -218,30 +218,104 @@ type Messages = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    basicsTitle: string;
-    basicsBody: string;
-    basicsCard1Title: string;
-    basicsCard1Body: string;
-    basicsCard2Title: string;
-    basicsCard2Body: string;
-    basicsCard3Title: string;
-    basicsCard3Body: string;
-    checklistTitle: string;
-    checklistBody: string;
-    checkItem1: string;
-    checkItem2: string;
-    checkItem3: string;
-    checkItem4: string;
-    faqTitle: string;
-    faqBody: string;
-    faq1Q: string;
-    faq1A: string;
-    faq2Q: string;
-    faq2A: string;
-    faq3Q: string;
-    faq3A: string;
-    faq4Q: string;
-    faq4A: string;
+    loadingBody: string;
+    progressTitle: string;
+    progressBody: string;
+    progressBadge: string;
+    readCountLabel: string;
+    bookmarkCountLabel: string;
+    partCountLabel: string;
+    bookmarkTitle: string;
+    bookmarkBody: string;
+    partTitle: string;
+    partBody: string;
+    partChipMeta: string;
+    chapterIndex: string;
+    chapterDetailEyebrow: string;
+    noteTitle: string;
+    markRead: string;
+    markUnread: string;
+    nextChapter: string;
+    partPrepTitle: string;
+    partPrepDescription: string;
+    prepSignalsTitle: string;
+    prepSignalsSummary: string;
+    prepSignalsBullet1: string;
+    prepSignalsBullet2: string;
+    prepSignalsBullet3: string;
+    prepSignalsNote: string;
+    prepTimingTitle: string;
+    prepTimingSummary: string;
+    prepTimingBullet1: string;
+    prepTimingBullet2: string;
+    prepTimingBullet3: string;
+    prepTimingNote: string;
+    prepToolsTitle: string;
+    prepToolsSummary: string;
+    prepToolsBullet1: string;
+    prepToolsBullet2: string;
+    prepToolsBullet3: string;
+    prepToolsNote: string;
+    partFirstFoodTitle: string;
+    partFirstFoodDescription: string;
+    foodFirstMenuTitle: string;
+    foodFirstMenuSummary: string;
+    foodFirstMenuBullet1: string;
+    foodFirstMenuBullet2: string;
+    foodFirstMenuBullet3: string;
+    foodFirstMenuNote: string;
+    foodPortionTitle: string;
+    foodPortionSummary: string;
+    foodPortionBullet1: string;
+    foodPortionBullet2: string;
+    foodPortionBullet3: string;
+    foodPortionNote: string;
+    foodThreeDayTitle: string;
+    foodThreeDaySummary: string;
+    foodThreeDayBullet1: string;
+    foodThreeDayBullet2: string;
+    foodThreeDayBullet3: string;
+    foodThreeDayNote: string;
+    partObserveTitle: string;
+    partObserveDescription: string;
+    observeReactionTitle: string;
+    observeReactionSummary: string;
+    observeReactionBullet1: string;
+    observeReactionBullet2: string;
+    observeReactionBullet3: string;
+    observeReactionNote: string;
+    observeRefusalTitle: string;
+    observeRefusalSummary: string;
+    observeRefusalBullet1: string;
+    observeRefusalBullet2: string;
+    observeRefusalBullet3: string;
+    observeRefusalNote: string;
+    observeRecordsTitle: string;
+    observeRecordsSummary: string;
+    observeRecordsBullet1: string;
+    observeRecordsBullet2: string;
+    observeRecordsBullet3: string;
+    observeRecordsNote: string;
+    partFaqTitle: string;
+    partFaqDescription: string;
+    faqLowIntakeTitle: string;
+    faqLowIntakeSummary: string;
+    faqLowIntakeBullet1: string;
+    faqLowIntakeBullet2: string;
+    faqLowIntakeBullet3: string;
+    faqLowIntakeNote: string;
+    faqRepeatTitle: string;
+    faqRepeatSummary: string;
+    faqRepeatBullet1: string;
+    faqRepeatBullet2: string;
+    faqRepeatBullet3: string;
+    faqRepeatNote: string;
+    faqAllergyTitle: string;
+    faqAllergySummary: string;
+    faqAllergyBullet1: string;
+    faqAllergyBullet2: string;
+    faqAllergyBullet3: string;
+    faqAllergyNote: string;
     adBadge: string;
     adTitle: string;
     adBody: string;
@@ -635,34 +709,108 @@ const messages: Record<Locale, Messages> = {
     starterGuideScreen: {
       eyebrow: '처음 시작해요',
       title: '이유식 시작하기',
-      subtitle: '처음 시작하는 보호자가 한 번에 훑어볼 수 있도록 기초 상식과 FAQ를 귀엽고 가볍게 정리했어요.',
-      basicsTitle: '먼저 알아둘 기초',
-      basicsBody: '이유식은 많이 먹이는 것보다 천천히 관찰하며 익숙해지는 과정에 더 가까워요.',
-      basicsCard1Title: '언제 시작하나요?',
-      basicsCard1Body: '보통 생후 4~6개월 무렵, 목을 어느 정도 가누고 음식에 관심을 보일 때 시작을 고민해요.',
-      basicsCard2Title: '처음엔 얼마나 먹나요?',
-      basicsCard2Body: '몇 숟가락만 먹어도 괜찮아요. 초기엔 양보다 반응과 리듬을 보는 것이 더 중요해요.',
-      basicsCard3Title: '무엇부터 시작하나요?',
-      basicsCard3Body: '곡물이나 단일 채소처럼 단순한 재료로 시작해 2~3일간 반응을 차분히 살펴보세요.',
-      checklistTitle: '시작 전 체크리스트',
-      checklistBody: '처음 먹이기 전에 아래 항목을 먼저 확인해두면 훨씬 덜 불안해져요.',
-      checkItem1: '아이 컨디션이 괜찮은 날, 오전이나 낮 시간대에 시작해요.',
-      checkItem2: '새 식재료는 한 번에 하나씩만 도입해 반응을 구분하기 쉽게 해요.',
-      checkItem3: '첫 주에는 묽고 단순한 형태로 시작하고, 거부해도 무리해서 먹이지 않아요.',
-      checkItem4: '토함, 발진, 심한 보챔이 있으면 기록을 남기고 다음 식단에 바로 반영해요.',
-      faqTitle: '자주 묻는 질문',
-      faqBody: '처음 시작할 때 많이 헷갈리는 질문만 골라 짧고 분명하게 정리했어요.',
-      faq1Q: '아이가 아직 잘 못 먹는데 괜찮을까요?',
-      faq1A: '괜찮아요. 초기에는 삼키는 연습과 새로운 감각에 익숙해지는 단계라서 먹는 양이 적어도 자연스러워요.',
-      faq2Q: '새 재료는 며칠 동안 봐야 하나요?',
-      faq2A: '보통 2~3일 정도 같은 재료를 관찰하면 반응을 구분하기 쉬워요. 앱의 식재료 상태와 기록을 같이 쓰면 더 편해요.',
-      faq3Q: '거부한 재료는 다시 주면 안 되나요?',
-      faq3A: '바로 포기할 필요는 없어요. 며칠 쉬었다가 입자감이나 조합을 바꿔 천천히 다시 시도해볼 수 있어요.',
-      faq4Q: '알레르기가 걱정되면 어떻게 하나요?',
-      faq4A: '새 식재료는 아이 컨디션이 좋은 날 소량으로 시작하고, 이상 반응이 보이면 즉시 기록해두세요. 걱정될 정도의 반응은 전문가 상담이 우선이에요.',
+      subtitle: '파트와 챕터를 눌러 필요한 내용만 빠르게 보고, 읽음과 책갈피도 함께 관리할 수 있어요.',
+      loadingBody: '읽은 챕터와 책갈피를 불러오고 있어요.',
+      progressTitle: '학습 현황',
+      progressBody: '{{total}}개 챕터 중 {{read}}개를 읽었어요.',
+      progressBadge: '완료 {{percent}}%',
+      readCountLabel: '읽은 챕터',
+      bookmarkCountLabel: '책갈피',
+      partCountLabel: '파트 수',
+      bookmarkTitle: '책갈피 모아보기',
+      bookmarkBody: '중요한 챕터만 따로 모아두고 다시 바로 들어갈 수 있어요.',
+      partTitle: '파트 선택',
+      partBody: '중요한 전환점 기준으로 파트를 나눠 필요한 챕터를 빠르게 찾아가세요.',
+      partChipMeta: '{{read}} / {{total}} 챕터',
+      chapterIndex: '챕터 {{index}}',
+      chapterDetailEyebrow: '지금 읽는 챕터',
+      noteTitle: '기억해두기',
+      markRead: '읽었어요',
+      markUnread: '읽음 해제',
+      nextChapter: '다음 챕터',
+      partPrepTitle: '초기 토핑 이유식',
+      partPrepDescription: '처음 시작하는 단계예요. 시작 신호, 첫 재료, 첫 양처럼 가장 기본이 되는 흐름부터 잡아요.',
+      prepSignalsTitle: '초기 시작 신호 읽기',
+      prepSignalsSummary: '초기 토핑 이유식은 월령보다 아기의 준비 신호를 먼저 보고 출발하는 편이 좋아요.',
+      prepSignalsBullet1: '목을 어느 정도 가누고 앉았을 때 상체가 비교적 안정적인지 봐주세요.',
+      prepSignalsBullet2: '음식을 바라보거나 입을 따라 움직이는 등 관심 표현이 있는지 함께 살펴보세요.',
+      prepSignalsBullet3: '하루 컨디션이 좋고 감기나 예방접종 직후가 아닌 날을 고르는 편이 좋아요.',
+      prepSignalsNote: '시작 시점은 빠른 것보다 아기 상태에 맞는지가 더 중요해요.',
+      prepTimingTitle: '첫날 타이밍 잡기',
+      prepTimingSummary: '처음 먹이는 시간과 분위기를 잘 고르면 보호자도 훨씬 덜 불안해져요.',
+      prepTimingBullet1: '오전이나 낮처럼 병원 문의가 쉬운 시간대를 첫 시도로 잡아두세요.',
+      prepTimingBullet2: '배가 너무 고프거나 너무 졸린 시간은 피하고, 평소보다 여유 있는 끼니로 잡아요.',
+      prepTimingBullet3: '첫날은 일정 없는 날로 잡아 관찰 시간을 넉넉히 확보하는 것이 좋아요.',
+      prepTimingNote: '첫날은 양보다 관찰 여유가 있는 시간대를 선택하는 것이 핵심이에요.',
+      prepToolsTitle: '처음 필요한 준비물',
+      prepToolsSummary: '많이 사기보다 당장 필요한 기본 도구만 있어도 충분히 시작할 수 있어요.',
+      prepToolsBullet1: '부드러운 스푼, 작은 볼, 턱받이, 닦을 수 있는 가벼운 매트 정도면 시작이 가능해요.',
+      prepToolsBullet2: '식재료보다 기록 준비도 중요해서 사진과 메모를 남길 수 있는 흐름을 같이 만들어두세요.',
+      prepToolsBullet3: '도구는 예쁜 것보다 세척이 쉽고 매일 부담 없이 꺼낼 수 있는지가 더 중요해요.',
+      prepToolsNote: '준비물은 최소한으로 시작하고, 반복하면서 필요한 것만 추가해도 늦지 않아요.',
+      partFirstFoodTitle: '중기 토핑 이유식',
+      partFirstFoodDescription: '중기부터는 재료 수와 조합이 조금씩 넓어져요. 3일 관찰과 반응 기록이 더 중요해져요.',
+      foodFirstMenuTitle: '초기 첫 재료 고르기',
+      foodFirstMenuSummary: '초기 토핑 이유식은 단일 재료 위주로 가볍게 시작해야 반응을 구분하기 쉬워요.',
+      foodFirstMenuBullet1: '쌀, 감자, 단호박처럼 비교적 단순한 재료 하나로 출발하면 관찰이 쉬워요.',
+      foodFirstMenuBullet2: '두 가지 이상을 한 번에 시작하면 어떤 재료 때문인지 구분이 어려워질 수 있어요.',
+      foodFirstMenuBullet3: '새로운 재료보다 이미 잘 맞는 재료를 섞고 싶어지는 날도 있지만 첫 주는 단순함이 중요해요.',
+      foodFirstMenuNote: '처음 메뉴는 영양 밸런스보다 반응을 읽기 쉬운 구조가 우선이에요.',
+      foodPortionTitle: '초기 첫 양은 어느 정도?',
+      foodPortionSummary: '초기에는 몇 숟가락만 먹어도 괜찮아요. 양보다 적응과 리듬이 먼저예요.',
+      foodPortionBullet1: '한두 숟가락만 먹고 끝나도 정상으로 받아들이는 것이 보호자에게도 도움이 돼요.',
+      foodPortionBullet2: '다 먹이기보다 표정, 삼킴, 거부 신호를 천천히 보는 것이 더 중요해요.',
+      foodPortionBullet3: '먹는 양이 적더라도 반복 노출로 익숙해질 수 있으니 첫날 반응만으로 판단하지 마세요.',
+      foodPortionNote: '첫 주의 핵심은 완식이 아니라 경험과 적응이에요.',
+      foodThreeDayTitle: '중기 3일 관찰 루틴',
+      foodThreeDaySummary: '중기 토핑 이유식은 재료가 늘어나는 만큼 같은 재료를 짧게 반복하며 반응을 보는 흐름이 중요해요.',
+      foodThreeDayBullet1: '새 재료를 먹인 날과 그 다음 이틀 정도는 같은 재료를 중심으로 반응을 확인해보세요.',
+      foodThreeDayBullet2: '관찰 기간에는 새로운 재료를 계속 추가하기보다 반응이 안정적인지 보는 데 집중해요.',
+      foodThreeDayBullet3: '식단 앱에서 같은 재료 기록을 이어 남기면 패턴을 나중에 되짚기 쉬워져요.',
+      foodThreeDayNote: '새 재료를 빨리 늘리는 것보다 관찰 패턴을 만드는 것이 장기적으로 더 편해져요.',
+      partObserveTitle: '후기 토핑 이유식',
+      partObserveDescription: '후기에는 입자감과 조합이 더 넓어져요. 거부 대응, 반복 노출, 알레르기 걱정을 정리해요.',
+      observeReactionTitle: '중기 반응은 무엇을 볼까?',
+      observeReactionSummary: '중기에는 먹는 양뿐 아니라 피부, 표정, 배앓이, 잠투정 같은 변화를 함께 살펴보세요.',
+      observeReactionBullet1: '발진, 토함, 심한 보챔처럼 보호자가 바로 알아차릴 수 있는 반응을 먼저 기록해두세요.',
+      observeReactionBullet2: '평소와 다르게 잠을 설치거나 변 상태가 달라지는 경우도 메모해두면 도움이 돼요.',
+      observeReactionBullet3: '확실하지 않은 변화라도 날짜와 재료를 함께 남기면 나중에 비교가 쉬워져요.',
+      observeReactionNote: '기록은 정확한 진단보다 패턴을 남긴다는 목적에 더 가깝게 보면 좋아요.',
+      observeRefusalTitle: '후기 거부했을 때 대처',
+      observeRefusalSummary: '후기에는 선호와 비선호가 더 분명해질 수 있어요. 거부를 실패보다 적응 과정으로 보는 편이 좋아요.',
+      observeRefusalBullet1: '입을 다물거나 몸을 돌리면 그날은 거기서 마무리하고 억지로 먹이지 않는 편이 좋아요.',
+      observeRefusalBullet2: '며칠 쉬었다가 농도, 온도, 조합을 조금 바꿔 다시 시도해볼 수 있어요.',
+      observeRefusalBullet3: '거부한 날도 기록해두면 어떤 상황에서 거부가 잦은지 보기 쉬워져요.',
+      observeRefusalNote: '거부는 재료의 문제일 수도 있지만 컨디션이나 타이밍 때문일 수도 있어요.',
+      observeRecordsTitle: '중기 기록은 어떻게 남길까?',
+      observeRecordsSummary: '중기부터는 조합이 다양해져서 짧아도 꾸준한 기록이 다음 식단을 훨씬 쉽게 해줘요.',
+      observeRecordsBullet1: '날짜, 시간, 식재료, 먹은 양, 반응만 남겨도 다음 시도에 큰 도움이 돼요.',
+      observeRecordsBullet2: '사진이나 한 줄 메모를 함께 남기면 보호자 기억에만 의존하지 않아도 돼요.',
+      observeRecordsBullet3: '처음엔 완벽하게 쓰기보다 같은 형식으로 빠르게 남기는 흐름을 만드는 것이 중요해요.',
+      observeRecordsNote: '기록은 길게 쓰는 것보다 같은 기준으로 쌓이는 것이 더 중요해요.',
+      partFaqTitle: '많이 묻는 상황',
+      partFaqDescription: '시작 초기에 가장 자주 나오는 불안과 고민을 짧은 챕터로 정리했어요.',
+      faqLowIntakeTitle: '후기인데도 너무 조금 먹어요',
+      faqLowIntakeSummary: '후기에도 먹는 양은 날마다 달라질 수 있어요. 컨디션과 거부 패턴을 함께 봐야 해요.',
+      faqLowIntakeBullet1: '몇 숟가락만 먹고 끝나도 처음에는 자연스러운 반응일 수 있어요.',
+      faqLowIntakeBullet2: '며칠 단위로 봤을 때 점차 표정이 편해지고 받아들이는 속도가 늘어나는지 보세요.',
+      faqLowIntakeBullet3: '먹는 양이 적더라도 컨디션이 괜찮다면 너무 급하게 양을 늘리려 하지 않아도 돼요.',
+      faqLowIntakeNote: '잘 안 먹는 날의 기록도 남겨야 다음 시도를 덜 흔들리며 할 수 있어요.',
+      faqRepeatTitle: '후기엔 같은 재료를 또 줘도 될까?',
+      faqRepeatSummary: '후기에도 반복은 여전히 도움이 돼요. 다만 조합과 형태를 조금씩 바꿔주는 식으로 접근하면 좋아요.',
+      faqRepeatBullet1: '새 재료 관찰 기간에는 같은 재료가 반복되는 편이 반응 구분에 더 유리해요.',
+      faqRepeatBullet2: '잘 먹던 재료는 보호자에게도 안전한 기본 식재료가 되어 식단 짜기가 쉬워져요.',
+      faqRepeatBullet3: '반복이 길어질 때는 조금씩 조합만 바꿔 익숙함과 새로움을 함께 가져가면 좋아요.',
+      faqRepeatNote: '초기엔 다양성보다 안정감이 먼저라는 점을 기억해두세요.',
+      faqAllergyTitle: '후기에도 알레르기가 걱정될 때',
+      faqAllergySummary: '후기에는 재료 종류가 넓어지는 만큼 소량, 좋은 컨디션, 기록 남기기 세 가지가 더 중요해져요.',
+      faqAllergyBullet1: '새 재료는 아이 컨디션이 좋은 날 소량부터 시작하고 반응을 차분히 보세요.',
+      faqAllergyBullet2: '이상 반응이 보이면 사진과 메모를 남기고 다음 식단에서는 즉시 제외해두는 편이 좋아요.',
+      faqAllergyBullet3: '숨 가쁨, 얼굴 붓기처럼 심한 반응은 기록보다 즉시 전문가 도움을 우선해야 해요.',
+      faqAllergyNote: '앱 기록은 전문가 상담 전 상황을 정리하는 데 도움을 줄 수 있어요.',
       adBadge: '광고',
       adTitle: '구글 광고 영역',
-      adBody: '이 위치에는 AdMob 네이티브 광고나 배너 광고를 앱 톤에 맞춰 안전하게 노출할 수 있어요.',
+      adBody: '챕터 사이에는 AdMob 네이티브 광고를 넣어도 화면 흐름이 깨지지 않도록 카드형 슬롯으로 설계했어요.',
       adPlaceholder: 'Google Ad Slot',
     },
     mealPlanScreen: {
@@ -1059,34 +1207,108 @@ const messages: Record<Locale, Messages> = {
     starterGuideScreen: {
       eyebrow: 'Starting out',
       title: 'Start weaning',
-      subtitle: 'A gentle starter guide with basics and FAQs for caregivers who are beginning weaning for the first time.',
-      basicsTitle: 'Basics first',
-      basicsBody: 'Weaning is less about how much the baby eats and more about slowly building comfort and observation.',
-      basicsCard1Title: 'When should we start?',
-      basicsCard1Body: 'Many families consider starting around 4 to 6 months, when the baby has better head control and shows interest in food.',
-      basicsCard2Title: 'How much at first?',
-      basicsCard2Body: 'Even a few spoonfuls is fine. At the start, rhythm and reaction matter more than volume.',
-      basicsCard3Title: 'What should come first?',
-      basicsCard3Body: 'Begin with simple grains or a single vegetable and observe reactions calmly for 2 to 3 days.',
-      checklistTitle: 'Before the first meal',
-      checklistBody: 'Checking these points first helps the first week feel much less stressful.',
-      checkItem1: 'Choose a day when your baby feels well, ideally earlier in the day.',
-      checkItem2: 'Introduce only one new ingredient at a time so reactions stay easy to read.',
-      checkItem3: 'Keep the first week thin and simple, and do not force intake if the baby refuses.',
-      checkItem4: 'If vomiting, rash, or strong fussiness appears, log it and reflect it in the next plan.',
-      faqTitle: 'FAQ',
-      faqBody: 'Short answers to the questions most caregivers ask at the beginning.',
-      faq1Q: 'My baby barely eats yet. Is that okay?',
-      faq1A: 'Yes. Early weaning is often about practice and exposure, so small amounts are completely normal.',
-      faq2Q: 'How many days should I watch a new ingredient?',
-      faq2A: 'Watching the same new ingredient for 2 to 3 days makes reaction patterns easier to notice.',
-      faq3Q: 'If a food was refused once, should I stop offering it?',
-      faq3A: 'Not necessarily. After a short break, you can try again with a different texture or pairing.',
-      faq4Q: 'What if I am worried about allergies?',
-      faq4A: 'Start with a very small amount on a good day, log any unusual response, and prioritize professional advice when a reaction feels concerning.',
+      subtitle: 'Move through key parts and chapters, then keep track of what you read and bookmark.',
+      loadingBody: 'Loading your read history and bookmarks.',
+      progressTitle: 'Learning progress',
+      progressBody: 'You have read {{read}} out of {{total}} chapters.',
+      progressBadge: '{{percent}}% complete',
+      readCountLabel: 'Read',
+      bookmarkCountLabel: 'Bookmarks',
+      partCountLabel: 'Parts',
+      bookmarkTitle: 'Bookmarked chapters',
+      bookmarkBody: 'Save the chapters you want to revisit quickly.',
+      partTitle: 'Choose a part',
+      partBody: 'The guide is split by key turning points so you can jump straight to what you need.',
+      partChipMeta: '{{read}} / {{total}} chapters',
+      chapterIndex: 'Chapter {{index}}',
+      chapterDetailEyebrow: 'Current chapter',
+      noteTitle: 'Keep in mind',
+      markRead: 'Mark as read',
+      markUnread: 'Mark unread',
+      nextChapter: 'Next chapter',
+      partPrepTitle: 'Getting ready',
+      partPrepDescription: 'Decide when to start, what day to choose, and what basics to prepare.',
+      prepSignalsTitle: 'Reading readiness signals',
+      prepSignalsSummary: 'Look at body readiness and food interest, not only the baby’s age in months.',
+      prepSignalsBullet1: 'Notice whether head and upper body control look steadier when sitting with support.',
+      prepSignalsBullet2: 'Watch for food interest such as looking at meals or opening the mouth when others eat.',
+      prepSignalsBullet3: 'Pick a day when your baby feels well and is not recovering from vaccines or illness.',
+      prepSignalsNote: 'The best start date is the one that matches your baby’s readiness, not the fastest one.',
+      prepTimingTitle: 'Picking the first day',
+      prepTimingSummary: 'Good timing lowers stress for both the baby and the caregiver.',
+      prepTimingBullet1: 'Choose morning or midday so help and observation are easier if needed.',
+      prepTimingBullet2: 'Avoid times when your baby is overly hungry or sleepy.',
+      prepTimingBullet3: 'Try the first meal on a day with fewer outside plans so you can observe calmly.',
+      prepTimingNote: 'Observation time matters more than finishing the meal.',
+      prepToolsTitle: 'What to prepare first',
+      prepToolsSummary: 'You only need a few practical tools to begin.',
+      prepToolsBullet1: 'A soft spoon, a small bowl, a bib, and a wipeable mat are enough to start.',
+      prepToolsBullet2: 'Prepare your logging flow too, because notes and photos matter as much as the food itself.',
+      prepToolsBullet3: 'Choose tools that are easy to wash and easy to use every day.',
+      prepToolsNote: 'Start simple and add items only when the routine shows you need them.',
+      partFirstFoodTitle: 'First foods',
+      partFirstFoodDescription: 'Learn what to offer first, how much to give, and how to use a 3-day routine.',
+      foodFirstMenuTitle: 'Choosing the first ingredient',
+      foodFirstMenuSummary: 'Simple single-ingredient foods make reactions easier to read.',
+      foodFirstMenuBullet1: 'Start with something simple such as rice, potato, or pumpkin.',
+      foodFirstMenuBullet2: 'Introducing multiple new ingredients at once makes reactions harder to interpret.',
+      foodFirstMenuBullet3: 'The first week works best when you keep the menu very simple.',
+      foodFirstMenuNote: 'Early menus are about clarity and comfort more than variety.',
+      foodPortionTitle: 'How much at first?',
+      foodPortionSummary: 'A few spoonfuls can be enough in the early stage.',
+      foodPortionBullet1: 'It is normal if your baby only takes one or two spoonfuls at first.',
+      foodPortionBullet2: 'Focus on swallowing, expression, and comfort rather than on volume.',
+      foodPortionBullet3: 'Do not judge progress from one day alone; repeated exposure matters.',
+      foodPortionNote: 'The first week is about practice, not full meals.',
+      foodThreeDayTitle: 'The 3-day routine',
+      foodThreeDaySummary: 'Staying with the same new ingredient for a few days makes patterns easier to see.',
+      foodThreeDayBullet1: 'After starting a new ingredient, keep it in focus for about 2 to 3 days.',
+      foodThreeDayBullet2: 'During that window, avoid adding many other new foods.',
+      foodThreeDayBullet3: 'Consistent logging makes the pattern much easier to review later.',
+      foodThreeDayNote: 'Growing slowly but clearly is often easier than moving fast.',
+      partObserveTitle: 'Late topping weaning',
+      partObserveDescription: 'As textures and combinations expand, focus on refusal, repeated exposure, and allergy concerns.',
+      observeReactionTitle: 'What to watch in the middle stage',
+      observeReactionSummary: 'Track more than intake volume. Skin, tummy, mood, and sleep all matter.',
+      observeReactionBullet1: 'Write down clear signs first, such as rash, vomiting, or unusual fussiness.',
+      observeReactionBullet2: 'Also note changes in stool, sleep, or overall mood when they stand out.',
+      observeReactionBullet3: 'Even uncertain changes become useful when tied to a date and ingredient.',
+      observeReactionNote: 'Logging is mainly about finding patterns, not making a diagnosis.',
+      observeRefusalTitle: 'When refusal shows up in the late stage',
+      observeRefusalSummary: 'In the late stage, preferences become stronger. Refusal should still be treated as part of adaptation, not failure.',
+      observeRefusalBullet1: 'If your baby turns away or closes the mouth, it is okay to stop for that meal.',
+      observeRefusalBullet2: 'You can try again later with a different texture, temperature, or pairing.',
+      observeRefusalBullet3: 'Refusal logs help you notice whether timing or condition plays a role.',
+      observeRefusalNote: 'Sometimes refusal is about timing or mood more than the ingredient itself.',
+      observeRecordsTitle: 'How to log in the middle stage',
+      observeRecordsSummary: 'As combinations grow, short but steady records make the next choice much easier.',
+      observeRecordsBullet1: 'Date, time, ingredient, intake, and reaction are enough to start.',
+      observeRecordsBullet2: 'Photos or a short note help when memory becomes fuzzy.',
+      observeRecordsBullet3: 'Consistency matters more than long, detailed writing.',
+      observeRecordsNote: 'A repeatable format is more valuable than a perfect log.',
+      partFaqTitle: 'Common worries',
+      partFaqDescription: 'Quick answers to the questions caregivers ask most often at the start.',
+      faqLowIntakeTitle: 'My baby still eats very little in the late stage',
+      faqLowIntakeSummary: 'Even in the late stage, intake can vary day by day. Look at condition and refusal patterns together.',
+      faqLowIntakeBullet1: 'A tiny amount can still count as a meaningful first experience.',
+      faqLowIntakeBullet2: 'Look for gradual comfort and acceptance over several days.',
+      faqLowIntakeBullet3: 'If your baby feels well overall, avoid pushing volume too quickly.',
+      faqLowIntakeNote: 'Record low-intake days too so the pattern stays clear.',
+      faqRepeatTitle: 'Can I still repeat ingredients in the late stage?',
+      faqRepeatSummary: 'Repetition still helps later on, especially when you vary texture or pairing instead of everything at once.',
+      faqRepeatBullet1: 'Repeating the same ingredient supports a cleaner observation window.',
+      faqRepeatBullet2: 'Safe familiar foods become a strong base for future meal planning.',
+      faqRepeatBullet3: 'Later, you can add variety by changing pairings instead of everything at once.',
+      faqRepeatNote: 'Early stability often matters more than early variety.',
+      faqAllergyTitle: 'What if I still worry about allergies in the late stage?',
+      faqAllergySummary: 'As ingredient variety expands, small amounts, a good day, and clear logging become even more important.',
+      faqAllergyBullet1: 'Introduce concerning ingredients on a calm day in a very small amount.',
+      faqAllergyBullet2: 'If something feels off, log it right away and pause that ingredient.',
+      faqAllergyBullet3: 'For severe symptoms, seek professional help first and use the log as context.',
+      faqAllergyNote: 'The app can support your notes, but urgent reactions always come first.',
       adBadge: 'Ad',
       adTitle: 'Google ad slot',
-      adBody: 'This area can later host AdMob native ads or banners while keeping the screen structure consistent.',
+      adBody: 'This slot is designed so AdMob native ads can fit between chapters without breaking the reading flow.',
       adPlaceholder: 'Google Ad Slot',
     },
     mealPlanScreen: {
