@@ -1,50 +1,124 @@
-# Welcome to your Expo app 👋
+# Weaning Diary
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+이유식 시작부터 정착까지의 기록을 구조화해, 보호자의 의사결정을 더 안전하고 덜 스트레스 받게 만드는 앱입니다.
 
-## Get started
+## 프로젝트 목적
 
-1. Install dependencies
+`weaning-diary`의 목적은 이유식 기간 동안 보호자가 식단, 섭취 반응, 알레르기/배변/수면 변화를 간편하게 기록하고 패턴을 확인해, 육아 의사결정을 더 안전하고 덜 스트레스 받게 만드는 것입니다.
 
-   ```bash
-   npm install
-   ```
+## 문제 정의
 
-2. Start the app
+- 이유식 기록이 메모, 사진, 채팅 등에 흩어져 추적이 어렵다.
+- 특정 식재료와 반응(알레르기 의심, 변 상태, 수면 변화)의 연관성을 빠르게 확인하기 어렵다.
+- 병원 상담이나 가족 간 공유 시 근거 있는 기록 정리가 어렵다.
 
-   ```bash
-   npx expo start
-   ```
+## 대상 사용자
 
-In the output, you'll find options to open the app in a
+- 0~24개월 영유아를 돌보는 보호자(부모/양육자)
+- 이유식 도입 초기라 관찰 항목이 많은 사용자
+- 여러 보호자가 함께 기록을 공유해야 하는 가정
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 핵심 가치
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- 기록 간소화: 빠른 입력으로 기록 부담 최소화
+- 변화 추적: 날짜/식재료/반응 기준으로 패턴 확인
+- 이상 신호 인지: 위험 징후를 놓치지 않도록 맥락 제공
 
-## Get a fresh project
+## 성공 지표 (초기)
 
-When you're ready, run:
+- 주 5일 이상 기록 사용자 비율
+- 기록 1건 평균 입력 시간 30초 이내
+- 사용자 인터뷰/설문 기반 체감 불안 감소
+
+## MVP 기능 우선순위
+
+### Must
+
+- 식단 기록: 날짜, 시간, 식재료, 형태(죽/퓨레/BLW 등)
+- 섭취량/섭취 반응 기록: 섭취량, 거부 여부, 특이사항
+- 반응 기록: 피부/소화/배변/수면 변화
+- 일자별 타임라인 조회
+- 기본 검색/필터: 날짜, 식재료, 반응 유형
+
+### Should
+
+- 주간 요약 리포트
+- 식재료별 반응 히스토리
+- 다중 보호자 공유(최소 읽기 공유)
+
+### Could
+
+- 성장/수유/수면 통합 대시보드
+- 병원 상담용 내보내기(PDF/이미지)
+- 알림/리마인더 자동화
+
+## Sprint 1 백로그 (초안)
+
+### 1) 데이터 모델
+
+- 기록 엔티티 정의: MealEntry, Ingredient, Reaction, Note
+- 로컬 저장소 구조 설계(예: SQLite 또는 AsyncStorage)
+- 기본 검증 규칙 정의(필수값, 반응 타입 enum)
+
+### 2) 기록 화면
+
+- 빠른 기록 입력 폼 구현
+- 반복 입력을 줄이는 기본값/최근값 UX
+- 입력 완료 후 즉시 피드백(저장 성공/실패)
+
+### 3) 타임라인 화면
+
+- 일자별 기록 목록 UI
+- 항목 클릭 시 상세 보기
+- 날짜/식재료/반응 필터 연결
+
+### 4) 품질 기준
+
+- 핵심 입력/조회 흐름 수동 테스트 시나리오 작성
+- 타입 안정성 및 lint 기준 충족
+
+## 개발 실행
 
 ```bash
-npm run reset-project
+npm install
+npm run lint
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 현재 화면 구조
 
-## Learn more
+- `app/(tabs)/index.tsx`: 라우팅 게이트 (프로필 입력 여부에 따라 분기)
+- `app/(tabs)/intro.tsx`: 아기 프로필 입력 화면 (이름/생년월일/사진 순차 입력)
+- `app/(tabs)/home.tsx`: 홈 서비스 화면 (프로필 기반 웰컴 메시지/아바타/월령 노출)
+- `app/(tabs)/meal-plan.tsx`, `app/(tabs)/journey.tsx`, `app/(tabs)/profile.tsx`: 보조 탭 화면
 
-To learn more about developing your project with Expo, look at the following resources:
+## 로컬라이제이션 정책
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- 기본 언어: 한국어(`ko`)
+- 확장 언어: 영어(`en`)
+- UI 문구 소스: `constants/i18n.ts`
 
-## Join the community
+## 계획 문서
 
-Join our community of developers creating universal apps.
+- Sprint 1 백로그: `docs/backlog.md`
+- 디자인 시스템: `docs/design-system.md`
+- 언어 가이드: `docs/language-guide.md`
+- Git 커밋 정책: `docs/git-commit-policy.md`
+- 식재료 PRD: `docs/prd-ingredient-management.md`
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 의사결정 원칙
+
+- 기록 시간 단축이 기능 추가보다 우선
+- 보호자가 해석 가능한 정보 제공을 우선
+- 의료 판단 대체가 아닌 관찰/기록 보조 도구로 설계
+- 식단(계획)과 기록(실제)은 도메인/저장소를 분리해 관리
+  - 식단은 "계획" 데이터
+  - 기록은 "실제 섭취/반응" 데이터
+  - 예: 계획 `단호박 50g` vs 실제 `단호박 20g + 고구마 추가`, 반응은 실제 기록에 귀속
+
+## 도메인 모델 기준
+
+- `features/records/model.ts`에서 아래 엔티티를 분리 정의
+  - `PlannedMeal` (계획)
+  - `MealRecord` (실제)
+  - `RecordDraft` (식단에서 가져온 기록 초안)
