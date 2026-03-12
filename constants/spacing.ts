@@ -1,0 +1,38 @@
+export const Spacing = {
+  screenHorizontal: 18,
+  screenTopPadding: 20,
+  screenBottomPadding: 24,
+  tabScreenBottomPadding: 88,
+  stickyActionContentPaddingBottom: 88,
+  sectionGap: 16,
+  cardStackGap: 16,
+  cardStackGapCompact: 8,
+  sectionHeaderMarginTop: 6,
+  sectionHeaderMarginBottom: 10,
+  cardPadding: 18,
+  fieldGap: 10,
+  microGap: 6,
+
+  formControlMinHeight: 44,
+  formControlRadius: 14,
+  formControlHorizontal: 12,
+  formControlVertical: 12,
+  formTextareaMinHeight: 92,
+
+  primaryButtonMinHeight: 46,
+  primaryButtonRadius: 16,
+  compactButtonMinHeight: 42,
+  compactButtonRadius: 14,
+
+  chipHorizontal: 12,
+  chipVertical: 8,
+  chipRadius: 999,
+
+  introScreenHorizontal: 16,
+  introTopPadding: 20,
+  introSectionGap: 14,
+  introCardPadding: 18,
+  introCardInnerGap: 10,
+  introInputGap: 6,
+  introStepSpacing: 10,
+} as const;

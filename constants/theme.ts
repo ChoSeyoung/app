@@ -1,53 +1,55 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
 import { Platform } from 'react-native';
-
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: '#1c1c1c',
+    background: '#F6F1E8',
+    tint: '#ffb928',
+    icon: '#1c1c1c',
+    tabIconDefault: '#B2A79C',
+    tabIconSelected: '#FFFDF8',
+    surface: '#F4F3F1',
+    surfaceMuted: '#E3DDD5',
+    accent: '#ffb928',
+    accentSoft: '#F8E6AA',
+    border: '#DED9D2',
+    success: '#2B8A5A',
+    danger: '#B03A2E',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    text: '#F6F4F2',
+    background: '#1F1D1F',
+    tint: '#ffb928',
+    icon: '#B9B3AD',
+    tabIconDefault: '#9A948E',
+    tabIconSelected: '#FFFDF8',
+    surface: '#2A2728',
+    surfaceMuted: '#393435',
+    accent: '#ffb928',
+    accentSoft: '#5A4A1C',
+    border: '#474244',
+    success: '#63C08A',
+    danger: '#FF8D7D',
   },
 };
 
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
+    sans: 'Pretendard',
+    serif: 'Pretendard',
+    rounded: 'Pretendard',
+    mono: 'Pretendard',
   },
   default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
+    sans: 'Pretendard',
+    serif: 'Pretendard',
+    rounded: 'Pretendard',
+    mono: 'Pretendard',
   },
   web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    sans: "'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
+    serif: "'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
+    rounded: "'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
+    mono: "'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
   },
 });

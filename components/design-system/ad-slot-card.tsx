@@ -1,0 +1,91 @@
+import { StyleSheet, Text, View } from 'react-native';
+
+import { t } from '@/constants/i18n';
+import { Spacing } from '@/constants/spacing';
+import { Colors, Fonts } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+
+type AdSlotCardProps = {
+  title?: string;
+  body?: string;
+  tone?: 'paper' | 'cream' | 'blush' | 'lavender';
+};
+
+const toneMap = {
+  paper: '#FFFCF6',
+  cream: '#EEEAD6',
+  blush: '#F4D7D0',
+  lavender: '#DCD4F3',
+} as const;
+
+export function AdSlotCard({
+  title = t('starterGuideScreen.adTitle'),
+  body = t('starterGuideScreen.adBody'),
+  tone = 'paper',
+}: AdSlotCardProps) {
+  const colorScheme = useColorScheme() ?? 'light';
+  const theme = Colors[colorScheme];
+
+  return (
+    <View style={[styles.card, { backgroundColor: toneMap[tone], borderColor: theme.border }]}>
+      <View style={[styles.badge, { backgroundColor: theme.accentSoft }]}>
+        <Text style={[styles.badgeText, { color: theme.text }]}>{t('starterGuideScreen.adBadge')}</Text>
+      </View>
+      <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
+      <Text style={[styles.body, { color: theme.icon }]}>{body}</Text>
+      <View style={[styles.placeholder, { borderColor: theme.border, backgroundColor: '#FFF9EE' }]}>
+        <Text style={[styles.placeholderText, { color: theme.icon }]}>{t('starterGuideScreen.adPlaceholder')}</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: Spacing.cardPadding,
+    gap: 10,
+    overflow: 'hidden',
+    shadowColor: '#C9B8A4',
+    shadowOpacity: 0.1,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 3,
+  },
+  badge: {
+    alignSelf: 'flex-start',
+    borderRadius: Spacing.chipRadius,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  badgeText: {
+    fontFamily: Fonts.sans,
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  title: {
+    fontFamily: Fonts.rounded,
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  body: {
+    fontFamily: Fonts.sans,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  placeholder: {
+    minHeight: 72,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  placeholderText: {
+    fontFamily: Fonts.sans,
+    fontSize: 12,
+    fontWeight: '600',
+  },
+});
