@@ -45,6 +45,9 @@ export default function RootLayout() {
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen name="weaning-start-guide" options={{ headerShown: false }} />
               <Stack.Screen name="weaning-readiness-checklist" options={{ headerShown: false }} />
+              <Stack.Screen name="weaning-supplies-checklist" options={{ headerShown: false }} />
+              <Stack.Screen name="weaning-part-guide" options={{ headerShown: false }} />
+              <Stack.Screen name="weaning-faq" options={{ headerShown: false }} />
               <Stack.Screen name="open-source-licenses" options={{ headerShown: false }} />
               <Stack.Screen name="notification-settings" options={{ headerShown: false }} />
               <Stack.Screen name="terms-of-service" options={{ headerShown: false }} />

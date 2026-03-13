@@ -32,6 +32,9 @@ function isStarterGuideProgress(value: unknown): value is StarterGuideProgress {
     (casted.readinessCheckedIds === undefined ||
       (Array.isArray(casted.readinessCheckedIds) &&
         casted.readinessCheckedIds.every((item) => typeof item === 'string'))) &&
+    (casted.suppliesCheckedIds === undefined ||
+      (Array.isArray(casted.suppliesCheckedIds) &&
+        casted.suppliesCheckedIds.every((item) => typeof item === 'string'))) &&
     (casted.lastChapterId === undefined || typeof casted.lastChapterId === 'string')
   );
 }
@@ -46,6 +49,7 @@ export function useStarterGuideProgress(): {
   toggleRead: (chapterId: string) => Promise<void>;
   toggleBookmark: (chapterId: string) => Promise<void>;
   toggleReadinessChecked: (itemId: string) => Promise<void>;
+  toggleSuppliesChecked: (itemId: string) => Promise<void>;
   setLastChapter: (chapterId: string) => Promise<void>;
 } {
   const [progress, setProgress] = useState(starterGuideProgressCache ?? DEFAULT_STARTER_GUIDE_PROGRESS);
@@ -85,6 +89,7 @@ export function useStarterGuideProgress(): {
                 ...DEFAULT_STARTER_GUIDE_PROGRESS,
                 ...parsed,
                 readinessCheckedIds: parsed.readinessCheckedIds ?? DEFAULT_STARTER_GUIDE_PROGRESS.readinessCheckedIds,
+                suppliesCheckedIds: parsed.suppliesCheckedIds ?? DEFAULT_STARTER_GUIDE_PROGRESS.suppliesCheckedIds,
               }
             : DEFAULT_STARTER_GUIDE_PROGRESS
         );
@@ -169,12 +174,28 @@ export function useStarterGuideProgress(): {
     [persist, progress]
   );
 
+  const toggleSuppliesChecked = useCallback(
+    async (itemId: string) => {
+      const isChecked = progress.suppliesCheckedIds.includes(itemId);
+      const next: StarterGuideProgress = {
+        ...progress,
+        suppliesCheckedIds: isChecked
+          ? progress.suppliesCheckedIds.filter((item) => item !== itemId)
+          : buildUniqueList([...progress.suppliesCheckedIds, itemId]),
+      };
+
+      await persist(next);
+    },
+    [persist, progress]
+  );
+
   return {
     progress,
     isLoading,
     toggleRead,
     toggleBookmark,
     toggleReadinessChecked,
+    toggleSuppliesChecked,
     setLastChapter,
   };
 }

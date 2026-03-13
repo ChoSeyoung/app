@@ -224,8 +224,12 @@ type Messages = {
     eyebrow: string;
     title: string;
     subtitle: string;
+    checklistTitle: string;
     readinessEyebrow: string;
     readinessTitle: string;
+    readinessChecklistTitle: string;
+    suppliesChecklistTitle: string;
+    suppliesChecklistBody: string;
     readinessBody: string;
     readinessSummaryBody: string;
     readinessStatusReadyTitle: string;
@@ -242,6 +246,12 @@ type Messages = {
     readinessProfileAction: string;
     readinessOpenAction: string;
     readinessReopenAction: string;
+    readinessCompleteToastTitle: string;
+    readinessCompleteToastBody: string;
+    referenceOpenFailed: string;
+    suppliesOpenAction: string;
+    suppliesReopenAction: string;
+    suppliesProgressLabel: string;
     readinessManualBadge: string;
     readinessAutoBadge: string;
     readinessReferenceLabel: string;
@@ -255,6 +265,16 @@ type Messages = {
     readinessSwallowBody: string;
     readinessInterestTitle: string;
     readinessInterestBody: string;
+    suppliesSpoonTitle: string;
+    suppliesSpoonBody: string;
+    suppliesBibTitle: string;
+    suppliesBibBody: string;
+    suppliesSeatTitle: string;
+    suppliesSeatBody: string;
+    suppliesIngredientTitle: string;
+    suppliesIngredientBody: string;
+    suppliesRecordTitle: string;
+    suppliesRecordBody: string;
     readinessCautionTitle: string;
     readinessCautionBody: string;
     referenceTitle: string;
@@ -276,6 +296,12 @@ type Messages = {
     partTitle: string;
     partBody: string;
     partChipMeta: string;
+    faqTitle: string;
+    faqBody: string;
+    faqCategoryTitle: string;
+    faqCategoryGettingStarted: string;
+    faqCategoryIntake: string;
+    faqCategoryReaction: string;
     chapterIndex: string;
     chapterDetailEyebrow: string;
     noteTitle: string;
@@ -345,23 +371,36 @@ type Messages = {
     partFaqTitle: string;
     partFaqDescription: string;
     faqLowIntakeTitle: string;
+    faqLowIntakeShortBody: string;
     faqLowIntakeSummary: string;
     faqLowIntakeBullet1: string;
     faqLowIntakeBullet2: string;
     faqLowIntakeBullet3: string;
     faqLowIntakeNote: string;
     faqRepeatTitle: string;
+    faqRepeatShortBody: string;
     faqRepeatSummary: string;
     faqRepeatBullet1: string;
     faqRepeatBullet2: string;
     faqRepeatBullet3: string;
     faqRepeatNote: string;
     faqAllergyTitle: string;
+    faqAllergyShortBody: string;
     faqAllergySummary: string;
     faqAllergyBullet1: string;
     faqAllergyBullet2: string;
     faqAllergyBullet3: string;
     faqAllergyNote: string;
+    faqFirstDayTimeTitle: string;
+    faqFirstDayTimeBody: string;
+    faqWaterTitle: string;
+    faqWaterBody: string;
+    faqConstipationTitle: string;
+    faqConstipationBody: string;
+    faqSkipDayTitle: string;
+    faqSkipDayBody: string;
+    faqStorageTitle: string;
+    faqStorageBody: string;
     adBadge: string;
     adTitle: string;
     adBody: string;
@@ -754,17 +793,21 @@ const messages: Record<Locale, Messages> = {
       appInfoTitle: '앱 정보',
     },
     splashScreen: {
-      eyebrow: '귀여운 기록을 준비해요',
+      eyebrow: '기록 준비 중',
       title: '이유식 다이어리',
-      subtitle: '오늘의 첫 숟가락부터 반응 메모까지 포근하게 이어볼게요.',
-      status: '기록장을 펼치는 중',
+      subtitle: '한입부터 반응까지 차분하게 남겨요',
+      status: '오늘 기록 여는 중',
     },
     starterGuideScreen: {
       eyebrow: '처음 시작해요',
       title: '이유식 시작하기',
       subtitle: '파트와 챕터를 눌러 필요한 내용만 빠르게 보고, 읽음과 책갈피도 함께 관리할 수 있어요.',
+      checklistTitle: '체크리스트',
       readinessEyebrow: '시작 전 확인',
-      readinessTitle: '시작 체크리스트',
+      readinessTitle: '이유식 시작 신호 체크리스트',
+      readinessChecklistTitle: '시작 신호 체크리스트',
+      suppliesChecklistTitle: '준비물 체크리스트',
+      suppliesChecklistBody: '첫날을 조금 더 차분하게 준비할 수 있도록 필요한 것만 먼저 점검해보세요.',
       readinessBody: '월령과 준비 신호를 같이 보면서, 지금 이유식을 시작해도 괜찮은지 차분하게 확인해보세요.',
       readinessSummaryBody: '체크 항목과 참고 자료는 별도 화면에서 차근차근 볼 수 있어요.',
       readinessStatusReadyTitle: '시작을 검토할 수 있어요',
@@ -781,6 +824,12 @@ const messages: Record<Locale, Messages> = {
       readinessProfileAction: '아기 프로필 입력',
       readinessOpenAction: '체크리스트 열기',
       readinessReopenAction: '체크리스트 다시 보기',
+      readinessCompleteToastTitle: '이제 이유식을 시작할 수 있어요',
+      readinessCompleteToastBody: '다음 챕터로 이어서 이동할게요.',
+      referenceOpenFailed: '원문을 열지 못했어요.',
+      suppliesOpenAction: '준비물 체크하기',
+      suppliesReopenAction: '준비물 다시 보기',
+      suppliesProgressLabel: '준비물 {{count}} / {{total}}',
       readinessManualBadge: '보호자 체크',
       readinessAutoBadge: '자동 확인',
       readinessReferenceLabel: '참고',
@@ -794,10 +843,20 @@ const messages: Record<Locale, Messages> = {
       readinessSwallowBody: '음식을 계속 밖으로 밀어내면 아직은 시작 시점이 아닐 수 있어요.',
       readinessInterestTitle: '먹는 모습에 관심을 보이고 입을 열어요',
       readinessInterestBody: '보호자가 먹는 것을 보며 따라오거나 숟가락에 반응하면 시작 준비 신호에 가까워요.',
+      suppliesSpoonTitle: '부드러운 스푼과 작은 볼이 준비되어 있어요',
+      suppliesSpoonBody: '처음은 많이 먹이는 날이 아니라 적응하는 날이니, 작은 도구면 충분해요.',
+      suppliesBibTitle: '턱받이와 닦을 수 있는 수건을 가까이에 두었어요',
+      suppliesBibBody: '첫날은 양보다 정리 흐름이 중요해서, 닦기 쉬운 준비가 되어 있으면 훨씬 편해요.',
+      suppliesSeatTitle: '안전하게 앉힐 자리나 의자를 정해두었어요',
+      suppliesSeatBody: '안정된 자세로 시작해야 관찰도 쉽고 보호자도 덜 불안해져요.',
+      suppliesIngredientTitle: '첫 재료와 첫 끼 시간대를 미리 정해두었어요',
+      suppliesIngredientBody: '오전이나 낮처럼 관찰하기 쉬운 시간과 단순한 첫 재료를 미리 정해두세요.',
+      suppliesRecordTitle: '먹인 뒤 기록할 흐름을 준비해두었어요',
+      suppliesRecordBody: '사진, 메모, 반응 기록을 바로 남길 준비를 해두면 첫날이 훨씬 차분해져요.',
       readinessCautionTitle: '이 점은 함께 기억해두세요',
       readinessCautionBody: '밤에 자주 깨거나 주먹을 빠는 것만으로는 준비 신호라고 보기 어려워요. 미숙아거나 건강 걱정이 있으면 소아청소년과와 먼저 상의해주세요.',
       referenceTitle: '어디를 참고했나요?',
-      referenceBody: 'WHO, CDC, NHS, AAP 자료에서 공통으로 반복되는 시작 신호만 추려서 정리했어요. 카드에서 원문도 바로 확인할 수 있어요.',
+      referenceBody: 'WHO, CDC, NHS, AAP 자료에서 공통으로 반복되는 시작 신호만 추려서 정리했어요.',
       referenceOpenAction: '원문 보기',
       referenceWhoSummary: '생후 6개월 무렵부터 적절하고 안전한 보충식을 시작하도록 안내하는 WHO 가이드라인이에요.',
       referenceCdcSummary: '생후 6개월 무렵과 함께, 앉은 자세·머리 가누기·삼킴 같은 발달 준비 신호를 구체적으로 설명해요.',
@@ -815,6 +874,12 @@ const messages: Record<Locale, Messages> = {
       partTitle: '파트 선택',
       partBody: '중요한 전환점 기준으로 파트를 나눠 필요한 챕터를 빠르게 찾아가세요.',
       partChipMeta: '{{read}} / {{total}} 챕터',
+      faqTitle: 'FAQ',
+      faqBody: '자주 묻는 질문만 먼저 모아 빠르게 볼 수 있어요.',
+      faqCategoryTitle: '카테고리',
+      faqCategoryGettingStarted: '시작 준비',
+      faqCategoryIntake: '먹는 양과 거부',
+      faqCategoryReaction: '반응과 관찰',
       chapterIndex: '챕터 {{index}}',
       chapterDetailEyebrow: '지금 읽는 챕터',
       noteTitle: '기억해두기',
@@ -884,23 +949,36 @@ const messages: Record<Locale, Messages> = {
       partFaqTitle: '많이 묻는 상황',
       partFaqDescription: '시작 초기에 가장 자주 나오는 불안과 고민을 짧은 챕터로 정리했어요.',
       faqLowIntakeTitle: '후기인데도 너무 조금 먹어요',
+      faqLowIntakeShortBody: '양보다 며칠 단위의 흐름과 컨디션을 함께 봐주세요.',
       faqLowIntakeSummary: '후기에도 먹는 양은 날마다 달라질 수 있어요. 컨디션과 거부 패턴을 함께 봐야 해요.',
       faqLowIntakeBullet1: '몇 숟가락만 먹고 끝나도 처음에는 자연스러운 반응일 수 있어요.',
       faqLowIntakeBullet2: '며칠 단위로 봤을 때 점차 표정이 편해지고 받아들이는 속도가 늘어나는지 보세요.',
       faqLowIntakeBullet3: '먹는 양이 적더라도 컨디션이 괜찮다면 너무 급하게 양을 늘리려 하지 않아도 돼요.',
       faqLowIntakeNote: '잘 안 먹는 날의 기록도 남겨야 다음 시도를 덜 흔들리며 할 수 있어요.',
       faqRepeatTitle: '후기엔 같은 재료를 또 줘도 될까?',
+      faqRepeatShortBody: '반복은 여전히 도움이 되고, 조합만 조금 바꿔도 충분해요.',
       faqRepeatSummary: '후기에도 반복은 여전히 도움이 돼요. 다만 조합과 형태를 조금씩 바꿔주는 식으로 접근하면 좋아요.',
       faqRepeatBullet1: '새 재료 관찰 기간에는 같은 재료가 반복되는 편이 반응 구분에 더 유리해요.',
       faqRepeatBullet2: '잘 먹던 재료는 보호자에게도 안전한 기본 식재료가 되어 식단 짜기가 쉬워져요.',
       faqRepeatBullet3: '반복이 길어질 때는 조금씩 조합만 바꿔 익숙함과 새로움을 함께 가져가면 좋아요.',
       faqRepeatNote: '초기엔 다양성보다 안정감이 먼저라는 점을 기억해두세요.',
       faqAllergyTitle: '후기에도 알레르기가 걱정될 때',
+      faqAllergyShortBody: '좋은 컨디션, 소량, 기록 세 가지를 먼저 지켜주세요.',
       faqAllergySummary: '후기에는 재료 종류가 넓어지는 만큼 소량, 좋은 컨디션, 기록 남기기 세 가지가 더 중요해져요.',
       faqAllergyBullet1: '새 재료는 아이 컨디션이 좋은 날 소량부터 시작하고 반응을 차분히 보세요.',
       faqAllergyBullet2: '이상 반응이 보이면 사진과 메모를 남기고 다음 식단에서는 즉시 제외해두는 편이 좋아요.',
       faqAllergyBullet3: '숨 가쁨, 얼굴 붓기처럼 심한 반응은 기록보다 즉시 전문가 도움을 우선해야 해요.',
       faqAllergyNote: '앱 기록은 전문가 상담 전 상황을 정리하는 데 도움을 줄 수 있어요.',
+      faqFirstDayTimeTitle: '첫날은 언제 먹여보는 게 좋을까요?',
+      faqFirstDayTimeBody: '오전이나 낮처럼 반응을 여유 있게 볼 수 있는 시간대가 가장 무난해요.',
+      faqWaterTitle: '이유식 시작하면 물도 같이 줘야 하나요?',
+      faqWaterBody: '처음부터 많이 줄 필요는 없고, 단계에 맞게 소량씩 천천히 익숙해지면 충분해요.',
+      faqConstipationTitle: '이유식 시작 후 변비처럼 보여요',
+      faqConstipationBody: '갑자기 양을 늘리기보다 식재료와 양, 반응 기록을 함께 보며 천천히 조절해보세요.',
+      faqSkipDayTitle: '하루 쉬었다가 다시 먹여도 괜찮을까요?',
+      faqSkipDayBody: '컨디션이 좋지 않거나 일정이 흔들린 날은 쉬었다가 다시 시작해도 괜찮아요.',
+      faqStorageTitle: '만든 이유식은 어떻게 보관하면 좋을까요?',
+      faqStorageBody: '처음엔 소량으로 만들고, 남기는 양이 생기면 냉장·냉동 흐름을 그때 맞춰 정리해도 늦지 않아요.',
       adBadge: '광고',
       adTitle: '구글 광고 영역',
       adBody: '챕터 사이에는 AdMob 네이티브 광고를 넣어도 화면 흐름이 깨지지 않도록 카드형 슬롯으로 설계했어요.',
@@ -1299,17 +1377,21 @@ const messages: Record<Locale, Messages> = {
       appInfoTitle: 'App info',
     },
     splashScreen: {
-      eyebrow: 'Getting the diary ready',
+      eyebrow: 'Getting ready',
       title: 'Weaning Diary',
-      subtitle: 'From the first spoonful to reaction notes, everything opens in one cozy flow.',
-      status: 'Opening today’s little journal',
+      subtitle: 'Track each bite and reaction',
+      status: 'Opening today’s log',
     },
     starterGuideScreen: {
       eyebrow: 'Starting out',
       title: 'Start weaning',
       subtitle: 'Move through key parts and chapters, then keep track of what you read and bookmark.',
+      checklistTitle: 'Checklists',
       readinessEyebrow: 'Before you start',
-      readinessTitle: 'Readiness checklist',
+      readinessTitle: 'Weaning readiness checklist',
+      readinessChecklistTitle: 'Readiness checklist',
+      suppliesChecklistTitle: 'Supplies checklist',
+      suppliesChecklistBody: 'Review only the essentials you need to make the first day feel calmer and easier.',
       readinessBody: 'Review age and readiness signs together to see whether this is a good time to begin solids.',
       readinessSummaryBody: 'Open a dedicated screen to go through the full checklist and the supporting references.',
       readinessStatusReadyTitle: 'You can consider starting now',
@@ -1326,6 +1408,12 @@ const messages: Record<Locale, Messages> = {
       readinessProfileAction: 'Set baby profile',
       readinessOpenAction: 'Open checklist',
       readinessReopenAction: 'Review checklist',
+      readinessCompleteToastTitle: 'You are ready to start weaning',
+      readinessCompleteToastBody: 'Moving to the next chapter.',
+      referenceOpenFailed: 'Could not open the source.',
+      suppliesOpenAction: 'Check supplies',
+      suppliesReopenAction: 'Review supplies',
+      suppliesProgressLabel: 'Supplies {{count}} / {{total}}',
       readinessManualBadge: 'Caregiver check',
       readinessAutoBadge: 'Auto check',
       readinessReferenceLabel: 'Based on',
@@ -1339,6 +1427,16 @@ const messages: Record<Locale, Messages> = {
       readinessSwallowBody: 'If food is still pushed out with the tongue every time, it may be too early to begin.',
       readinessInterestTitle: 'Baby shows interest in food and opens the mouth',
       readinessInterestBody: 'Watching others eat, leaning in, or opening for the spoon can all support readiness.',
+      suppliesSpoonTitle: 'A soft spoon and a small bowl are ready',
+      suppliesSpoonBody: 'The first few feeds are about getting used to the routine, so simple tools are enough.',
+      suppliesBibTitle: 'A bib and wipes are nearby',
+      suppliesBibBody: 'Cleanup gets easier when the basics are already within reach.',
+      suppliesSeatTitle: 'A safe seat or feeding spot is ready',
+      suppliesSeatBody: 'A stable posture makes the first tries calmer and easier to observe.',
+      suppliesIngredientTitle: 'The first ingredient and mealtime are already decided',
+      suppliesIngredientBody: 'Pick a simple first ingredient and a daytime slot that gives you room to observe.',
+      suppliesRecordTitle: 'A quick recording flow is ready after feeding',
+      suppliesRecordBody: 'Having photos, notes, and reaction logs ready helps the first day feel much calmer.',
       readinessCautionTitle: 'Keep this in mind too',
       readinessCautionBody: 'Night waking or chewing on fists alone does not confirm readiness. If your baby was premature or has health concerns, talk with your pediatric clinician first.',
       referenceTitle: 'Where does this come from?',
@@ -1360,6 +1458,12 @@ const messages: Record<Locale, Messages> = {
       partTitle: 'Choose a part',
       partBody: 'The guide is split by key turning points so you can jump straight to what you need.',
       partChipMeta: '{{read}} / {{total}} chapters',
+      faqTitle: 'FAQ',
+      faqBody: 'Start with the most common questions in one quick list.',
+      faqCategoryTitle: 'Categories',
+      faqCategoryGettingStarted: 'Getting started',
+      faqCategoryIntake: 'Intake and refusal',
+      faqCategoryReaction: 'Reactions and observation',
       chapterIndex: 'Chapter {{index}}',
       chapterDetailEyebrow: 'Current chapter',
       noteTitle: 'Keep in mind',
@@ -1429,23 +1533,36 @@ const messages: Record<Locale, Messages> = {
       partFaqTitle: 'Common worries',
       partFaqDescription: 'Quick answers to the questions caregivers ask most often at the start.',
       faqLowIntakeTitle: 'My baby still eats very little in the late stage',
+      faqLowIntakeShortBody: 'Look at the pattern over several days, not just one meal.',
       faqLowIntakeSummary: 'Even in the late stage, intake can vary day by day. Look at condition and refusal patterns together.',
       faqLowIntakeBullet1: 'A tiny amount can still count as a meaningful first experience.',
       faqLowIntakeBullet2: 'Look for gradual comfort and acceptance over several days.',
       faqLowIntakeBullet3: 'If your baby feels well overall, avoid pushing volume too quickly.',
       faqLowIntakeNote: 'Record low-intake days too so the pattern stays clear.',
       faqRepeatTitle: 'Can I still repeat ingredients in the late stage?',
+      faqRepeatShortBody: 'Repetition still helps, even if you only change the pairing a little.',
       faqRepeatSummary: 'Repetition still helps later on, especially when you vary texture or pairing instead of everything at once.',
       faqRepeatBullet1: 'Repeating the same ingredient supports a cleaner observation window.',
       faqRepeatBullet2: 'Safe familiar foods become a strong base for future meal planning.',
       faqRepeatBullet3: 'Later, you can add variety by changing pairings instead of everything at once.',
       faqRepeatNote: 'Early stability often matters more than early variety.',
       faqAllergyTitle: 'What if I still worry about allergies in the late stage?',
+      faqAllergyShortBody: 'Start with a small amount, on a good day, and keep a clear record.',
       faqAllergySummary: 'As ingredient variety expands, small amounts, a good day, and clear logging become even more important.',
       faqAllergyBullet1: 'Introduce concerning ingredients on a calm day in a very small amount.',
       faqAllergyBullet2: 'If something feels off, log it right away and pause that ingredient.',
       faqAllergyBullet3: 'For severe symptoms, seek professional help first and use the log as context.',
       faqAllergyNote: 'The app can support your notes, but urgent reactions always come first.',
+      faqFirstDayTimeTitle: 'What time works best for the first day?',
+      faqFirstDayTimeBody: 'Morning or midday is usually best because you have more time to observe calmly.',
+      faqWaterTitle: 'Should I offer water when solids begin?',
+      faqWaterBody: 'There is no need to rush. Small amounts can be introduced gradually as the routine settles.',
+      faqConstipationTitle: 'The baby looks constipated after starting solids',
+      faqConstipationBody: 'Instead of increasing the amount quickly, review the ingredient, amount, and record together first.',
+      faqSkipDayTitle: 'Is it okay to skip a day and try again?',
+      faqSkipDayBody: 'Yes. If the day feels off, it is okay to pause and restart when the baby feels steadier.',
+      faqStorageTitle: 'How should I store homemade baby food?',
+      faqStorageBody: 'Start with very small batches and only build a storage routine once leftovers actually appear.',
       adBadge: 'Ad',
       adTitle: 'Google ad slot',
       adBody: 'This slot is designed so AdMob native ads can fit between chapters without breaking the reading flow.',
