@@ -224,10 +224,26 @@ export function AnimatedAppSplash({ colorScheme, onFinish }: AnimatedAppSplashPr
 
           <Animated.View style={[styles.copyBlock, copyStyle]}>
             <View style={[styles.eyebrowChip, { backgroundColor: theme.accentSoft }]}>
-              <Text style={[styles.eyebrowText, { color: theme.text }]}>{t('splashScreen.eyebrow')}</Text>
+              <Text
+                style={[styles.eyebrowText, { color: theme.text }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.85}>
+                {t('splashScreen.eyebrow')}
+              </Text>
             </View>
-            <Text style={[styles.title, { color: theme.text }]}>{t('splashScreen.title')}</Text>
-            <Text style={[styles.subtitle, { color: colorScheme === 'dark' ? '#D8D0C9' : '#705C47' }]}>
+            <Text
+              style={[styles.title, { color: theme.text }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.9}>
+              {t('splashScreen.title')}
+            </Text>
+            <Text
+              style={[styles.subtitle, { color: colorScheme === 'dark' ? '#D8D0C9' : '#705C47' }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}>
               {t('splashScreen.subtitle')}
             </Text>
 
@@ -244,7 +260,11 @@ export function AnimatedAppSplash({ colorScheme, onFinish }: AnimatedAppSplashPr
                 ]}
               />
             </View>
-            <Text style={[styles.status, { color: colorScheme === 'dark' ? '#B7ACA1' : '#8E7A63' }]}>
+            <Text
+              style={[styles.status, { color: colorScheme === 'dark' ? '#B7ACA1' : '#8E7A63' }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.85}>
               {t('splashScreen.status')}
             </Text>
           </Animated.View>
@@ -335,7 +355,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 28,
     gap: 10,
-    maxWidth: 290,
+    width: '100%',
+    maxWidth: 320,
   },
   eyebrowChip: {
     paddingHorizontal: 14,
@@ -356,8 +377,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontFamily: Fonts.sans,
-    fontSize: 14,
-    lineHeight: 21,
+    fontSize: 13,
     fontWeight: '500',
     textAlign: 'center',
   },

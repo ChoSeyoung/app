@@ -201,7 +201,6 @@ export default function JourneyScreen() {
             await loadRecords();
             setSelectedRecord(null);
             showToast({
-              title: t('journeyScreen.title'),
               message: t('journeyScreen.deleteSuccess'),
               variant: 'success',
             });

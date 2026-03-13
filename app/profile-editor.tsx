@@ -102,7 +102,6 @@ export default function ProfileEditorScreen() {
 
     if (!babyNameInput.trim()) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationName'),
         variant: 'error',
       });
@@ -111,7 +110,6 @@ export default function ProfileEditorScreen() {
 
     if (!birthDateInput) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationBirthDate'),
         variant: 'error',
       });
@@ -120,7 +118,6 @@ export default function ProfileEditorScreen() {
 
     if (!isValidDateInput(birthDateInput)) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationBirthDateFormat'),
         variant: 'error',
       });
@@ -129,7 +126,6 @@ export default function ProfileEditorScreen() {
 
     if (feedingStartDateInput && !isValidDateInput(feedingStartDateInput)) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('profileEditorScreen.validationStartDateFormat'),
         variant: 'error',
       });
@@ -148,7 +144,6 @@ export default function ProfileEditorScreen() {
     try {
       await saveProfile(nextProfile);
       showToast({
-        title: t('profileScreen.title'),
         message: t('profileEditorScreen.saveSuccess'),
         variant: 'success',
       });

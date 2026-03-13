@@ -99,7 +99,6 @@ export default function MoreScreen() {
             <Pressable
               onPress={() =>
                 showToast({
-                  title: t('tabs.more'),
                   message: t('profileScreen.comingSoon'),
                   variant: 'info',
                 })

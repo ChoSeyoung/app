@@ -22,12 +22,12 @@ import { Spacing } from '@/constants/spacing';
 import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
-type ToastVariant = 'info' | 'success' | 'error';
+type ToastLevel = 'info' | 'success' | 'warning' | 'error' | 'highlight';
 
 export type ShowToastOptions = {
   message: string;
-  title?: string;
-  variant?: ToastVariant;
+  level?: ToastLevel;
+  variant?: ToastLevel;
   durationMs?: number;
   actionLabel?: string;
   onActionPress?: () => void;
@@ -46,29 +46,62 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 const TOAST_DURATION_MS = 2600;
 const ANIMATION_DURATION_MS = 220;
+const TOAST_BOTTOM_OFFSET = 12;
 
-function getVariantColors(variant: ToastVariant, colorScheme: 'light' | 'dark') {
+function getToastTheme(level: ToastLevel, colorScheme: 'light' | 'dark') {
   const theme = Colors[colorScheme];
 
-  switch (variant) {
+  switch (level) {
     case 'success':
       return {
         icon: 'check-circle',
+        badgeLabel: 'SUCCESS',
         card: colorScheme === 'dark' ? '#21362B' : '#EEF7F0',
         badge: theme.success,
+        chip: colorScheme === 'dark' ? '#2E4B39' : '#DDF1E2',
+        bubbleTop: colorScheme === 'dark' ? '#315741' : '#D1EED8',
+        bubbleBottom: colorScheme === 'dark' ? '#274434' : '#F7FBF5',
+      };
+    case 'warning':
+      return {
+        icon: 'priority-high',
+        badgeLabel: 'CAUTION',
+        card: colorScheme === 'dark' ? '#40311E' : '#FFF3DE',
+        badge: '#D99227',
+        chip: colorScheme === 'dark' ? '#4B3820' : '#FCE7BE',
+        bubbleTop: colorScheme === 'dark' ? '#5A4326' : '#FFE2A8',
+        bubbleBottom: colorScheme === 'dark' ? '#48341D' : '#FFF8EA',
       };
     case 'error':
       return {
         icon: 'error-outline',
+        badgeLabel: 'ERROR',
         card: colorScheme === 'dark' ? '#3B2724' : '#FBEDEA',
         badge: theme.danger,
+        chip: colorScheme === 'dark' ? '#4A322E' : '#F6D9D2',
+        bubbleTop: colorScheme === 'dark' ? '#593F3A' : '#F2C5BA',
+        bubbleBottom: colorScheme === 'dark' ? '#47302C' : '#FFF7F5',
+      };
+    case 'highlight':
+      return {
+        icon: 'auto-awesome',
+        badgeLabel: 'NICE',
+        card: colorScheme === 'dark' ? '#372B49' : '#F3EAFF',
+        badge: '#9A67EA',
+        chip: colorScheme === 'dark' ? '#45355E' : '#E7D9FF',
+        bubbleTop: colorScheme === 'dark' ? '#58447B' : '#DCC7FF',
+        bubbleBottom: colorScheme === 'dark' ? '#44355B' : '#FCF8FF',
       };
     case 'info':
     default:
       return {
         icon: 'notifications-none',
+        badgeLabel: 'INFO',
         card: colorScheme === 'dark' ? '#3A3120' : '#FFF6DD',
         badge: theme.accent,
+        chip: colorScheme === 'dark' ? '#514325' : '#FCE7BE',
+        bubbleTop: colorScheme === 'dark' ? '#68562F' : '#FFE0A3',
+        bubbleBottom: colorScheme === 'dark' ? '#473B21' : '#FFFBEF',
       };
   }
 }
@@ -104,7 +137,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
         useNativeDriver: true,
       }),
       Animated.timing(translateY, {
-        toValue: -12,
+        toValue: 28,
         duration: ANIMATION_DURATION_MS,
         easing: Easing.out(Easing.quad),
         useNativeDriver: true,
@@ -124,7 +157,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
 
       const nextToast: ToastState = {
         id: Date.now(),
-        variant: options.variant ?? 'info',
+        level: options.level ?? options.variant ?? 'info',
         durationMs: options.durationMs ?? TOAST_DURATION_MS,
         ...options,
       };
@@ -132,7 +165,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
       opacity.stopAnimation();
       translateY.stopAnimation();
       opacity.setValue(0);
-      translateY.setValue(-12);
+      translateY.setValue(28);
       setToast(nextToast);
 
       requestAnimationFrame(() => {
@@ -168,7 +201,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
     hideToast,
   };
 
-  const variantColors = getVariantColors(toast?.variant ?? 'info', colorScheme);
+  const toastTheme = getToastTheme(toast?.level ?? toast?.variant ?? 'info', colorScheme);
 
   return (
     <ToastContext.Provider value={contextValue}>
@@ -180,7 +213,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
             style={[
               styles.overlay,
               {
-                paddingTop: Math.max(insets.top, 12) + 8,
+                bottom: Math.max(insets.bottom, 8) + TOAST_BOTTOM_OFFSET,
                 opacity,
                 transform: [{ translateY }],
               },
@@ -189,22 +222,28 @@ export function ToastProvider({ children }: PropsWithChildren) {
               style={[
                 styles.toastCard,
                 {
-                  backgroundColor: variantColors.card,
+                  backgroundColor: toastTheme.card,
                   borderColor: theme.border,
                 },
               ]}>
+              <View style={[styles.decorBubble, styles.decorBubbleTopRight, { backgroundColor: toastTheme.bubbleTop }]} />
+              <View
+                style={[styles.decorBubble, styles.decorBubbleBottomLeft, { backgroundColor: toastTheme.bubbleBottom }]}
+              />
               <View style={styles.toastBody}>
-                <View style={[styles.iconBadge, { backgroundColor: variantColors.badge }]}>
-                  <MaterialIcons name={variantColors.icon as never} size={18} color="#FFFDF8" />
+                <View style={[styles.iconBadge, { backgroundColor: toastTheme.badge }]}>
+                  <MaterialIcons name={toastTheme.icon as never} size={18} color="#FFFDF8" />
                 </View>
 
                 <View style={styles.textWrap}>
-                  {toast.title ? (
-                    <Text style={[styles.title, { color: theme.text }]} numberOfLines={1}>
-                      {toast.title}
-                    </Text>
-                  ) : null}
-                  <Text style={[styles.message, { color: theme.text }]} numberOfLines={2}>
+                  <View style={[styles.levelChip, { backgroundColor: toastTheme.chip, borderColor: theme.border }]}>
+                    <Text style={[styles.levelChipText, { color: theme.text }]}>{toastTheme.badgeLabel}</Text>
+                  </View>
+                  <Text
+                    style={[styles.message, { color: theme.text }]}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.9}>
                     {toast.message}
                   </Text>
                 </View>
@@ -216,7 +255,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
                       toast.onActionPress?.();
                       hideToast();
                     }}
-                    style={[styles.actionChip, { backgroundColor: theme.accentSoft, borderColor: theme.border }]}>
+                    style={[styles.actionChip, { backgroundColor: toastTheme.chip, borderColor: theme.border }]}>
                     <Text style={[styles.actionLabel, { color: theme.text }]} numberOfLines={1}>
                       {toast.actionLabel}
                     </Text>
@@ -243,20 +282,25 @@ export function useToast() {
 
 const styles = StyleSheet.create({
   overlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    justifyContent: 'flex-end',
     alignItems: 'center',
     paddingHorizontal: Spacing.screenHorizontal,
   },
   toastCard: {
+    overflow: 'hidden',
     width: '100%',
-    maxWidth: 520,
+    maxWidth: 460,
     borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    paddingVertical: 15,
     shadowColor: '#C9B8A4',
-    shadowOpacity: 0.14,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.16,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 12 },
     elevation: 6,
   },
   toastBody: {
@@ -265,25 +309,34 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   iconBadge: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },
   textWrap: {
     flex: 1,
-    gap: 4,
+    gap: 3,
   },
-  title: {
+  levelChip: {
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginBottom: 1,
+  },
+  levelChipText: {
+    fontFamily: Fonts.sans,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  message: {
     fontFamily: Fonts.rounded,
     fontSize: 14,
     fontWeight: '700',
-  },
-  message: {
-    fontFamily: Fonts.sans,
-    fontSize: 13,
-    lineHeight: 18,
   },
   actionChip: {
     minHeight: Spacing.compactButtonMinHeight,
@@ -291,11 +344,29 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.compactButtonRadius,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: 13,
   },
   actionLabel: {
     fontFamily: Fonts.sans,
     fontSize: 13,
     fontWeight: '700',
+  },
+  decorBubble: {
+    position: 'absolute',
+    borderRadius: 999,
+    opacity: 0.85,
+  },
+  decorBubbleTopRight: {
+    width: 72,
+    height: 72,
+    right: -20,
+    top: -20,
+  },
+  decorBubbleBottomLeft: {
+    width: 52,
+    height: 52,
+    left: -14,
+    bottom: -18,
+    opacity: 0.65,
   },
 });

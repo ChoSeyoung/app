@@ -235,13 +235,11 @@ export default function IngredientsScreen() {
         }))
       );
       showToast({
-        title: t('tabs.ingredients'),
         message: t('ingredientScreen.savedMessage'),
         variant: 'success',
       });
     } catch {
       showToast({
-        title: t('tabs.ingredients'),
         message: t('ingredientScreen.saveFailedMessage'),
         variant: 'error',
       });
@@ -265,7 +263,6 @@ export default function IngredientsScreen() {
     });
     await refresh();
     showToast({
-      title: t('tabs.ingredients'),
       message: t('ingredientScreen.savedMessage'),
       variant: 'success',
     });

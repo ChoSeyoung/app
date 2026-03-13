@@ -69,11 +69,22 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
     [descriptors, state.routes]
   );
 
+  const activeVisibleRouteKey = useMemo(() => {
+    const currentRouteKey = state.routes[state.index]?.key;
+    const currentVisible = visibleRoutes.find((route) => route.key === currentRouteKey);
+    if (currentVisible) {
+      return currentVisible.key;
+    }
+
+    const homeRoute = visibleRoutes.find((route) => route.name === 'home');
+    return homeRoute?.key ?? visibleRoutes[0]?.key ?? '';
+  }, [state.index, state.routes, visibleRoutes]);
+
   const shellWidth = Math.min(width * 0.8, 360);
   const shellHorizontalPadding = 18;
   const shellInnerWidth = shellWidth - shellHorizontalPadding * 2;
   const inactiveCount = Math.max(visibleRoutes.length - 1, 1);
-  const focusedVisibleIndex = visibleRoutes.findIndex((route) => state.routes[state.index]?.key === route.key);
+  const focusedVisibleIndex = visibleRoutes.findIndex((route) => route.key === activeVisibleRouteKey);
   const activeSlotWidth = shellInnerWidth * 0.28;
   const activePillWidth = activeSlotWidth;
   const inactiveSlotWidth =
@@ -146,8 +157,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
           ]}
         />
         {visibleRoutes.map((route) => {
-          const routeIndex = state.routes.findIndex((item) => item.key === route.key);
-          const focused = state.index === routeIndex;
+          const focused = route.key === activeVisibleRouteKey;
           const options = descriptors[route.key]?.options;
           const label =
             typeof options?.title === 'string' && options.title.length > 0 ? options.title : route.name;
