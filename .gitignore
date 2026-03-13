@@ -41,3 +41,8 @@ app-example
 # generated native folders
 /ios
 /android
+
+# Codex / GSD local workspace artifacts
+.codex/
+.planning/
+.continue-here
