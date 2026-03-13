@@ -17,6 +17,7 @@ export type StarterGuideProgress = {
   readChapterIds: string[];
   bookmarkedChapterIds: string[];
   readinessCheckedIds: string[];
+  suppliesCheckedIds: string[];
   lastChapterId?: string;
 };
 
@@ -38,12 +39,19 @@ export type StarterGuideReadinessChecklistDefinition = {
   autoDerived?: 'ageAroundSixMonths';
 };
 
+export type StarterGuideSuppliesChecklistDefinition = {
+  id: string;
+  titleKey: string;
+  bodyKey: string;
+};
+
 export const STARTER_GUIDE_PROGRESS_STORAGE_KEY = '@weaning-diary/starter-guide-progress';
 
 export const DEFAULT_STARTER_GUIDE_PROGRESS: StarterGuideProgress = {
   readChapterIds: [],
   bookmarkedChapterIds: [],
   readinessCheckedIds: [],
+  suppliesCheckedIds: [],
 };
 
 export const STARTER_GUIDE_READINESS_REFERENCES: StarterGuideReadinessReferenceDefinition[] = [
@@ -116,6 +124,34 @@ export const STARTER_GUIDE_READINESS_CHECKLIST: StarterGuideReadinessChecklistDe
     titleKey: 'starterGuideScreen.readinessInterestTitle',
     bodyKey: 'starterGuideScreen.readinessInterestBody',
     sourceIds: ['cdc-solid-foods-2025', 'aap-baby-food-and-feeding'],
+  },
+];
+
+export const STARTER_GUIDE_SUPPLIES_CHECKLIST: StarterGuideSuppliesChecklistDefinition[] = [
+  {
+    id: 'soft-spoon-and-small-bowl',
+    titleKey: 'starterGuideScreen.suppliesSpoonTitle',
+    bodyKey: 'starterGuideScreen.suppliesSpoonBody',
+  },
+  {
+    id: 'bib-and-wipes',
+    titleKey: 'starterGuideScreen.suppliesBibTitle',
+    bodyKey: 'starterGuideScreen.suppliesBibBody',
+  },
+  {
+    id: 'highchair-or-safe-seat',
+    titleKey: 'starterGuideScreen.suppliesSeatTitle',
+    bodyKey: 'starterGuideScreen.suppliesSeatBody',
+  },
+  {
+    id: 'first-ingredient-plan',
+    titleKey: 'starterGuideScreen.suppliesIngredientTitle',
+    bodyKey: 'starterGuideScreen.suppliesIngredientBody',
+  },
+  {
+    id: 'recording-flow-ready',
+    titleKey: 'starterGuideScreen.suppliesRecordTitle',
+    bodyKey: 'starterGuideScreen.suppliesRecordBody',
   },
 ];
 

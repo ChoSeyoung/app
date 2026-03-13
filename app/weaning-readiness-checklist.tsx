@@ -1,9 +1,10 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { FoldableCard } from '@/components/design-system/foldable-card';
 import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
 import { t } from '@/constants/i18n';
@@ -22,9 +23,12 @@ export default function WeaningReadinessChecklistScreen() {
   const { profile, isLoading: isProfileLoading } = useBabyProfile();
   const { progress, toggleReadinessChecked } = useStarterGuideProgress();
   const { showToast } = useToast();
+  const navigationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {
     ageInMonths,
     autoAgeReady,
+    checkedManualCount,
+    manualChecklistItems,
     positiveChecklistCount,
     readinessItems,
     readinessReferences,
@@ -70,8 +74,7 @@ export default function WeaningReadinessChecklistScreen() {
       await Linking.openURL(url);
     } catch {
       showToast({
-        title: t('starterGuideScreen.referenceTitle'),
-        message: url,
+        message: t('starterGuideScreen.referenceOpenFailed'),
         variant: 'error',
       });
     }
@@ -86,6 +89,36 @@ export default function WeaningReadinessChecklistScreen() {
       params: { returnTo: '/weaning-readiness-checklist' },
     });
   }, [isProfileLoading, profile?.birthDate, router]);
+
+  useEffect(() => {
+    return () => {
+      if (!navigationTimerRef.current) return;
+      clearTimeout(navigationTimerRef.current);
+      navigationTimerRef.current = null;
+    };
+  }, []);
+
+  const handleToggleReadiness = (itemId: string, isChecked: boolean) => {
+    void toggleReadinessChecked(itemId);
+
+    if (isChecked) return;
+    if (autoAgeReady !== true) return;
+    if (checkedManualCount + 1 !== manualChecklistItems.length) return;
+
+    if (navigationTimerRef.current) {
+      clearTimeout(navigationTimerRef.current);
+      navigationTimerRef.current = null;
+    }
+
+    showToast({
+      message: t('starterGuideScreen.readinessCompleteToastBody'),
+      variant: 'success',
+    });
+
+    navigationTimerRef.current = setTimeout(() => {
+      router.replace('/weaning-start-guide');
+    }, 650);
+  };
 
   if (isProfileLoading || !profile?.birthDate) {
     return (
@@ -102,8 +135,7 @@ export default function WeaningReadinessChecklistScreen() {
         <View style={styles.cardStack}>
           <HeroHeaderCard
             title={t('starterGuideScreen.readinessTitle')}
-            subtitle={t('starterGuideScreen.readinessBody')}
-            eyebrow={t('starterGuideScreen.readinessEyebrow')}
+            subtitle={t('starterGuideScreen.readinessSummaryBody')}
             onBack={goBack}
             theme={theme}
             backgroundColor={tones.lavender}
@@ -116,6 +148,16 @@ export default function WeaningReadinessChecklistScreen() {
           <View style={[styles.readinessCard, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
             <View style={[styles.decorBubble, styles.readinessBubbleTop, { backgroundColor: tones.cream }]} />
             <View style={[styles.decorBubble, styles.readinessBubbleBottom, { backgroundColor: tones.lavender }]} />
+
+            <FoldableCard
+              title={t('starterGuideScreen.readinessCautionTitle')}
+              theme={theme}
+              backgroundColor={tones.blush}
+              borderColor={theme.border}>
+              <View>
+                <Text style={[styles.cautionBody, { color: theme.icon }]}>{t('starterGuideScreen.readinessCautionBody')}</Text>
+              </View>
+            </FoldableCard>
 
             <View style={[styles.readinessStatusCard, { backgroundColor: readinessStatusTone, borderColor: theme.border }]}>
               <View style={styles.readinessStatusHeader}>
@@ -133,16 +175,8 @@ export default function WeaningReadinessChecklistScreen() {
                 </View>
               </View>
 
-              <View style={styles.readinessMetaRow}>
-                <View style={[styles.readinessMetaCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
-                  <Text style={[styles.metaLabel, { color: theme.icon }]}>{t('starterGuideScreen.readinessAutoBadge')}</Text>
-                  <Text style={[styles.readinessMetaValue, { color: theme.text }]}>
-                    {ageInMonths === null
-                      ? t('starterGuideScreen.readinessAgeUnknown')
-                      : t('starterGuideScreen.readinessAgeKnown', { months: ageInMonths })}
-                  </Text>
-                </View>
-                {ageInMonths === null ? (
+              {ageInMonths === null ? (
+                <View style={styles.readinessMetaRow}>
                   <Pressable
                     onPress={() => router.push('/profile-editor')}
                     style={[styles.profileActionChip, { backgroundColor: theme.accent }]}>
@@ -150,8 +184,8 @@ export default function WeaningReadinessChecklistScreen() {
                       {t('starterGuideScreen.readinessProfileAction')}
                     </Text>
                   </Pressable>
-                ) : null}
-              </View>
+                </View>
+              ) : null}
             </View>
 
             <View style={styles.readinessList}>
@@ -164,7 +198,7 @@ export default function WeaningReadinessChecklistScreen() {
                   <Pressable
                     key={item.id}
                     disabled={isAuto}
-                    onPress={() => void toggleReadinessChecked(item.id)}
+                    onPress={() => handleToggleReadiness(item.id, isChecked)}
                     style={[
                       styles.readinessItemCard,
                       {
@@ -182,49 +216,27 @@ export default function WeaningReadinessChecklistScreen() {
                         />
                         <Text style={[styles.readinessItemTitle, { color: theme.text }]}>{item.title}</Text>
                       </View>
-                      <View
-                        style={[
-                          styles.readinessModeChip,
-                          { backgroundColor: isAuto ? theme.accentSoft : tones.paper, borderColor: theme.border },
-                        ]}>
-                        <Text style={[styles.readinessModeChipText, { color: theme.text }]}>
-                          {isAuto ? t('starterGuideScreen.readinessAutoBadge') : t('starterGuideScreen.readinessManualBadge')}
-                        </Text>
-                      </View>
                     </View>
                     <Text style={[styles.readinessItemBody, { color: theme.icon }]}>{item.body}</Text>
-                    <View style={styles.readinessSourceRow}>
-                      <Text style={[styles.readinessSourceLabel, { color: theme.icon }]}>
-                        {t('starterGuideScreen.readinessReferenceLabel')}
-                      </Text>
-                      <View style={styles.readinessSourceChips}>
-                        {item.sources.map((source) => (
-                          <View
-                            key={`${item.id}-${source.id}`}
-                            style={[styles.readinessSourceChip, { backgroundColor: tones.paper, borderColor: theme.border }]}>
-                            <Text style={[styles.readinessSourceChipText, { color: theme.text }]}>{source.shortLabel}</Text>
-                          </View>
-                        ))}
-                      </View>
+                    <View style={styles.readinessSourceChips}>
+                      {item.sources.map((source) => (
+                        <View
+                          key={`${item.id}-${source.id}`}
+                          style={[styles.readinessSourceChip, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                          <Text style={[styles.readinessSourceChipText, { color: theme.text }]}>{source.shortLabel}</Text>
+                        </View>
+                      ))}
                     </View>
                   </Pressable>
                 );
               })}
             </View>
 
-            <View style={[styles.cautionCard, { backgroundColor: tones.blush, borderColor: theme.border }]}>
-              <View style={styles.cautionHeader}>
-                <MaterialIcons name="info-outline" size={18} color={theme.text} />
-                <Text style={[styles.cautionTitle, { color: theme.text }]}>{t('starterGuideScreen.readinessCautionTitle')}</Text>
-              </View>
-              <Text style={[styles.cautionBody, { color: theme.icon }]}>{t('starterGuideScreen.readinessCautionBody')}</Text>
-            </View>
           </View>
 
           <View style={[styles.referenceCard, styles.decorativeCard, { backgroundColor: tones.cream, borderColor: theme.border }]}>
             <View style={styles.sectionHeaderRow}>
               <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('starterGuideScreen.referenceTitle')}</Text>
-              <Text style={[styles.sectionBody, { color: theme.icon }]}>{t('starterGuideScreen.referenceBody')}</Text>
             </View>
 
             <View style={styles.referenceList}>
@@ -383,14 +395,13 @@ const styles = StyleSheet.create({
   },
   readinessItemHeader: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    alignItems: 'center',
     gap: 10,
   },
   readinessItemTitleWrap: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: 10,
   },
   readinessItemTitle: {
@@ -440,22 +451,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
   },
-  cautionCard: {
-    borderWidth: 1,
-    borderRadius: 18,
-    padding: 14,
-    gap: 8,
-  },
-  cautionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  cautionTitle: {
-    fontFamily: Fonts.rounded,
-    fontSize: 16,
-    fontWeight: '700',
-  },
   cautionBody: {
     fontFamily: Fonts.sans,
     fontSize: 14,
@@ -493,6 +488,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   referenceItemTextWrap: {
+    flexShrink: 1,
+    width: '100%',
     gap: 4,
   },
   referenceOrg: {
@@ -501,6 +498,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   referenceTitleText: {
+    flexShrink: 1,
     fontFamily: Fonts.rounded,
     fontSize: 16,
     fontWeight: '700',
