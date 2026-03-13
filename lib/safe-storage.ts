@@ -1,33 +1,26 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { File, Paths } from 'expo-file-system';
-import * as SecureStore from 'expo-secure-store';
+import { getDatabase } from '@/lib/database';
+import { readLegacyStorageItem } from '@/lib/legacy-storage';
 
 const memoryStore = new Map<string, string>();
-const storageFile = new File(Paths.document, 'safe-storage.json');
 
-async function readFileStore(): Promise<Record<string, string>> {
-  try {
-    if (!storageFile.exists) return {};
-    const raw = await storageFile.text();
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
+type KeyValueRow = {
+  value: string;
+};
 
-    return Object.fromEntries(
-      Object.entries(parsed).filter((entry): entry is [string, string] => typeof entry[1] === 'string')
-    );
-  } catch {
-    return {};
-  }
-}
-
-async function writeFileStore(next: Record<string, string>): Promise<void> {
-  try {
-    if (!storageFile.exists) {
-      storageFile.create({ overwrite: true, intermediates: true });
-    }
-    storageFile.write(JSON.stringify(next));
-  } catch {
-    // Ignore write errors and continue fallback chain
-  }
+async function persistValue(key: string, value: string): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `
+      INSERT INTO app_kv (key, value, updated_at)
+      VALUES (?, ?, ?)
+      ON CONFLICT(key) DO UPDATE SET
+        value = excluded.value,
+        updated_at = excluded.updated_at
+    `,
+    key,
+    value,
+    new Date().toISOString()
+  );
 }
 
 export async function safeGetItem(key: string): Promise<string | null> {
@@ -36,67 +29,24 @@ export async function safeGetItem(key: string): Promise<string | null> {
     return inMemory;
   }
 
-  try {
-    const value = await AsyncStorage.getItem(key);
-    if (value !== null) return value;
-  } catch {
-    // Continue fallback chain
+  const db = await getDatabase();
+  const stored = await db.getFirstAsync<KeyValueRow>('SELECT value FROM app_kv WHERE key = ?', key);
+  if (stored) {
+    memoryStore.set(key, stored.value);
+    return stored.value;
   }
 
-  try {
-    const value = await SecureStore.getItemAsync(key);
-    if (value !== null) return value;
-  } catch {
-    // Continue fallback chain
+  const legacyValue = await readLegacyStorageItem(key);
+  if (legacyValue !== null) {
+    memoryStore.set(key, legacyValue);
+    await persistValue(key, legacyValue);
+    return legacyValue;
   }
 
-  const fileStore = await readFileStore();
-  if (key in fileStore) {
-    return fileStore[key] ?? null;
-  }
-
-  if (typeof globalThis.localStorage !== 'undefined') {
-    return globalThis.localStorage.getItem(key);
-  }
-
-  return memoryStore.get(key) ?? null;
+  return null;
 }
 
 export async function safeSetItem(key: string, value: string): Promise<void> {
-  // Keep in-memory cache in sync to avoid stale reads across hook instances.
   memoryStore.set(key, value);
-
-  let hasStored = false;
-
-  try {
-    await AsyncStorage.setItem(key, value);
-    hasStored = true;
-  } catch {
-    // Continue fallback chain
-  }
-
-  try {
-    await SecureStore.setItemAsync(key, value);
-    hasStored = true;
-  } catch {
-    // Continue fallback chain
-  }
-
-  try {
-    const current = await readFileStore();
-    current[key] = value;
-    await writeFileStore(current);
-    hasStored = true;
-  } catch {
-    try {
-      if (typeof globalThis.localStorage !== 'undefined') {
-        globalThis.localStorage.setItem(key, value);
-        hasStored = true;
-      }
-    } catch {
-      // Ignore and continue
-    }
-  }
-
-  if (!hasStored) return;
+  await persistValue(key, value);
 }

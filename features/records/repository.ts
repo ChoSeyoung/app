@@ -1,12 +1,46 @@
-import type { MealIngredientRelation } from '@/features/ingredients/model';
-import { safeGetItem, safeSetItem } from '@/lib/safe-storage';
+import { getDatabase } from '@/lib/database';
+import { readLegacyStorageItem } from '@/lib/legacy-storage';
 
-import type { FeedingRecord } from './model';
+import type { FeedingRecord, FeedingRecordIngredient } from './model';
 
 const FEEDING_RECORDS_KEY = '@weaning-diary/feeding-records';
 const MEAL_RECORDS_LEGACY_KEY = '@weaning-diary/meal-records';
-const FEEDING_RECORD_INGREDIENT_RELATIONS_KEY = '@weaning-diary/feeding-record-ingredient-relations';
-const MEAL_INGREDIENT_RELATIONS_LEGACY_KEY = '@weaning-diary/meal-ingredient-relations';
+
+type FeedingRecordRow = {
+  id: string;
+  baby_id: string;
+  date_time: string;
+  amount_type: FeedingRecord['amountType'];
+  amount_gram: number | null;
+  amount_level: FeedingRecord['amountLevel'] | null;
+  reaction_type: FeedingRecord['reactionType'];
+  note: string | null;
+  photo_url: string | null;
+  source_plan_id: string | null;
+  slot: FeedingRecord['slot'] | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type FeedingRecordIngredientRow = {
+  id: string;
+  record_id: string;
+  ingredient_id: string | null;
+  ingredient_name: string;
+};
+
+let recordsMigrationPromise: Promise<void> | null = null;
+
+function isFeedingRecordIngredient(value: unknown): value is FeedingRecordIngredient {
+  if (!value || typeof value !== 'object') return false;
+
+  const casted = value as Partial<FeedingRecordIngredient>;
+  return (
+    typeof casted.id === 'string' &&
+    typeof casted.recordId === 'string' &&
+    typeof casted.ingredientName === 'string'
+  );
+}
 
 function isFeedingRecord(value: unknown): value is FeedingRecord {
   if (!value || typeof value !== 'object') return false;
@@ -19,14 +53,43 @@ function isFeedingRecord(value: unknown): value is FeedingRecord {
     typeof casted.amountType === 'string' &&
     typeof casted.reactionType === 'string' &&
     Array.isArray(casted.ingredients) &&
+    casted.ingredients.every(isFeedingRecordIngredient) &&
     typeof casted.createdAt === 'string' &&
     typeof casted.updatedAt === 'string'
   );
 }
 
-async function readRecordsFromKey(key: string): Promise<FeedingRecord[]> {
+function mapRecordRow(row: FeedingRecordRow, ingredients: FeedingRecordIngredient[]): FeedingRecord {
+  return {
+    id: row.id,
+    babyId: row.baby_id,
+    dateTime: row.date_time,
+    amountType: row.amount_type,
+    amountGram: row.amount_gram ?? undefined,
+    amountLevel: row.amount_level ?? undefined,
+    reactionType: row.reaction_type,
+    note: row.note ?? undefined,
+    photoUrl: row.photo_url ?? undefined,
+    ingredients,
+    sourcePlanId: row.source_plan_id ?? undefined,
+    slot: row.slot ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapIngredientRow(row: FeedingRecordIngredientRow): FeedingRecordIngredient {
+  return {
+    id: row.id,
+    recordId: row.record_id,
+    ingredientId: row.ingredient_id ?? undefined,
+    ingredientName: row.ingredient_name,
+  };
+}
+
+async function readLegacyRecordsFromKey(key: string): Promise<FeedingRecord[]> {
   try {
-    const raw = await safeGetItem(key);
+    const raw = await readLegacyStorageItem(key);
     if (!raw) return [];
 
     const parsed = JSON.parse(raw) as unknown;
@@ -38,105 +101,248 @@ async function readRecordsFromKey(key: string): Promise<FeedingRecord[]> {
   }
 }
 
-async function readFeedingRecords(): Promise<FeedingRecord[]> {
-  const current = await readRecordsFromKey(FEEDING_RECORDS_KEY);
-  if (current.length > 0) return current;
-  return readRecordsFromKey(MEAL_RECORDS_LEGACY_KEY);
+async function ensureRecordsMigrated(): Promise<void> {
+  if (!recordsMigrationPromise) {
+    recordsMigrationPromise = (async () => {
+      const db = await getDatabase();
+      const existing = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM feeding_records');
+
+      if ((existing?.count ?? 0) > 0) {
+        return;
+      }
+
+      const current = await readLegacyRecordsFromKey(FEEDING_RECORDS_KEY);
+      const legacy = current.length > 0 ? current : await readLegacyRecordsFromKey(MEAL_RECORDS_LEGACY_KEY);
+
+      if (legacy.length === 0) {
+        return;
+      }
+
+      await db.withTransactionAsync(async () => {
+        for (const record of legacy) {
+          await db.runAsync(
+            `
+              INSERT OR REPLACE INTO feeding_records (
+                id, baby_id, date_time, amount_type, amount_gram, amount_level,
+                reaction_type, note, photo_url, source_plan_id, slot, created_at, updated_at
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `,
+            record.id,
+            record.babyId,
+            record.dateTime,
+            record.amountType,
+            record.amountGram ?? null,
+            record.amountLevel ?? null,
+            record.reactionType,
+            record.note ?? null,
+            record.photoUrl ?? null,
+            record.sourcePlanId ?? null,
+            record.slot ?? null,
+            record.createdAt,
+            record.updatedAt
+          );
+
+          for (const ingredient of record.ingredients) {
+            await db.runAsync(
+              `
+                INSERT OR REPLACE INTO feeding_record_ingredients (
+                  id, record_id, ingredient_id, ingredient_name
+                ) VALUES (?, ?, ?, ?)
+              `,
+              ingredient.id,
+              record.id,
+              ingredient.ingredientId ?? null,
+              ingredient.ingredientName
+            );
+          }
+        }
+      });
+    })();
+  }
+
+  await recordsMigrationPromise;
 }
 
-async function writeFeedingRecords(next: FeedingRecord[]): Promise<void> {
-  await safeSetItem(FEEDING_RECORDS_KEY, JSON.stringify(next));
+async function readIngredientRows(recordIds?: string[]): Promise<Map<string, FeedingRecordIngredient[]>> {
+  const db = await getDatabase();
+  await ensureRecordsMigrated();
+
+  let rows: FeedingRecordIngredientRow[];
+  if (!recordIds || recordIds.length === 0) {
+    rows = await db.getAllAsync<FeedingRecordIngredientRow>(
+      'SELECT id, record_id, ingredient_id, ingredient_name FROM feeding_record_ingredients'
+    );
+  } else {
+    const placeholders = recordIds.map(() => '?').join(', ');
+    rows = await db.getAllAsync<FeedingRecordIngredientRow>(
+      `
+        SELECT id, record_id, ingredient_id, ingredient_name
+        FROM feeding_record_ingredients
+        WHERE record_id IN (${placeholders})
+        ORDER BY rowid ASC
+      `,
+      ...recordIds
+    );
+  }
+
+  const grouped = new Map<string, FeedingRecordIngredient[]>();
+
+  for (const row of rows) {
+    const current = grouped.get(row.record_id) ?? [];
+    current.push(mapIngredientRow(row));
+    grouped.set(row.record_id, current);
+  }
+
+  return grouped;
 }
 
-async function readRelationsFromKey(key: string): Promise<MealIngredientRelation[]> {
-  try {
-    const raw = await safeGetItem(key);
-    if (!raw) return [];
+async function readRecordRowsByQuery(
+  source: string,
+  params: (string | number)[] = []
+): Promise<FeedingRecord[]> {
+  const db = await getDatabase();
+  await ensureRecordsMigrated();
 
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed.filter((item): item is MealIngredientRelation => {
-      if (!item || typeof item !== 'object') return false;
-      const casted = item as Partial<MealIngredientRelation>;
-      return typeof casted.mealId === 'string' && typeof casted.ingredientId === 'string';
-    });
-  } catch {
+  const rows = await db.getAllAsync<FeedingRecordRow>(source, ...params);
+  if (rows.length === 0) {
     return [];
   }
+
+  const ingredientMap = await readIngredientRows(rows.map((row) => row.id));
+
+  return rows.map((row) => mapRecordRow(row, ingredientMap.get(row.id) ?? []));
 }
 
-async function readIngredientRelations(): Promise<MealIngredientRelation[]> {
-  const current = await readRelationsFromKey(FEEDING_RECORD_INGREDIENT_RELATIONS_KEY);
-  if (current.length > 0) return current;
-  return readRelationsFromKey(MEAL_INGREDIENT_RELATIONS_LEGACY_KEY);
-}
+async function writeFeedingRecord(record: FeedingRecord): Promise<void> {
+  const db = await getDatabase();
+  await ensureRecordsMigrated();
 
-async function writeIngredientRelations(next: MealIngredientRelation[]): Promise<void> {
-  await safeSetItem(FEEDING_RECORD_INGREDIENT_RELATIONS_KEY, JSON.stringify(next));
-}
+  await db.withTransactionAsync(async () => {
+    await db.runAsync(
+      `
+        INSERT OR REPLACE INTO feeding_records (
+          id, baby_id, date_time, amount_type, amount_gram, amount_level,
+          reaction_type, note, photo_url, source_plan_id, slot, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+      record.id,
+      record.babyId,
+      record.dateTime,
+      record.amountType,
+      record.amountGram ?? null,
+      record.amountLevel ?? null,
+      record.reactionType,
+      record.note ?? null,
+      record.photoUrl ?? null,
+      record.sourcePlanId ?? null,
+      record.slot ?? null,
+      record.createdAt,
+      record.updatedAt
+    );
 
-async function syncIngredientRelations(records: FeedingRecord[]): Promise<void> {
-  const relations = records.flatMap((record) =>
-    Array.from(
-      new Set(record.ingredients.map((ingredient) => ingredient.ingredientId).filter((id): id is string => Boolean(id)))
-    ).map((ingredientId) => ({
-      mealId: record.id,
-      ingredientId,
-    }))
-  );
+    await db.runAsync('DELETE FROM feeding_record_ingredients WHERE record_id = ?', record.id);
 
-  await writeIngredientRelations(relations);
-}
-
-function sortByDateTimeDesc(records: FeedingRecord[]): FeedingRecord[] {
-  return [...records].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+    for (const ingredient of record.ingredients) {
+      await db.runAsync(
+        `
+          INSERT INTO feeding_record_ingredients (id, record_id, ingredient_id, ingredient_name)
+          VALUES (?, ?, ?, ?)
+        `,
+        ingredient.id,
+        record.id,
+        ingredient.ingredientId ?? null,
+        ingredient.ingredientName
+      );
+    }
+  });
 }
 
 export async function listFeedingRecords(): Promise<FeedingRecord[]> {
-  return sortByDateTimeDesc(await readFeedingRecords());
+  return readRecordRowsByQuery(`
+    SELECT
+      id,
+      baby_id,
+      date_time,
+      amount_type,
+      amount_gram,
+      amount_level,
+      reaction_type,
+      note,
+      photo_url,
+      source_plan_id,
+      slot,
+      created_at,
+      updated_at
+    FROM feeding_records
+    ORDER BY date_time DESC
+  `);
 }
 
 export async function getFeedingRecordById(recordId: string): Promise<FeedingRecord | null> {
-  const records = await readFeedingRecords();
-  return records.find((record) => record.id === recordId) ?? null;
+  const records = await readRecordRowsByQuery(
+    `
+      SELECT
+        id,
+        baby_id,
+        date_time,
+        amount_type,
+        amount_gram,
+        amount_level,
+        reaction_type,
+        note,
+        photo_url,
+        source_plan_id,
+        slot,
+        created_at,
+        updated_at
+      FROM feeding_records
+      WHERE id = ?
+    `,
+    [recordId]
+  );
+
+  return records[0] ?? null;
 }
 
 export async function createFeedingRecord(record: FeedingRecord): Promise<void> {
-  const current = await readFeedingRecords();
-  const next = [record, ...current];
-  await writeFeedingRecords(next);
-  await syncIngredientRelations(next);
+  await writeFeedingRecord(record);
 }
 
 export async function updateFeedingRecord(record: FeedingRecord): Promise<void> {
-  const current = await readFeedingRecords();
-  const next = current.map((item) => (item.id === record.id ? record : item));
-  await writeFeedingRecords(next);
-  await syncIngredientRelations(next);
+  await writeFeedingRecord(record);
 }
 
 export async function deleteFeedingRecord(recordId: string): Promise<void> {
-  const current = await readFeedingRecords();
-  const next = current.filter((item) => item.id !== recordId);
-  await writeFeedingRecords(next);
-  await syncIngredientRelations(next);
+  const db = await getDatabase();
+  await ensureRecordsMigrated();
+  await db.runAsync('DELETE FROM feeding_records WHERE id = ?', recordId);
 }
 
 export async function listRecentIngredientNames(limit = 8): Promise<string[]> {
-  const records = await listFeedingRecords();
+  const db = await getDatabase();
+  await ensureRecordsMigrated();
+
+  const rows = await db.getAllAsync<{ ingredient_name: string }>(
+    `
+      SELECT fri.ingredient_name
+      FROM feeding_record_ingredients fri
+      INNER JOIN feeding_records fr ON fr.id = fri.record_id
+      ORDER BY fr.date_time DESC, fri.rowid ASC
+    `
+  );
+
   const names: string[] = [];
   const seen = new Set<string>();
 
-  for (const record of records) {
-    for (const ingredient of record.ingredients) {
-      const normalized = ingredient.ingredientName.trim().toLowerCase();
-      if (!normalized || seen.has(normalized)) continue;
-      seen.add(normalized);
-      names.push(ingredient.ingredientName);
-      if (names.length >= limit) {
-        return names;
-      }
+  for (const row of rows) {
+    const normalized = row.ingredient_name.trim().toLowerCase();
+    if (!normalized || seen.has(normalized)) continue;
+
+    seen.add(normalized);
+    names.push(row.ingredient_name);
+
+    if (names.length >= limit) {
+      break;
     }
   }
 
@@ -144,12 +350,29 @@ export async function listRecentIngredientNames(limit = 8): Promise<string[]> {
 }
 
 export async function listFeedingRecordsByIngredientId(ingredientId: string): Promise<FeedingRecord[]> {
-  const [relations, records] = await Promise.all([readIngredientRelations(), readFeedingRecords()]);
-  const recordIds = new Set(
-    relations.filter((relation) => relation.ingredientId === ingredientId).map((relation) => relation.mealId)
+  return readRecordRowsByQuery(
+    `
+      SELECT DISTINCT
+        fr.id,
+        fr.baby_id,
+        fr.date_time,
+        fr.amount_type,
+        fr.amount_gram,
+        fr.amount_level,
+        fr.reaction_type,
+        fr.note,
+        fr.photo_url,
+        fr.source_plan_id,
+        fr.slot,
+        fr.created_at,
+        fr.updated_at
+      FROM feeding_records fr
+      INNER JOIN feeding_record_ingredients fri ON fri.record_id = fr.id
+      WHERE fri.ingredient_id = ?
+      ORDER BY fr.date_time DESC
+    `,
+    [ingredientId]
   );
-
-  return sortByDateTimeDesc(records.filter((record) => recordIds.has(record.id)));
 }
 
 export async function listMealRecordsByIngredientId(ingredientId: string): Promise<FeedingRecord[]> {

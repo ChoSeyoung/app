@@ -1,4 +1,5 @@
-import { safeGetItem, safeSetItem } from '@/lib/safe-storage';
+import { getDatabase } from '@/lib/database';
+import { readLegacyStorageItem } from '@/lib/legacy-storage';
 
 import {
   canTransitionIngredientStatus,
@@ -63,6 +64,34 @@ type LegacyIngredient = IngredientBase & {
   firstTriedDate?: string;
 };
 
+type CustomIngredientRow = {
+  id: string;
+  name: string;
+  category: IngredientCategory;
+  source: 'custom';
+  image_uri: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type IngredientStatusRow = {
+  ingredient_id: string;
+  status: IngredientStatus;
+  first_tried_date: string | null;
+  is_favorite: number;
+  updated_at: string;
+};
+
+type IngredientReactionRow = {
+  id: string;
+  ingredient_id: string;
+  date: string;
+  reaction_type: IngredientReactionType;
+  note: string | null;
+};
+
+let ingredientsMigrationPromise: Promise<void> | null = null;
+
 function nowIso(): string {
   return new Date().toISOString();
 }
@@ -115,92 +144,273 @@ function isIngredientStatusEntry(value: unknown): value is IngredientStatusEntry
   );
 }
 
-async function readParsedArray<T>(
+function isIngredientReaction(value: unknown): value is IngredientReaction {
+  if (!value || typeof value !== 'object') return false;
+  const casted = value as Partial<IngredientReaction>;
+  return (
+    typeof casted.id === 'string' &&
+    typeof casted.ingredientId === 'string' &&
+    typeof casted.date === 'string' &&
+    typeof casted.reactionType === 'string'
+  );
+}
+
+async function readLegacyParsedArray<T>(
   key: string,
   guard: (value: unknown) => value is T
 ): Promise<T[]> {
   try {
-    const raw = await safeGetItem(key);
+    const raw = await readLegacyStorageItem(key);
     if (!raw) return [];
+
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
+
     return parsed.filter(guard);
   } catch {
     return [];
   }
 }
 
-async function writeCustomIngredients(next: MasterIngredient[]): Promise<void> {
-  await safeSetItem(CUSTOM_INGREDIENTS_KEY, JSON.stringify(next));
+function mapCustomIngredientRow(row: CustomIngredientRow): MasterIngredient {
+  return {
+    id: row.id,
+    name: row.name,
+    category: row.category,
+    source: row.source,
+    imageUri: row.image_uri ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
 }
 
-async function writeIngredientStatuses(next: IngredientStatusEntry[]): Promise<void> {
-  await safeSetItem(INGREDIENT_STATUSES_KEY, JSON.stringify(next));
+function mapIngredientStatusRow(row: IngredientStatusRow): IngredientStatusEntry {
+  return {
+    ingredientId: row.ingredient_id,
+    status: row.status,
+    firstTriedDate: row.first_tried_date ?? undefined,
+    isFavorite: Boolean(row.is_favorite),
+    updatedAt: row.updated_at,
+  };
 }
 
-async function readLegacyIngredients(): Promise<LegacyIngredient[]> {
-  return readParsedArray(LEGACY_INGREDIENTS_KEY, isLegacyIngredient);
+function mapReactionRow(row: IngredientReactionRow): IngredientReaction {
+  return {
+    id: row.id,
+    ingredientId: row.ingredient_id,
+    date: row.date,
+    reactionType: row.reaction_type,
+    note: row.note ?? undefined,
+  };
 }
 
 async function readCustomIngredients(): Promise<MasterIngredient[]> {
-  return readParsedArray(CUSTOM_INGREDIENTS_KEY, isMasterIngredient);
+  const db = await getDatabase();
+  await ensureIngredientsStorageMigrated();
+
+  const rows = await db.getAllAsync<CustomIngredientRow>(
+    `
+      SELECT id, name, category, source, image_uri, created_at, updated_at
+      FROM custom_ingredients
+      ORDER BY created_at ASC
+    `
+  );
+
+  return rows.map(mapCustomIngredientRow);
 }
 
 async function readIngredientStatuses(): Promise<IngredientStatusEntry[]> {
-  return readParsedArray(INGREDIENT_STATUSES_KEY, isIngredientStatusEntry);
+  const db = await getDatabase();
+  await ensureIngredientsStorageMigrated();
+
+  const rows = await db.getAllAsync<IngredientStatusRow>(
+    `
+      SELECT ingredient_id, status, first_tried_date, is_favorite, updated_at
+      FROM ingredient_statuses
+    `
+  );
+
+  return rows.map(mapIngredientStatusRow);
+}
+
+async function readIngredientReactions(): Promise<IngredientReaction[]> {
+  const db = await getDatabase();
+  await ensureIngredientsStorageMigrated();
+
+  const rows = await db.getAllAsync<IngredientReactionRow>(
+    `
+      SELECT id, ingredient_id, date, reaction_type, note
+      FROM ingredient_reactions
+      ORDER BY date DESC, rowid DESC
+    `
+  );
+
+  return rows.map(mapReactionRow);
+}
+
+async function writeCustomIngredient(item: MasterIngredient): Promise<void> {
+  const db = await getDatabase();
+  await ensureIngredientsStorageMigrated();
+
+  await db.runAsync(
+    `
+      INSERT OR REPLACE INTO custom_ingredients (
+        id, name, normalized_name, category, source, image_uri, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `,
+    item.id,
+    item.name,
+    normalizeName(item.name),
+    item.category,
+    item.source,
+    item.imageUri ?? null,
+    item.createdAt,
+    item.updatedAt
+  );
+}
+
+async function writeIngredientStatus(item: IngredientStatusEntry): Promise<void> {
+  const db = await getDatabase();
+  await ensureIngredientsStorageMigrated();
+
+  await db.runAsync(
+    `
+      INSERT OR REPLACE INTO ingredient_statuses (
+        ingredient_id, status, first_tried_date, is_favorite, updated_at
+      ) VALUES (?, ?, ?, ?, ?)
+    `,
+    item.ingredientId,
+    item.status,
+    item.firstTriedDate ?? null,
+    item.isFavorite ? 1 : 0,
+    item.updatedAt
+  );
 }
 
 async function ensureIngredientsStorageMigrated(): Promise<void> {
-  const [customIngredients, statuses] = await Promise.all([
-    readCustomIngredients(),
-    readIngredientStatuses(),
-  ]);
-  if (customIngredients.length > 0 || statuses.length > 0) {
-    return;
+  if (!ingredientsMigrationPromise) {
+    ingredientsMigrationPromise = (async () => {
+      const db = await getDatabase();
+      const [customCount, statusCount, reactionCount] = await Promise.all([
+        db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM custom_ingredients'),
+        db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM ingredient_statuses'),
+        db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM ingredient_reactions'),
+      ]);
+
+      const shouldMigrateCustom = (customCount?.count ?? 0) === 0 && (statusCount?.count ?? 0) === 0;
+      const shouldMigrateReactions = (reactionCount?.count ?? 0) === 0;
+
+      if (shouldMigrateCustom) {
+        const legacyIngredients = await readLegacyParsedArray(LEGACY_INGREDIENTS_KEY, isLegacyIngredient);
+        const customIngredients =
+          legacyIngredients.length > 0
+            ? legacyIngredients.map<MasterIngredient>((item) => ({
+                id: item.id,
+                name: item.name,
+                category: item.category,
+                source: 'custom',
+                createdAt: item.createdAt,
+                updatedAt: item.updatedAt,
+              }))
+            : await readLegacyParsedArray(CUSTOM_INGREDIENTS_KEY, isMasterIngredient);
+
+        const statuses =
+          legacyIngredients.length > 0
+            ? legacyIngredients
+                .filter((item) => item.status !== 'NOT_TRIED' || item.firstTriedDate)
+                .map<IngredientStatusEntry>((item) => ({
+                  ingredientId: item.id,
+                  status: item.status,
+                  firstTriedDate: item.firstTriedDate,
+                  isFavorite: false,
+                  updatedAt: item.updatedAt,
+                }))
+            : await readLegacyParsedArray(INGREDIENT_STATUSES_KEY, isIngredientStatusEntry);
+
+        await db.withTransactionAsync(async () => {
+          for (const item of customIngredients) {
+            await db.runAsync(
+              `
+                INSERT OR REPLACE INTO custom_ingredients (
+                  id, name, normalized_name, category, source, image_uri, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+              `,
+              item.id,
+              item.name,
+              normalizeName(item.name),
+              item.category,
+              item.source,
+              item.imageUri ?? null,
+              item.createdAt,
+              item.updatedAt
+            );
+          }
+
+          for (const status of statuses) {
+            await db.runAsync(
+              `
+                INSERT OR REPLACE INTO ingredient_statuses (
+                  ingredient_id, status, first_tried_date, is_favorite, updated_at
+                ) VALUES (?, ?, ?, ?, ?)
+              `,
+              status.ingredientId,
+              status.status,
+              status.firstTriedDate ?? null,
+              status.isFavorite ? 1 : 0,
+              status.updatedAt
+            );
+          }
+        });
+      }
+
+      if (shouldMigrateReactions) {
+        const legacyReactions = await readLegacyParsedArray(INGREDIENT_REACTIONS_KEY, isIngredientReaction);
+
+        if (legacyReactions.length > 0) {
+          await db.withTransactionAsync(async () => {
+            for (const reaction of legacyReactions) {
+              await db.runAsync(
+                `
+                  INSERT OR REPLACE INTO ingredient_reactions (
+                    id, ingredient_id, date, reaction_type, note
+                  ) VALUES (?, ?, ?, ?, ?)
+                `,
+                reaction.id,
+                reaction.ingredientId,
+                reaction.date,
+                reaction.reactionType,
+                reaction.note ?? null
+              );
+            }
+          });
+        }
+      }
+
+      const currentStatuses = await db.getAllAsync<{ ingredient_id: string }>(
+        'SELECT ingredient_id FROM ingredient_statuses'
+      );
+      const existingIds = new Set(currentStatuses.map((item) => item.ingredient_id));
+
+      for (const defaultStatus of DEFAULT_DEMO_STATUSES) {
+        if (existingIds.has(defaultStatus.ingredientId)) continue;
+
+        await db.runAsync(
+          `
+            INSERT OR REPLACE INTO ingredient_statuses (
+              ingredient_id, status, first_tried_date, is_favorite, updated_at
+            ) VALUES (?, ?, ?, ?, ?)
+          `,
+          defaultStatus.ingredientId,
+          defaultStatus.status,
+          defaultStatus.firstTriedDate ?? null,
+          defaultStatus.isFavorite ? 1 : 0,
+          defaultStatus.updatedAt
+        );
+      }
+    })();
   }
 
-  const legacyIngredients = await readLegacyIngredients();
-  if (legacyIngredients.length === 0) {
-    return;
-  }
-
-  const nextCustomIngredients: MasterIngredient[] = [];
-  const nextStatuses: IngredientStatusEntry[] = [];
-
-  for (const item of legacyIngredients) {
-    nextCustomIngredients.push({
-      id: item.id,
-      name: item.name,
-      category: item.category,
-      source: 'custom',
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    });
-
-    if (item.status !== 'NOT_TRIED' || item.firstTriedDate) {
-      nextStatuses.push({
-        ingredientId: item.id,
-        status: item.status,
-        firstTriedDate: item.firstTriedDate,
-        updatedAt: item.updatedAt,
-      });
-    }
-  }
-
-  await Promise.all([writeCustomIngredients(nextCustomIngredients), writeIngredientStatuses(nextStatuses)]);
-}
-
-async function ensureDefaultDemoStatuses(): Promise<void> {
-  await ensureIngredientsStorageMigrated();
-  const currentStatuses = await readIngredientStatuses();
-  const existingIds = new Set(currentStatuses.map((item) => item.ingredientId));
-  const missingDefaults = DEFAULT_DEMO_STATUSES.filter((item) => !existingIds.has(item.ingredientId));
-
-  if (missingDefaults.length === 0) {
-    return;
-  }
-
-  await writeIngredientStatuses([...currentStatuses, ...missingDefaults]);
+  await ingredientsMigrationPromise;
 }
 
 function composeIngredients(
@@ -240,17 +450,20 @@ function composeIngredients(
     .sort((a, b) => {
       const aSeed = SEED_INGREDIENTS.find((item) => item.id === a.id);
       const bSeed = SEED_INGREDIENTS.find((item) => item.id === b.id);
-      const orderDiff = (aSeed?.sortOrder ?? Number.MAX_SAFE_INTEGER) - (bSeed?.sortOrder ?? Number.MAX_SAFE_INTEGER);
+      const orderDiff =
+        (aSeed?.sortOrder ?? Number.MAX_SAFE_INTEGER) - (bSeed?.sortOrder ?? Number.MAX_SAFE_INTEGER);
       if (orderDiff !== 0) return orderDiff;
       return a.name.localeCompare(b.name, 'ko');
     });
 }
 
 async function readIngredientCatalog(): Promise<MasterIngredient[]> {
-  await ensureDefaultDemoStatuses();
   const customIngredients = await readCustomIngredients();
   const customNames = new Set(customIngredients.map((item) => normalizeName(item.name)));
-  const visibleSeedIngredients = SEED_INGREDIENTS.filter((item) => !customNames.has(normalizeName(item.name)));
+  const visibleSeedIngredients = SEED_INGREDIENTS.filter(
+    (item) => !customNames.has(normalizeName(item.name))
+  );
+
   return [...visibleSeedIngredients, ...customIngredients];
 }
 
@@ -260,24 +473,8 @@ async function readCombinedIngredients(): Promise<Ingredient[]> {
     readIngredientStatuses(),
     readIngredientReactions(),
   ]);
+
   return composeIngredients(catalog, statuses, reactions);
-}
-
-async function readIngredientReactions(): Promise<IngredientReaction[]> {
-  return readParsedArray(INGREDIENT_REACTIONS_KEY, (item): item is IngredientReaction => {
-    if (!item || typeof item !== 'object') return false;
-    const casted = item as Partial<IngredientReaction>;
-    return (
-      typeof casted.id === 'string' &&
-      typeof casted.ingredientId === 'string' &&
-      typeof casted.date === 'string' &&
-      typeof casted.reactionType === 'string'
-    );
-  });
-}
-
-async function writeIngredientReactions(next: IngredientReaction[]): Promise<void> {
-  await safeSetItem(INGREDIENT_REACTIONS_KEY, JSON.stringify(next));
 }
 
 async function upsertIngredientStatus(
@@ -286,8 +483,7 @@ async function upsertIngredientStatus(
   triedDate?: string
 ): Promise<IngredientStatusEntry> {
   const current = await readIngredientStatuses();
-  const index = current.findIndex((item) => item.ingredientId === ingredientId);
-  const before = index >= 0 ? current[index] : null;
+  const before = current.find((item) => item.ingredientId === ingredientId) ?? null;
   const fromStatus = before?.status ?? 'NOT_TRIED';
 
   if (!canTransitionIngredientStatus(fromStatus, nextStatus)) {
@@ -305,9 +501,7 @@ async function upsertIngredientStatus(
     updatedAt: nowIso(),
   };
 
-  const next =
-    index >= 0 ? current.map((item, itemIndex) => (itemIndex === index ? updated : item)) : [...current, updated];
-  await writeIngredientStatuses(next);
+  await writeIngredientStatus(updated);
   return updated;
 }
 
@@ -328,6 +522,7 @@ export async function getIngredientById(ingredientId: string): Promise<Ingredien
 export async function findIngredientByName(name: string): Promise<Ingredient | null> {
   const normalized = normalizeName(name);
   const items = await readCombinedIngredients();
+
   return (
     items.find((item) => normalizeName(item.name) === normalized) ??
     items.find((item) => {
@@ -360,8 +555,7 @@ export async function createIngredient(input: IngredientCreateInput): Promise<In
     updatedAt: createdAt,
   };
 
-  const customIngredients = await readCustomIngredients();
-  await writeCustomIngredients([...customIngredients, nextIngredient]);
+  await writeCustomIngredient(nextIngredient);
 
   return {
     ...nextIngredient,
@@ -375,12 +569,11 @@ export async function updateIngredient(
   input: IngredientUpdateInput
 ): Promise<Ingredient> {
   const customIngredients = await readCustomIngredients();
-  const index = customIngredients.findIndex((item) => item.id === ingredientId);
-  if (index < 0) {
+  const before = customIngredients.find((item) => item.id === ingredientId);
+  if (!before) {
     throw new Error('INGREDIENT_NOT_FOUND');
   }
 
-  const before = customIngredients[index];
   const nextName = input.name?.trim() ?? before.name;
   if (!nextName) {
     throw new Error('INGREDIENT_NAME_REQUIRED');
@@ -401,9 +594,7 @@ export async function updateIngredient(
     updatedAt: nowIso(),
   };
 
-  const next = [...customIngredients];
-  next[index] = updatedMaster;
-  await writeCustomIngredients(next);
+  await writeCustomIngredient(updatedMaster);
 
   const statusEntry = (await readIngredientStatuses()).find((item) => item.ingredientId === ingredientId);
   return {
@@ -459,10 +650,8 @@ export async function toggleIngredientFavorite(ingredientId: string): Promise<In
     isFavorite: !(existing?.isFavorite ?? ingredient.isFavorite),
     updatedAt: nowIso(),
   };
-  const nextStatuses = existing
-    ? currentStatuses.map((item) => (item.ingredientId === ingredientId ? nextEntry : item))
-    : [...currentStatuses, nextEntry];
-  await writeIngredientStatuses(nextStatuses);
+
+  await writeIngredientStatus(nextEntry);
 
   return {
     ...ingredient,
@@ -482,7 +671,6 @@ export async function addIngredientReaction(input: {
     throw new Error('INGREDIENT_NOT_FOUND');
   }
 
-  const current = await readIngredientReactions();
   const next: IngredientReaction = {
     id: id('ingredient-reaction'),
     ingredientId: input.ingredientId,
@@ -491,7 +679,20 @@ export async function addIngredientReaction(input: {
     note: input.note?.trim() || undefined,
   };
 
-  await writeIngredientReactions([...current, next]);
+  const db = await getDatabase();
+  await ensureIngredientsStorageMigrated();
+  await db.runAsync(
+    `
+      INSERT INTO ingredient_reactions (id, ingredient_id, date, reaction_type, note)
+      VALUES (?, ?, ?, ?, ?)
+    `,
+    next.id,
+    next.ingredientId,
+    next.date,
+    next.reactionType,
+    next.note ?? null
+  );
+
   return next;
 }
 
