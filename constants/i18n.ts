@@ -214,6 +214,12 @@ type Messages = {
     weaningStartGuideAction: string;
     appInfoTitle: string;
   };
+  splashScreen: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    status: string;
+  };
   starterGuideScreen: {
     eyebrow: string;
     title: string;
@@ -705,6 +711,12 @@ const messages: Record<Locale, Messages> = {
       weaningStartGuideBody: '처음 이유식을 시작할 때 필요한 기초 상식과 자주 묻는 질문을 한 번에 볼 수 있어요.',
       weaningStartGuideAction: '가이드 보러가기',
       appInfoTitle: '앱 정보',
+    },
+    splashScreen: {
+      eyebrow: '귀여운 기록을 준비해요',
+      title: '이유식 다이어리',
+      subtitle: '오늘의 첫 숟가락부터 반응 메모까지 포근하게 이어볼게요.',
+      status: '기록장을 펼치는 중',
     },
     starterGuideScreen: {
       eyebrow: '처음 시작해요',
@@ -1203,6 +1215,12 @@ const messages: Record<Locale, Messages> = {
       weaningStartGuideBody: 'Browse the basics and common questions caregivers need when starting weaning for the first time.',
       weaningStartGuideAction: 'Open guide',
       appInfoTitle: 'App info',
+    },
+    splashScreen: {
+      eyebrow: 'Getting the diary ready',
+      title: 'Weaning Diary',
+      subtitle: 'From the first spoonful to reaction notes, everything opens in one cozy flow.',
+      status: 'Opening today’s little journal',
     },
     starterGuideScreen: {
       eyebrow: 'Starting out',
