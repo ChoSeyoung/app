@@ -3,7 +3,6 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Alert,
   Animated,
   FlatList,
   Modal,
@@ -30,6 +29,7 @@ import { Colors, Fonts } from '@/constants/theme';
 import { useIngredients } from '@/hooks/use-ingredients';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
+import { useToast } from '@/hooks/use-toast';
 import { formatDisplayDate } from '@/utils/date';
 
 type IngredientFilter = 'ALL' | 'TRIED' | 'NOT_TRIED' | 'RISK';
@@ -110,6 +110,7 @@ export default function IngredientsScreen() {
   const { ingredients, isLoading, refresh, setStatus, toggleFavorite, addReaction } =
     useIngredients();
   const { topStyle, sectionsStyle } = useScreenEnterAnimation();
+  const { showToast } = useToast();
 
   const [filter, setFilter] = useState<IngredientFilter>('ALL');
   const [query, setQuery] = useState('');
@@ -233,8 +234,17 @@ export default function IngredientsScreen() {
           items: record.ingredients.map((item) => item.ingredientName),
         }))
       );
+      showToast({
+        title: t('tabs.ingredients'),
+        message: t('ingredientScreen.savedMessage'),
+        variant: 'success',
+      });
     } catch {
-      Alert.alert(t('tabs.ingredients'), t('ingredientScreen.savedMessage'));
+      showToast({
+        title: t('tabs.ingredients'),
+        message: t('ingredientScreen.saveFailedMessage'),
+        variant: 'error',
+      });
     }
   };
 
@@ -254,7 +264,11 @@ export default function IngredientsScreen() {
       note: memoNote,
     });
     await refresh();
-    Alert.alert(t('tabs.ingredients'), t('ingredientScreen.savedMessage'));
+    showToast({
+      title: t('tabs.ingredients'),
+      message: t('ingredientScreen.savedMessage'),
+      variant: 'success',
+    });
   };
 
   const renderIngredientCard = useCallback(

@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
 import { useRouter } from 'expo-router';
-import { Animated, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PageBackground } from '@/components/design-system/page-background';
@@ -12,9 +12,11 @@ import { Spacing } from '@/constants/spacing';
 import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
+import { useToast } from '@/hooks/use-toast';
 
 export default function MoreScreen() {
   const router = useRouter();
+  const { showToast } = useToast();
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
@@ -95,7 +97,13 @@ export default function MoreScreen() {
               <IconSymbol name="chevron.right" size={20} color={theme.icon} />
             </Pressable>
             <Pressable
-              onPress={() => Alert.alert(t('tabs.more'), t('profileScreen.comingSoon'))}
+              onPress={() =>
+                showToast({
+                  title: t('tabs.more'),
+                  message: t('profileScreen.comingSoon'),
+                  variant: 'info',
+                })
+              }
               style={[styles.menuItem, { backgroundColor: tones.cream, borderColor: theme.border }]}>
               <Text style={[styles.menuText, { color: theme.text }]}>{t('profileScreen.dataManagement')}</Text>
               <IconSymbol name="chevron.right" size={20} color={theme.icon} />

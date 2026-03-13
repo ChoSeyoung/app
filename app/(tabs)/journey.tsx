@@ -29,6 +29,7 @@ import {
 } from '@/features/records/repository';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
+import { useToast } from '@/hooks/use-toast';
 import { formatDisplayDate, formatDisplayDateWithWeekday } from '@/utils/date';
 
 function pad(value: number): string {
@@ -140,6 +141,7 @@ export default function JourneyScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
+  const { showToast } = useToast();
   const tones = {
     blush: '#F4D7D0',
     lavender: '#DCD4F3',
@@ -198,7 +200,11 @@ export default function JourneyScreen() {
             await deleteFeedingRecord(record.id);
             await loadRecords();
             setSelectedRecord(null);
-            Alert.alert(t('journeyScreen.title'), t('journeyScreen.deleteSuccess'));
+            showToast({
+              title: t('journeyScreen.title'),
+              message: t('journeyScreen.deleteSuccess'),
+              variant: 'success',
+            });
           })();
         },
       },

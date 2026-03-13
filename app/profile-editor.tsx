@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Animated, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +14,7 @@ import type { BabyProfile } from '@/constants/baby-profile';
 import { useBabyProfile } from '@/hooks/use-baby-profile';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
+import { useToast } from '@/hooks/use-toast';
 
 const defaultBabyAvatar = require('../assets/images/default-baby-avatar.png');
 
@@ -38,6 +39,7 @@ function isValidDateInput(value: string): boolean {
 
 export default function ProfileEditorScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ returnTo?: string }>();
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const { topStyle, sectionsStyle } = useScreenEnterAnimation();
@@ -48,6 +50,7 @@ export default function ProfileEditorScreen() {
     paper: '#FFFCF6',
   };
   const { profile, saveProfile } = useBabyProfile();
+  const { showToast } = useToast();
 
   const [babyNameInput, setBabyNameInput] = useState('');
   const [birthDateInput, setBirthDateInput] = useState('');
@@ -64,6 +67,7 @@ export default function ProfileEditorScreen() {
   }, [profile]);
 
   const canSave = babyNameInput.trim().length > 0 && isValidDateInput(birthDateInput);
+  const returnTo = typeof params.returnTo === 'string' ? params.returnTo : undefined;
 
   const goBack = () => {
     if (router.canGoBack()) {
@@ -97,22 +101,38 @@ export default function ProfileEditorScreen() {
     if (isSaving || !canSave) return;
 
     if (!babyNameInput.trim()) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationName'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationName'),
+        variant: 'error',
+      });
       return;
     }
 
     if (!birthDateInput) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationBirthDate'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationBirthDate'),
+        variant: 'error',
+      });
       return;
     }
 
     if (!isValidDateInput(birthDateInput)) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationBirthDateFormat'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationBirthDateFormat'),
+        variant: 'error',
+      });
       return;
     }
 
     if (feedingStartDateInput && !isValidDateInput(feedingStartDateInput)) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('profileEditorScreen.validationStartDateFormat'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('profileEditorScreen.validationStartDateFormat'),
+        variant: 'error',
+      });
       return;
     }
 
@@ -127,8 +147,12 @@ export default function ProfileEditorScreen() {
     setIsSaving(true);
     try {
       await saveProfile(nextProfile);
-      Alert.alert(t('profileScreen.title'), t('profileEditorScreen.saveSuccess'));
-      router.replace('/(tabs)/more');
+      showToast({
+        title: t('profileScreen.title'),
+        message: t('profileEditorScreen.saveSuccess'),
+        variant: 'success',
+      });
+      router.replace(returnTo ?? '/(tabs)/more');
     } finally {
       setIsSaving(false);
     }

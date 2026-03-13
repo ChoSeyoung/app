@@ -15,8 +15,10 @@ import {
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
 import { Colors, Fonts } from '@/constants/theme';
+import { useBabyProfile } from '@/hooks/use-baby-profile';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
+import { useStarterGuideReadiness } from '@/hooks/use-starter-guide-readiness';
 import { useStarterGuideProgress } from '@/hooks/use-starter-guide-progress';
 
 type GuideChapter = StarterGuideChapterDefinition & {
@@ -26,7 +28,7 @@ type GuideChapter = StarterGuideChapterDefinition & {
   note: string;
 };
 
-type GuidePart = StarterGuidePartDefinition & {
+type GuidePart = Omit<StarterGuidePartDefinition, 'chapters'> & {
   title: string;
   description: string;
   chapters: GuideChapter[];
@@ -49,6 +51,7 @@ export default function WeaningStartGuideScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const { topStyle, sectionsStyle } = useScreenEnterAnimation();
+  const { profile, isLoading: isProfileLoading } = useBabyProfile();
   const { progress, isLoading, toggleBookmark, toggleRead, setLastChapter } = useStarterGuideProgress();
   const tones = {
     blush: '#F4D7D0',
@@ -91,8 +94,8 @@ export default function WeaningStartGuideScreen() {
     setSelectedPartId((current) => current || findPartByChapterId(parts, initialChapter.id)?.id || parts[0]?.id || '');
   }, [initialChapter, parts]);
 
-  const selectedPart = parts.find((part) => part.id === selectedPartId) ?? parts[0];
-  const selectedChapter =
+  const selectedPart: GuidePart | undefined = parts.find((part) => part.id === selectedPartId) ?? parts[0];
+  const selectedChapter: GuideChapter | undefined =
     selectedPart?.chapters.find((chapter) => chapter.id === selectedChapterId) ??
     findChapterById(parts, selectedChapterId) ??
     selectedPart?.chapters[0];
@@ -113,6 +116,30 @@ export default function WeaningStartGuideScreen() {
   const nextChapter = currentIndex >= 0 ? allChapters[currentIndex + 1] : undefined;
   const isCurrentRead = selectedChapter ? progress.readChapterIds.includes(selectedChapter.id) : false;
   const isCurrentBookmarked = selectedChapter ? progress.bookmarkedChapterIds.includes(selectedChapter.id) : false;
+  const {
+    ageInMonths,
+    isReadinessChecklistComplete,
+    positiveChecklistCount,
+    readinessItems,
+    readinessStatus,
+    readinessStatusCopy,
+  } = useStarterGuideReadiness({
+    birthDate: profile?.birthDate,
+    readinessCheckedIds: progress.readinessCheckedIds,
+  });
+  const readinessStatusTone = useMemo(() => {
+    switch (readinessStatus) {
+      case 'ready':
+        return tones.cream;
+      case 'almost':
+        return tones.peach;
+      case 'wait':
+        return tones.blush;
+      case 'unknown':
+      default:
+        return tones.lavender;
+    }
+  }, [readinessStatus, tones.blush, tones.cream, tones.lavender, tones.peach]);
 
   const goBack = () => {
     if (router.canGoBack()) {
@@ -120,6 +147,20 @@ export default function WeaningStartGuideScreen() {
       return;
     }
     router.replace('/(tabs)/more');
+  };
+
+  const handleOpenReadinessChecklist = () => {
+    if (isProfileLoading) return;
+
+    if (!profile?.birthDate) {
+      router.push({
+        pathname: '/profile-editor',
+        params: { returnTo: '/weaning-readiness-checklist' },
+      });
+      return;
+    }
+
+    router.push('/weaning-readiness-checklist');
   };
 
   const handleSelectPart = (partId: string) => {
@@ -162,6 +203,56 @@ export default function WeaningStartGuideScreen() {
             topBubbleColor={tones.paper}
             bottomBubbleColor={tones.blush}
           />
+
+          <View style={[styles.readinessCard, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+            <View style={[styles.decorBubble, styles.readinessBubbleTop, { backgroundColor: tones.cream }]} />
+            <View style={[styles.decorBubble, styles.readinessBubbleBottom, { backgroundColor: tones.lavender }]} />
+
+            <View style={styles.sectionHeaderRow}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('starterGuideScreen.readinessTitle')}</Text>
+              <Text style={[styles.sectionBody, { color: theme.icon }]}>{t('starterGuideScreen.readinessSummaryBody')}</Text>
+            </View>
+
+            <View style={[styles.readinessStatusCard, { backgroundColor: readinessStatusTone, borderColor: theme.border }]}>
+              <View style={styles.readinessStatusHeader}>
+                <View style={styles.readinessStatusTitleWrap}>
+                  <Text style={[styles.readinessStatusTitle, { color: theme.text }]}>{readinessStatusCopy.title}</Text>
+                  <Text style={[styles.readinessStatusBody, { color: theme.icon }]}>{readinessStatusCopy.body}</Text>
+                </View>
+                <View style={[styles.progressBadge, { backgroundColor: theme.accentSoft }]}>
+                  <Text style={[styles.progressBadgeText, { color: theme.text }]}>
+                    {t('starterGuideScreen.readinessSignalsLabel', {
+                      count: positiveChecklistCount,
+                      total: readinessItems.length,
+                    })}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.readinessMetaRow}>
+                <View style={[styles.readinessMetaCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                  <Text style={[styles.metaLabel, { color: theme.icon }]}>{t('starterGuideScreen.readinessAutoBadge')}</Text>
+                  <Text style={[styles.readinessMetaValue, { color: theme.text }]}>
+                    {ageInMonths === null
+                      ? t('starterGuideScreen.readinessAgeUnknown')
+                      : t('starterGuideScreen.readinessAgeKnown', { months: ageInMonths })}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.detailFooter}>
+              <Pressable
+                onPress={handleOpenReadinessChecklist}
+                style={[styles.primaryAction, { backgroundColor: theme.accent }]}>
+                <Text style={styles.primaryActionText}>
+                  {isReadinessChecklistComplete
+                    ? t('starterGuideScreen.readinessReopenAction')
+                    : t('starterGuideScreen.readinessOpenAction')}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
 
           <View style={[styles.overviewCard, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
             <View style={[styles.decorBubble, styles.overviewBubble, { backgroundColor: tones.cream }]} />
@@ -407,6 +498,19 @@ const styles = StyleSheet.create({
     right: -24,
     top: -18,
   },
+  readinessBubbleTop: {
+    width: 126,
+    height: 126,
+    top: -30,
+    right: -24,
+  },
+  readinessBubbleBottom: {
+    width: 140,
+    height: 140,
+    bottom: -42,
+    left: -34,
+    opacity: 0.56,
+  },
   overviewCard: {
     borderWidth: 1,
     borderRadius: 22,
@@ -461,6 +565,204 @@ const styles = StyleSheet.create({
   metaValue: {
     fontFamily: Fonts.rounded,
     fontSize: 22,
+    fontWeight: '700',
+  },
+  readinessCard: {
+    borderWidth: 1,
+    borderRadius: 22,
+    padding: Spacing.cardPadding,
+    gap: 14,
+  },
+  readinessStatusCard: {
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 14,
+    gap: 12,
+  },
+  readinessStatusHeader: {
+    gap: 10,
+  },
+  readinessStatusTitleWrap: {
+    gap: 4,
+  },
+  readinessStatusTitle: {
+    fontFamily: Fonts.rounded,
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  readinessStatusBody: {
+    fontFamily: Fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  readinessMetaRow: {
+    gap: 10,
+  },
+  readinessMetaCard: {
+    borderWidth: 1,
+    borderRadius: 18,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    gap: 6,
+  },
+  readinessMetaValue: {
+    fontFamily: Fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '700',
+  },
+  profileActionChip: {
+    minHeight: Spacing.compactButtonMinHeight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: Spacing.compactButtonRadius,
+    paddingHorizontal: 14,
+    alignSelf: 'flex-start',
+  },
+  profileActionChipText: {
+    fontFamily: Fonts.sans,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  readinessList: {
+    gap: 10,
+  },
+  readinessItemCard: {
+    borderWidth: 1,
+    borderRadius: 18,
+    padding: 14,
+    gap: 10,
+  },
+  readinessItemHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  readinessItemTitleWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  readinessItemTitle: {
+    flex: 1,
+    fontFamily: Fonts.rounded,
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 22,
+  },
+  readinessModeChip: {
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  readinessModeChipText: {
+    fontFamily: Fonts.sans,
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  readinessItemBody: {
+    fontFamily: Fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  readinessSourceRow: {
+    gap: 8,
+  },
+  readinessSourceLabel: {
+    fontFamily: Fonts.sans,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  readinessSourceChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  readinessSourceChip: {
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  readinessSourceChipText: {
+    fontFamily: Fonts.sans,
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  cautionCard: {
+    borderWidth: 1,
+    borderRadius: 18,
+    padding: 14,
+    gap: 8,
+  },
+  cautionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  cautionTitle: {
+    fontFamily: Fonts.rounded,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  cautionBody: {
+    fontFamily: Fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  referenceCard: {
+    borderWidth: 1,
+    borderRadius: 22,
+    padding: Spacing.cardPadding,
+    gap: 12,
+  },
+  referenceList: {
+    gap: 10,
+  },
+  referenceItemCard: {
+    borderWidth: 1,
+    borderRadius: 18,
+    padding: 14,
+    gap: 10,
+  },
+  referenceItemHeader: {
+    gap: 12,
+  },
+  referenceItemTextWrap: {
+    gap: 4,
+  },
+  referenceOrg: {
+    fontFamily: Fonts.sans,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  referenceTitleText: {
+    fontFamily: Fonts.rounded,
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 22,
+  },
+  referenceSummary: {
+    fontFamily: Fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  referenceAction: {
+    alignSelf: 'flex-start',
+    minHeight: Spacing.compactButtonMinHeight,
+    borderWidth: 1,
+    borderRadius: Spacing.compactButtonRadius,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  referenceActionText: {
+    fontFamily: Fonts.sans,
+    fontSize: 13,
     fontWeight: '700',
   },
   bookmarkCard: {

@@ -16,7 +16,26 @@ export type StarterGuidePartDefinition = {
 export type StarterGuideProgress = {
   readChapterIds: string[];
   bookmarkedChapterIds: string[];
+  readinessCheckedIds: string[];
   lastChapterId?: string;
+};
+
+export type StarterGuideReadinessReferenceDefinition = {
+  id: string;
+  shortLabel: string;
+  title: string;
+  organization: string;
+  year: string;
+  url: string;
+  summaryKey: string;
+};
+
+export type StarterGuideReadinessChecklistDefinition = {
+  id: string;
+  titleKey: string;
+  bodyKey: string;
+  sourceIds: string[];
+  autoDerived?: 'ageAroundSixMonths';
 };
 
 export const STARTER_GUIDE_PROGRESS_STORAGE_KEY = '@weaning-diary/starter-guide-progress';
@@ -24,7 +43,81 @@ export const STARTER_GUIDE_PROGRESS_STORAGE_KEY = '@weaning-diary/starter-guide-
 export const DEFAULT_STARTER_GUIDE_PROGRESS: StarterGuideProgress = {
   readChapterIds: [],
   bookmarkedChapterIds: [],
+  readinessCheckedIds: [],
 };
+
+export const STARTER_GUIDE_READINESS_REFERENCES: StarterGuideReadinessReferenceDefinition[] = [
+  {
+    id: 'who-complementary-feeding-2023',
+    shortLabel: 'WHO',
+    organization: 'World Health Organization',
+    year: '2023',
+    title: 'WHO Guideline for complementary feeding of infants and young children 6-23 months of age',
+    url: 'https://www.who.int/publications/i/item/9789240081864',
+    summaryKey: 'starterGuideScreen.referenceWhoSummary',
+  },
+  {
+    id: 'cdc-solid-foods-2025',
+    shortLabel: 'CDC',
+    organization: 'Centers for Disease Control and Prevention',
+    year: '2025',
+    title: 'When, What, and How to Introduce Solid Foods',
+    url: 'https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html',
+    summaryKey: 'starterGuideScreen.referenceCdcSummary',
+  },
+  {
+    id: 'nhs-first-solid-foods',
+    shortLabel: 'NHS',
+    organization: 'NHS',
+    year: 'Current guidance',
+    title: "Your baby's first solid foods",
+    url: 'https://www.nhs.uk/conditions/baby/weaning-and-feeding/babys-first-solid-foods/',
+    summaryKey: 'starterGuideScreen.referenceNhsSummary',
+  },
+  {
+    id: 'aap-baby-food-and-feeding',
+    shortLabel: 'AAP',
+    organization: 'HealthyChildren.org',
+    year: 'Current guidance',
+    title: 'Baby Food & Feeding',
+    url: 'https://www.healthychildren.org/English/healthy-living/growing-healthy/Pages/baby-food-and-feeding.aspx',
+    summaryKey: 'starterGuideScreen.referenceAapSummary',
+  },
+];
+
+export const STARTER_GUIDE_READINESS_CHECKLIST: StarterGuideReadinessChecklistDefinition[] = [
+  {
+    id: 'age-around-six-months',
+    titleKey: 'starterGuideScreen.readinessAgeTitle',
+    bodyKey: 'starterGuideScreen.readinessAgeBody',
+    sourceIds: ['who-complementary-feeding-2023', 'cdc-solid-foods-2025', 'nhs-first-solid-foods'],
+    autoDerived: 'ageAroundSixMonths',
+  },
+  {
+    id: 'steady-head-and-supported-sit',
+    titleKey: 'starterGuideScreen.readinessPostureTitle',
+    bodyKey: 'starterGuideScreen.readinessPostureBody',
+    sourceIds: ['cdc-solid-foods-2025', 'nhs-first-solid-foods', 'aap-baby-food-and-feeding'],
+  },
+  {
+    id: 'eyes-hands-mouth-coordination',
+    titleKey: 'starterGuideScreen.readinessCoordinationTitle',
+    bodyKey: 'starterGuideScreen.readinessCoordinationBody',
+    sourceIds: ['cdc-solid-foods-2025', 'nhs-first-solid-foods'],
+  },
+  {
+    id: 'swallows-instead-of-pushing-out',
+    titleKey: 'starterGuideScreen.readinessSwallowTitle',
+    bodyKey: 'starterGuideScreen.readinessSwallowBody',
+    sourceIds: ['cdc-solid-foods-2025', 'nhs-first-solid-foods', 'aap-baby-food-and-feeding'],
+  },
+  {
+    id: 'shows-interest-in-food',
+    titleKey: 'starterGuideScreen.readinessInterestTitle',
+    bodyKey: 'starterGuideScreen.readinessInterestBody',
+    sourceIds: ['cdc-solid-foods-2025', 'aap-baby-food-and-feeding'],
+  },
+];
 
 export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
   {

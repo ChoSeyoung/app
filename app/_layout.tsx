@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-reanimated';
 
 import { AnimatedAppSplash } from '@/components/animated-app-splash';
+import { ToastProvider } from '@/components/design-system/toast-provider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
@@ -38,28 +39,31 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <View style={styles.container} onLayout={handleLayout}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="weaning-start-guide" options={{ headerShown: false }} />
-            <Stack.Screen name="open-source-licenses" options={{ headerShown: false }} />
-            <Stack.Screen name="notification-settings" options={{ headerShown: false }} />
-            <Stack.Screen name="terms-of-service" options={{ headerShown: false }} />
-            <Stack.Screen name="privacy-policy" options={{ headerShown: false }} />
-            <Stack.Screen name="record-editor" options={{ headerShown: false }} />
-            <Stack.Screen name="profile-editor" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-          </Stack>
-          {isNativeSplashHidden && isAnimatedSplashVisible ? (
-            <AnimatedAppSplash
-              colorScheme={colorScheme}
-              onFinish={() => {
-                setIsAnimatedSplashVisible(false);
-              }}
-            />
-          ) : null}
-          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        </View>
+        <ToastProvider>
+          <View style={styles.container} onLayout={handleLayout}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="weaning-start-guide" options={{ headerShown: false }} />
+              <Stack.Screen name="weaning-readiness-checklist" options={{ headerShown: false }} />
+              <Stack.Screen name="open-source-licenses" options={{ headerShown: false }} />
+              <Stack.Screen name="notification-settings" options={{ headerShown: false }} />
+              <Stack.Screen name="terms-of-service" options={{ headerShown: false }} />
+              <Stack.Screen name="privacy-policy" options={{ headerShown: false }} />
+              <Stack.Screen name="record-editor" options={{ headerShown: false }} />
+              <Stack.Screen name="profile-editor" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+            </Stack>
+            {isNativeSplashHidden && isAnimatedSplashVisible ? (
+              <AnimatedAppSplash
+                colorScheme={colorScheme}
+                onFinish={() => {
+                  setIsAnimatedSplashVisible(false);
+                }}
+              />
+            ) : null}
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+          </View>
+        </ToastProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

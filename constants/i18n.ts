@@ -224,6 +224,46 @@ type Messages = {
     eyebrow: string;
     title: string;
     subtitle: string;
+    readinessEyebrow: string;
+    readinessTitle: string;
+    readinessBody: string;
+    readinessSummaryBody: string;
+    readinessStatusReadyTitle: string;
+    readinessStatusReadyBody: string;
+    readinessStatusAlmostTitle: string;
+    readinessStatusAlmostBody: string;
+    readinessStatusWaitTitle: string;
+    readinessStatusWaitBody: string;
+    readinessStatusUnknownTitle: string;
+    readinessStatusUnknownBody: string;
+    readinessSignalsLabel: string;
+    readinessAgeKnown: string;
+    readinessAgeUnknown: string;
+    readinessProfileAction: string;
+    readinessOpenAction: string;
+    readinessReopenAction: string;
+    readinessManualBadge: string;
+    readinessAutoBadge: string;
+    readinessReferenceLabel: string;
+    readinessAgeTitle: string;
+    readinessAgeBody: string;
+    readinessPostureTitle: string;
+    readinessPostureBody: string;
+    readinessCoordinationTitle: string;
+    readinessCoordinationBody: string;
+    readinessSwallowTitle: string;
+    readinessSwallowBody: string;
+    readinessInterestTitle: string;
+    readinessInterestBody: string;
+    readinessCautionTitle: string;
+    readinessCautionBody: string;
+    referenceTitle: string;
+    referenceBody: string;
+    referenceOpenAction: string;
+    referenceWhoSummary: string;
+    referenceCdcSummary: string;
+    referenceNhsSummary: string;
+    referenceAapSummary: string;
     loadingBody: string;
     progressTitle: string;
     progressBody: string;
@@ -493,6 +533,7 @@ type Messages = {
     recordsTitle: string;
     recordsEmpty: string;
     savedMessage: string;
+    saveFailedMessage: string;
   };
 };
 
@@ -722,6 +763,46 @@ const messages: Record<Locale, Messages> = {
       eyebrow: '처음 시작해요',
       title: '이유식 시작하기',
       subtitle: '파트와 챕터를 눌러 필요한 내용만 빠르게 보고, 읽음과 책갈피도 함께 관리할 수 있어요.',
+      readinessEyebrow: '시작 전 확인',
+      readinessTitle: '시작 체크리스트',
+      readinessBody: '월령과 준비 신호를 같이 보면서, 지금 이유식을 시작해도 괜찮은지 차분하게 확인해보세요.',
+      readinessSummaryBody: '체크 항목과 참고 자료는 별도 화면에서 차근차근 볼 수 있어요.',
+      readinessStatusReadyTitle: '시작을 검토할 수 있어요',
+      readinessStatusReadyBody: '프로필 기준 월령과 핵심 준비 신호가 모두 맞아 있어요. 첫 재료는 단순하게 시작해보세요.',
+      readinessStatusAlmostTitle: '거의 준비됐어요',
+      readinessStatusAlmostBody: '핵심 신호가 대부분 보이지만 몇 가지를 더 확인하면 더 안심하고 시작할 수 있어요.',
+      readinessStatusWaitTitle: '조금 더 기다려보세요',
+      readinessStatusWaitBody: '아직 시작 신호가 덜 모였어요. 며칠 더 지켜본 뒤 다시 확인해보는 편이 좋아요.',
+      readinessStatusUnknownTitle: '프로필을 먼저 확인해보세요',
+      readinessStatusUnknownBody: '생년월일이 없어서 월령 자동 확인이 비어 있어요. 프로필을 입력하면 더 정확하게 볼 수 있어요.',
+      readinessSignalsLabel: '준비 신호 {{count}} / {{total}}',
+      readinessAgeKnown: '프로필 기준 {{months}}개월',
+      readinessAgeUnknown: '프로필이 없어서 월령 자동 확인이 비어 있어요.',
+      readinessProfileAction: '아기 프로필 입력',
+      readinessOpenAction: '체크리스트 열기',
+      readinessReopenAction: '체크리스트 다시 보기',
+      readinessManualBadge: '보호자 체크',
+      readinessAutoBadge: '자동 확인',
+      readinessReferenceLabel: '참고',
+      readinessAgeTitle: '생후 6개월 전후예요',
+      readinessAgeBody: 'WHO와 CDC, NHS는 이유식 시작 시점을 대체로 생후 6개월 전후로 안내해요.',
+      readinessPostureTitle: '앉힌 자세에서 고개를 안정적으로 가눠요',
+      readinessPostureBody: '목과 상체가 어느 정도 안정돼야 숟가락과 음식에 더 안전하게 적응할 수 있어요.',
+      readinessCoordinationTitle: '눈, 손, 입을 함께 써서 음식에 반응해요',
+      readinessCoordinationBody: '음식을 보며 손이나 입으로 가져가려는 협응이 보이면 시작 신호로 볼 수 있어요.',
+      readinessSwallowTitle: '혀로 밀어내기보다 삼키려고 해요',
+      readinessSwallowBody: '음식을 계속 밖으로 밀어내면 아직은 시작 시점이 아닐 수 있어요.',
+      readinessInterestTitle: '먹는 모습에 관심을 보이고 입을 열어요',
+      readinessInterestBody: '보호자가 먹는 것을 보며 따라오거나 숟가락에 반응하면 시작 준비 신호에 가까워요.',
+      readinessCautionTitle: '이 점은 함께 기억해두세요',
+      readinessCautionBody: '밤에 자주 깨거나 주먹을 빠는 것만으로는 준비 신호라고 보기 어려워요. 미숙아거나 건강 걱정이 있으면 소아청소년과와 먼저 상의해주세요.',
+      referenceTitle: '어디를 참고했나요?',
+      referenceBody: 'WHO, CDC, NHS, AAP 자료에서 공통으로 반복되는 시작 신호만 추려서 정리했어요. 카드에서 원문도 바로 확인할 수 있어요.',
+      referenceOpenAction: '원문 보기',
+      referenceWhoSummary: '생후 6개월 무렵부터 적절하고 안전한 보충식을 시작하도록 안내하는 WHO 가이드라인이에요.',
+      referenceCdcSummary: '생후 6개월 무렵과 함께, 앉은 자세·머리 가누기·삼킴 같은 발달 준비 신호를 구체적으로 설명해요.',
+      referenceNhsSummary: '앉은 자세, 눈-손-입 협응, 삼킴을 대표적인 시작 신호로 설명하고, 헷갈리기 쉬운 가짜 신호도 함께 안내해요.',
+      referenceAapSummary: '미국소아과학회 보호자 가이드로, 관심 표현과 자세 안정 같은 실제 관찰 포인트를 이해하기 쉽게 풀어줘요.',
       loadingBody: '읽은 챕터와 책갈피를 불러오고 있어요.',
       progressTitle: '학습 현황',
       progressBody: '{{total}}개 챕터 중 {{read}}개를 읽었어요.',
@@ -999,6 +1080,7 @@ const messages: Record<Locale, Messages> = {
       recordsTitle: '관련 이유식 기록',
       recordsEmpty: '관련 기록이 없어요.',
       savedMessage: '저장되었습니다.',
+      saveFailedMessage: '저장에 실패했어요. 다시 시도해주세요.',
     },
   },
   en: {
@@ -1226,6 +1308,46 @@ const messages: Record<Locale, Messages> = {
       eyebrow: 'Starting out',
       title: 'Start weaning',
       subtitle: 'Move through key parts and chapters, then keep track of what you read and bookmark.',
+      readinessEyebrow: 'Before you start',
+      readinessTitle: 'Readiness checklist',
+      readinessBody: 'Review age and readiness signs together to see whether this is a good time to begin solids.',
+      readinessSummaryBody: 'Open a dedicated screen to go through the full checklist and the supporting references.',
+      readinessStatusReadyTitle: 'You can consider starting now',
+      readinessStatusReadyBody: 'The age check and key readiness signs are aligned. Start with simple first foods and observe closely.',
+      readinessStatusAlmostTitle: 'Almost ready',
+      readinessStatusAlmostBody: 'Most core signs are there, but checking one or two more signals can make the first start feel safer.',
+      readinessStatusWaitTitle: 'Wait a little longer',
+      readinessStatusWaitBody: 'The core readiness signs are not all there yet. It is better to watch a bit longer and check again soon.',
+      readinessStatusUnknownTitle: 'Set the profile first',
+      readinessStatusUnknownBody: 'Birth date is missing, so the age check cannot run yet. Add the baby profile for a more reliable view.',
+      readinessSignalsLabel: 'Readiness signs {{count}} / {{total}}',
+      readinessAgeKnown: 'Profile says {{months}} months',
+      readinessAgeUnknown: 'Age check is empty because the baby profile is missing.',
+      readinessProfileAction: 'Set baby profile',
+      readinessOpenAction: 'Open checklist',
+      readinessReopenAction: 'Review checklist',
+      readinessManualBadge: 'Caregiver check',
+      readinessAutoBadge: 'Auto check',
+      readinessReferenceLabel: 'Based on',
+      readinessAgeTitle: 'Baby is around 6 months old',
+      readinessAgeBody: 'WHO, CDC, and NHS all place the starting window for solids around 6 months of age.',
+      readinessPostureTitle: 'Baby can hold the head steady in a supported sitting position',
+      readinessPostureBody: 'Stable head and upper-body control makes spoon-feeding and early practice safer.',
+      readinessCoordinationTitle: 'Baby uses eyes, hands, and mouth together around food',
+      readinessCoordinationBody: 'Watching food and trying to bring it toward the mouth is a common readiness sign.',
+      readinessSwallowTitle: 'Baby tries to swallow instead of pushing food back out',
+      readinessSwallowBody: 'If food is still pushed out with the tongue every time, it may be too early to begin.',
+      readinessInterestTitle: 'Baby shows interest in food and opens the mouth',
+      readinessInterestBody: 'Watching others eat, leaning in, or opening for the spoon can all support readiness.',
+      readinessCautionTitle: 'Keep this in mind too',
+      readinessCautionBody: 'Night waking or chewing on fists alone does not confirm readiness. If your baby was premature or has health concerns, talk with your pediatric clinician first.',
+      referenceTitle: 'Where does this come from?',
+      referenceBody: 'This checklist only uses readiness signs that overlap across WHO, CDC, NHS, and AAP guidance. Each card can open the original source.',
+      referenceOpenAction: 'Open source',
+      referenceWhoSummary: 'WHO guidance that places complementary feeding around 6 months and emphasizes timely, safe, and adequate feeding.',
+      referenceCdcSummary: 'CDC guidance that lists developmental readiness signs such as sitting support, head control, and swallowing.',
+      referenceNhsSummary: 'NHS guidance that highlights three key readiness signs together and warns against common false signals.',
+      referenceAapSummary: 'AAP caregiver guidance that helps parents interpret real-world signs like posture stability and food interest.',
       loadingBody: 'Loading your read history and bookmarks.',
       progressTitle: 'Learning progress',
       progressBody: 'You have read {{read}} out of {{total}} chapters.',
@@ -1503,6 +1625,7 @@ const messages: Record<Locale, Messages> = {
       recordsTitle: 'Related meal records',
       recordsEmpty: 'No related records.',
       savedMessage: 'Saved.',
+      saveFailedMessage: 'Saving failed. Please try again.',
     },
   },
 };

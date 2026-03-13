@@ -29,6 +29,7 @@ import { useBabyProfile } from '@/hooks/use-baby-profile';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useIngredients } from '@/hooks/use-ingredients';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
+import { useToast } from '@/hooks/use-toast';
 import { formatDisplayDate } from '@/utils/date';
 
 type EditorIngredient = {
@@ -271,6 +272,7 @@ export default function RecordEditorScreen() {
     paper: '#FFFCF6',
   };
   const { profile } = useBabyProfile();
+  const { showToast } = useToast();
   const { ingredients } = useIngredients();
 
   const [ingredientQuery, setIngredientQuery] = useState('');
@@ -412,15 +414,27 @@ export default function RecordEditorScreen() {
   const handleSave = async () => {
     if (isSaving) return;
     if (editor.ingredients.length === 0) {
-      Alert.alert(t('journeyScreen.title'), t('journeyScreen.validationIngredient'));
+      showToast({
+        title: t('journeyScreen.title'),
+        message: t('journeyScreen.validationIngredient'),
+        variant: 'error',
+      });
       return;
     }
     if (!isValidDateInput(editor.date)) {
-      Alert.alert(t('journeyScreen.title'), t('journeyScreen.validationDate'));
+      showToast({
+        title: t('journeyScreen.title'),
+        message: t('journeyScreen.validationDate'),
+        variant: 'error',
+      });
       return;
     }
     if (!isValidTimeInput(editor.time)) {
-      Alert.alert(t('journeyScreen.title'), t('journeyScreen.validationTime'));
+      showToast({
+        title: t('journeyScreen.title'),
+        message: t('journeyScreen.validationTime'),
+        variant: 'error',
+      });
       return;
     }
 
@@ -465,10 +479,18 @@ export default function RecordEditorScreen() {
 
       if (editor.recordId) {
         await updateFeedingRecord(nextRecord);
-        Alert.alert(t('journeyScreen.title'), t('journeyScreen.updateSuccess'));
+        showToast({
+          title: t('journeyScreen.title'),
+          message: t('journeyScreen.updateSuccess'),
+          variant: 'success',
+        });
       } else {
         await createFeedingRecord(nextRecord);
-        Alert.alert(t('journeyScreen.title'), t('journeyScreen.saveSuccess'));
+        showToast({
+          title: t('journeyScreen.title'),
+          message: t('journeyScreen.saveSuccess'),
+          variant: 'success',
+        });
       }
 
       router.replace('/(tabs)/journey');

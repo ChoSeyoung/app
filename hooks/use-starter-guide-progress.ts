@@ -29,6 +29,9 @@ function isStarterGuideProgress(value: unknown): value is StarterGuideProgress {
     casted.readChapterIds.every((item) => typeof item === 'string') &&
     Array.isArray(casted.bookmarkedChapterIds) &&
     casted.bookmarkedChapterIds.every((item) => typeof item === 'string') &&
+    (casted.readinessCheckedIds === undefined ||
+      (Array.isArray(casted.readinessCheckedIds) &&
+        casted.readinessCheckedIds.every((item) => typeof item === 'string'))) &&
     (casted.lastChapterId === undefined || typeof casted.lastChapterId === 'string')
   );
 }
@@ -42,6 +45,7 @@ export function useStarterGuideProgress(): {
   isLoading: boolean;
   toggleRead: (chapterId: string) => Promise<void>;
   toggleBookmark: (chapterId: string) => Promise<void>;
+  toggleReadinessChecked: (itemId: string) => Promise<void>;
   setLastChapter: (chapterId: string) => Promise<void>;
 } {
   const [progress, setProgress] = useState(starterGuideProgressCache ?? DEFAULT_STARTER_GUIDE_PROGRESS);
@@ -76,7 +80,13 @@ export function useStarterGuideProgress(): {
 
         const parsed = JSON.parse(raw) as unknown;
         publishStarterGuideProgress(
-          isStarterGuideProgress(parsed) ? parsed : DEFAULT_STARTER_GUIDE_PROGRESS
+          isStarterGuideProgress(parsed)
+            ? {
+                ...DEFAULT_STARTER_GUIDE_PROGRESS,
+                ...parsed,
+                readinessCheckedIds: parsed.readinessCheckedIds ?? DEFAULT_STARTER_GUIDE_PROGRESS.readinessCheckedIds,
+              }
+            : DEFAULT_STARTER_GUIDE_PROGRESS
         );
       } catch {
         publishStarterGuideProgress(DEFAULT_STARTER_GUIDE_PROGRESS);
@@ -144,11 +154,27 @@ export function useStarterGuideProgress(): {
     [persist, progress]
   );
 
+  const toggleReadinessChecked = useCallback(
+    async (itemId: string) => {
+      const isChecked = progress.readinessCheckedIds.includes(itemId);
+      const next: StarterGuideProgress = {
+        ...progress,
+        readinessCheckedIds: isChecked
+          ? progress.readinessCheckedIds.filter((item) => item !== itemId)
+          : buildUniqueList([...progress.readinessCheckedIds, itemId]),
+      };
+
+      await persist(next);
+    },
+    [persist, progress]
+  );
+
   return {
     progress,
     isLoading,
     toggleRead,
     toggleBookmark,
+    toggleReadinessChecked,
     setLastChapter,
   };
 }

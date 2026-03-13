@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Alert, Animated, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Animated, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PageBackground } from '@/components/design-system/page-background';
@@ -16,6 +16,7 @@ import { useBabyProfile } from '@/hooks/use-baby-profile';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useIngredients } from '@/hooks/use-ingredients';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
+import { useToast } from '@/hooks/use-toast';
 import { formatDisplayDate } from '@/utils/date';
 
 function isSameDate(a: Date, b: Date): boolean {
@@ -152,6 +153,7 @@ function buildBabyInfoSummary(
 
 export default function MealPlanScreen() {
   const router = useRouter();
+  const { showToast } = useToast();
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const weekdays = tList('home.weekdays');
@@ -206,7 +208,11 @@ export default function MealPlanScreen() {
     if (!profile) return;
     const normalized = normalizeDateInput(feedingStartDateInput);
     if (!isValidDateInput(normalized)) {
-      Alert.alert(t('mealPlanScreen.title'), t('mealPlanScreen.startDateValidation'));
+      showToast({
+        title: t('mealPlanScreen.title'),
+        message: t('mealPlanScreen.startDateValidation'),
+        variant: 'error',
+      });
       return;
     }
 
@@ -215,7 +221,11 @@ export default function MealPlanScreen() {
       feedingStartDate: toIsoDate(normalized),
     });
     setFeedingStartDateInput('');
-    Alert.alert(t('mealPlanScreen.title'), t('mealPlanScreen.startDateSaveSuccess'));
+    showToast({
+      title: t('mealPlanScreen.title'),
+      message: t('mealPlanScreen.startDateSaveSuccess'),
+      variant: 'success',
+    });
   };
 
   const shiftMonth = (direction: -1 | 1) => {

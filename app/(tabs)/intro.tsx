@@ -22,6 +22,7 @@ import { Colors, Fonts } from '@/constants/theme';
 import { useBabyProfile } from '@/hooks/use-baby-profile';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
+import { useToast } from '@/hooks/use-toast';
 
 const defaultBabyAvatar = require('../../assets/images/default-baby-avatar.png');
 
@@ -116,6 +117,7 @@ export default function IntroScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const { profile, isLoading, saveProfile } = useBabyProfile();
+  const { showToast } = useToast();
 
   const [babyNameInput, setBabyNameInput] = useState('');
   const [birthDateInput, setBirthDateInput] = useState('');
@@ -241,7 +243,11 @@ export default function IntroScreen() {
 
   const handleContinueFromName = () => {
     if (!babyNameInput.trim()) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationName'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationName'),
+        variant: 'error',
+      });
       return;
     }
 
@@ -260,12 +266,20 @@ export default function IntroScreen() {
     const birthDate = normalizeBirthDateInput(birthDateInput.trim());
 
     if (!birthDate) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationBirthDate'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationBirthDate'),
+        variant: 'error',
+      });
       return;
     }
 
     if (!isValidBirthDate(birthDate)) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationBirthDateFormat'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationBirthDateFormat'),
+        variant: 'error',
+      });
       return;
     }
 
@@ -295,22 +309,38 @@ export default function IntroScreen() {
     const feedingStartDate = normalizeBirthDateInput(feedingStartDateInput.trim());
 
     if (!babyName) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationName'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationName'),
+        variant: 'error',
+      });
       return;
     }
 
     if (!birthDate) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationBirthDate'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationBirthDate'),
+        variant: 'error',
+      });
       return;
     }
 
     if (!isValidBirthDate(birthDate)) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationBirthDateFormat'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationBirthDateFormat'),
+        variant: 'error',
+      });
       return;
     }
 
     if (feedingStartDate && !isValidBirthDate(feedingStartDate)) {
-      Alert.alert(t('home.profileForm.validationTitle'), t('home.profileForm.validationBirthDateFormat'));
+      showToast({
+        title: t('home.profileForm.validationTitle'),
+        message: t('home.profileForm.validationBirthDateFormat'),
+        variant: 'error',
+      });
       return;
     }
 
@@ -330,7 +360,11 @@ export default function IntroScreen() {
         await saveProfile(nextProfile);
         router.replace('/(tabs)/home');
       } catch {
-        Alert.alert(t('home.profileForm.saveFailedTitle'), t('home.profileForm.saveFailedMessage'));
+        showToast({
+          title: t('home.profileForm.saveFailedTitle'),
+          message: t('home.profileForm.saveFailedMessage'),
+          variant: 'error',
+        });
       } finally {
         setIsSaving(false);
       }
