@@ -415,7 +415,6 @@ export default function RecordEditorScreen() {
     if (isSaving) return;
     if (editor.ingredients.length === 0) {
       showToast({
-        title: t('journeyScreen.title'),
         message: t('journeyScreen.validationIngredient'),
         variant: 'error',
       });
@@ -423,7 +422,6 @@ export default function RecordEditorScreen() {
     }
     if (!isValidDateInput(editor.date)) {
       showToast({
-        title: t('journeyScreen.title'),
         message: t('journeyScreen.validationDate'),
         variant: 'error',
       });
@@ -431,7 +429,6 @@ export default function RecordEditorScreen() {
     }
     if (!isValidTimeInput(editor.time)) {
       showToast({
-        title: t('journeyScreen.title'),
         message: t('journeyScreen.validationTime'),
         variant: 'error',
       });
@@ -480,14 +477,12 @@ export default function RecordEditorScreen() {
       if (editor.recordId) {
         await updateFeedingRecord(nextRecord);
         showToast({
-          title: t('journeyScreen.title'),
           message: t('journeyScreen.updateSuccess'),
           variant: 'success',
         });
       } else {
         await createFeedingRecord(nextRecord);
         showToast({
-          title: t('journeyScreen.title'),
           message: t('journeyScreen.saveSuccess'),
           variant: 'success',
         });

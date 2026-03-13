@@ -244,7 +244,6 @@ export default function IntroScreen() {
   const handleContinueFromName = () => {
     if (!babyNameInput.trim()) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationName'),
         variant: 'error',
       });
@@ -267,7 +266,6 @@ export default function IntroScreen() {
 
     if (!birthDate) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationBirthDate'),
         variant: 'error',
       });
@@ -276,7 +274,6 @@ export default function IntroScreen() {
 
     if (!isValidBirthDate(birthDate)) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationBirthDateFormat'),
         variant: 'error',
       });
@@ -310,7 +307,6 @@ export default function IntroScreen() {
 
     if (!babyName) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationName'),
         variant: 'error',
       });
@@ -319,7 +315,6 @@ export default function IntroScreen() {
 
     if (!birthDate) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationBirthDate'),
         variant: 'error',
       });
@@ -328,7 +323,6 @@ export default function IntroScreen() {
 
     if (!isValidBirthDate(birthDate)) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationBirthDateFormat'),
         variant: 'error',
       });
@@ -337,7 +331,6 @@ export default function IntroScreen() {
 
     if (feedingStartDate && !isValidBirthDate(feedingStartDate)) {
       showToast({
-        title: t('home.profileForm.validationTitle'),
         message: t('home.profileForm.validationBirthDateFormat'),
         variant: 'error',
       });
@@ -361,7 +354,6 @@ export default function IntroScreen() {
         router.replace('/(tabs)/home');
       } catch {
         showToast({
-          title: t('home.profileForm.saveFailedTitle'),
           message: t('home.profileForm.saveFailedMessage'),
           variant: 'error',
         });

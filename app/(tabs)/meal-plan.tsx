@@ -209,7 +209,6 @@ export default function MealPlanScreen() {
     const normalized = normalizeDateInput(feedingStartDateInput);
     if (!isValidDateInput(normalized)) {
       showToast({
-        title: t('mealPlanScreen.title'),
         message: t('mealPlanScreen.startDateValidation'),
         variant: 'error',
       });
@@ -222,7 +221,6 @@ export default function MealPlanScreen() {
     });
     setFeedingStartDateInput('');
     showToast({
-      title: t('mealPlanScreen.title'),
       message: t('mealPlanScreen.startDateSaveSuccess'),
       variant: 'success',
     });
