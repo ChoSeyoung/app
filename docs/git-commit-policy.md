@@ -10,6 +10,10 @@
 <type>(<scope>): <summary>
 ```
 
+- `type`은 영문 소문자만 사용한다.
+- `scope`는 영문 kebab-case를 사용한다.
+- `summary`만 한국어로 작성한다.
+
 예시:
 
 ```text
@@ -23,6 +27,7 @@ chore(repo): git remote 및 문서 정리
 
 ## 2. Type 규칙
 
+- `type`은 반드시 영문 소문자를 사용한다.
 - `feat`: 사용자 기능 추가
 - `fix`: 버그 수정
 - `design`: UI/UX 디자인 조정
@@ -36,6 +41,9 @@ chore(repo): git remote 및 문서 정리
 ## 3. Scope 규칙
 
 scope는 가능한 한 실제 변경 영역을 짧게 적는다.
+
+- `scope`는 반드시 영문으로 적는다.
+- 공백 대신 `-`를 사용한다.
 
 권장 예시:
 
@@ -53,6 +61,7 @@ scope는 가능한 한 실제 변경 영역을 짧게 적는다.
 
 ## 4. Summary 규칙
 
+- `summary`는 한국어로 작성한다.
 - 한 줄로 끝낸다.
 - 50자 안팎을 권장한다.
 - 변경 결과를 바로 이해할 수 있게 쓴다.
@@ -114,6 +123,13 @@ design(journey): 캘린더와 선택 날짜 카드 간격 통일
 refactor(design-system): 상단 HeroHeaderCard 공통 컴포넌트 추출
 docs(git): 커밋 메시지 정책 문서 추가
 chore(repo): origin remote 추가
+```
+
+잘못된 예시:
+
+```text
+기능(가이드): 이유식 시작하기 허브 개편
+수정(기록): 상세 팝업 정렬 수정
 ```
 
 ## 9. 브랜치와의 관계
