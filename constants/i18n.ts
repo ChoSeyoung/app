@@ -52,6 +52,21 @@ type Messages = {
       eveningSleepBody: string;
       eveningSleepChip: string;
     };
+    actions: {
+      observationTitle: string;
+      observationBody: string;
+      observationChip: string;
+      riskTitle: string;
+      riskBody: string;
+      riskChip: string;
+      recordTitle: string;
+      recordBody: string;
+      recordChip: string;
+      defaultTitle: string;
+      defaultBody: string;
+      defaultChip: string;
+      noneFallback: string;
+    };
       profileForm: {
         overline: string;
         title: string;
@@ -196,6 +211,10 @@ type Messages = {
     cautionReactionAlertBody: string;
     newIngredientObservationTitle: string;
     newIngredientObservationBody: string;
+    mealPlanMorningToast: string;
+    feedingRecordReminderToast: string;
+    cautionReactionAlertToast: string;
+    newIngredientObservationToast: string;
     sectionMessage: string;
     emailUpdatesTitle: string;
     emailUpdatesBody: string;
@@ -213,6 +232,70 @@ type Messages = {
     weaningStartGuideBody: string;
     weaningStartGuideAction: string;
     appInfoTitle: string;
+    mealPreferences: string;
+    weeklyInsights: string;
+  };
+  mealPlanPreferencesScreen: {
+    title: string;
+    subtitle: string;
+    stageTitle: string;
+    stageBody: string;
+    mealsTitle: string;
+    mealsBody: string;
+    methodTitle: string;
+    methodBody: string;
+    proteinTitle: string;
+    proteinBody: string;
+    proteinStarted: string;
+    proteinNotStarted: string;
+    textureTitle: string;
+    textureBody: string;
+    textureThin: string;
+    textureMash: string;
+    textureChunk: string;
+    textureFinger: string;
+    goalTitle: string;
+    goalBody: string;
+    goalVariety: string;
+    goalEasy: string;
+    goalFreezer: string;
+    blockedTitle: string;
+    blockedBody: string;
+    preferredTitle: string;
+    preferredBody: string;
+    dislikedTitle: string;
+    dislikedBody: string;
+    refusedTitle: string;
+    refusedBody: string;
+    saveButton: string;
+    saveSuccess: string;
+  };
+  dataManagementScreen: {
+    title: string;
+    subtitle: string;
+    exportTitle: string;
+    exportBody: string;
+    exportButton: string;
+    exportSuccess: string;
+    exportFailed: string;
+    importTitle: string;
+    importBody: string;
+    importButton: string;
+    importSuccess: string;
+    importFailed: string;
+  };
+  weeklyInsightsScreen: {
+    title: string;
+    subtitle: string;
+    recordsTitle: string;
+    recordsUnit: string;
+    newIngredientsTitle: string;
+    topIngredientTitle: string;
+    cautionTitle: string;
+    completionTitle: string;
+    itemsUnit: string;
+    timesUnit: string;
+    emptyValue: string;
   };
   splashScreen: {
     eyebrow: string;
@@ -293,17 +376,50 @@ type Messages = {
     partCountLabel: string;
     bookmarkTitle: string;
     bookmarkBody: string;
+    bookmarkEmptyTitle: string;
+    bookmarkEmptyBody: string;
     partTitle: string;
     partBody: string;
     partChipMeta: string;
     faqTitle: string;
     faqBody: string;
+    recommendedTitle: string;
+    recommendedBody: string;
     faqCategoryTitle: string;
     faqCategoryGettingStarted: string;
+    faqCategoryTools: string;
     faqCategoryIntake: string;
+    faqCategorySchedule: string;
     faqCategoryReaction: string;
+    faqStartAgeTitle: string;
+    faqStartAgeBody: string;
+    faqMethodChoiceTitle: string;
+    faqMethodChoiceBody: string;
+    faqUtensilsTitle: string;
+    faqUtensilsBody: string;
+    faqIronStartTitle: string;
+    faqIronStartBody: string;
+    faqSpitOutTitle: string;
+    faqSpitOutBody: string;
+    faqTextureRefusalTitle: string;
+    faqTextureRefusalBody: string;
+    faqMealCountTitle: string;
+    faqMealCountBody: string;
+    faqProteinStartTitle: string;
+    faqProteinStartBody: string;
+    faqRashWhatTitle: string;
+    faqRashWhatBody: string;
+    faqVomitWhatTitle: string;
+    faqVomitWhatBody: string;
+    faqPoopChangeTitle: string;
+    faqPoopChangeBody: string;
+    faqHospitalWhenTitle: string;
+    faqHospitalWhenBody: string;
+    faqSearchPlaceholder: string;
+    faqSearchEmpty: string;
     chapterIndex: string;
     chapterDetailEyebrow: string;
+    chapterPointsTitle: string;
     noteTitle: string;
     markRead: string;
     markUnread: string;
@@ -315,18 +431,21 @@ type Messages = {
     prepSignalsBullet1: string;
     prepSignalsBullet2: string;
     prepSignalsBullet3: string;
+    prepSignalsBullet4: string;
     prepSignalsNote: string;
     prepTimingTitle: string;
     prepTimingSummary: string;
     prepTimingBullet1: string;
     prepTimingBullet2: string;
     prepTimingBullet3: string;
+    prepTimingBullet4: string;
     prepTimingNote: string;
     prepToolsTitle: string;
     prepToolsSummary: string;
     prepToolsBullet1: string;
     prepToolsBullet2: string;
     prepToolsBullet3: string;
+    prepToolsBullet4: string;
     prepToolsNote: string;
     partFirstFoodTitle: string;
     partFirstFoodDescription: string;
@@ -335,18 +454,21 @@ type Messages = {
     foodFirstMenuBullet1: string;
     foodFirstMenuBullet2: string;
     foodFirstMenuBullet3: string;
+    foodFirstMenuBullet4: string;
     foodFirstMenuNote: string;
     foodPortionTitle: string;
     foodPortionSummary: string;
     foodPortionBullet1: string;
     foodPortionBullet2: string;
     foodPortionBullet3: string;
+    foodPortionBullet4: string;
     foodPortionNote: string;
     foodThreeDayTitle: string;
     foodThreeDaySummary: string;
     foodThreeDayBullet1: string;
     foodThreeDayBullet2: string;
     foodThreeDayBullet3: string;
+    foodThreeDayBullet4: string;
     foodThreeDayNote: string;
     partObserveTitle: string;
     partObserveDescription: string;
@@ -355,18 +477,21 @@ type Messages = {
     observeReactionBullet1: string;
     observeReactionBullet2: string;
     observeReactionBullet3: string;
+    observeReactionBullet4: string;
     observeReactionNote: string;
     observeRefusalTitle: string;
     observeRefusalSummary: string;
     observeRefusalBullet1: string;
     observeRefusalBullet2: string;
     observeRefusalBullet3: string;
+    observeRefusalBullet4: string;
     observeRefusalNote: string;
     observeRecordsTitle: string;
     observeRecordsSummary: string;
     observeRecordsBullet1: string;
     observeRecordsBullet2: string;
     observeRecordsBullet3: string;
+    observeRecordsBullet4: string;
     observeRecordsNote: string;
     partFaqTitle: string;
     partFaqDescription: string;
@@ -376,6 +501,7 @@ type Messages = {
     faqLowIntakeBullet1: string;
     faqLowIntakeBullet2: string;
     faqLowIntakeBullet3: string;
+    faqLowIntakeBullet4: string;
     faqLowIntakeNote: string;
     faqRepeatTitle: string;
     faqRepeatShortBody: string;
@@ -383,6 +509,7 @@ type Messages = {
     faqRepeatBullet1: string;
     faqRepeatBullet2: string;
     faqRepeatBullet3: string;
+    faqRepeatBullet4: string;
     faqRepeatNote: string;
     faqAllergyTitle: string;
     faqAllergyShortBody: string;
@@ -390,6 +517,7 @@ type Messages = {
     faqAllergyBullet1: string;
     faqAllergyBullet2: string;
     faqAllergyBullet3: string;
+    faqAllergyBullet4: string;
     faqAllergyNote: string;
     faqFirstDayTimeTitle: string;
     faqFirstDayTimeBody: string;
@@ -439,6 +567,9 @@ type Messages = {
     reasonFeedingWeek: string;
     reasonMealCount: string;
     reasonBlocked: string;
+    reasonObservation: string;
+    reasonRefusal: string;
+    reasonFavorite: string;
     switchToRecordButton: string;
     fedButton: string;
     expandButton: string;
@@ -451,6 +582,10 @@ type Messages = {
     noneLabel: string;
     noteObserveNew: string;
     noteExcludeCaution: string;
+    preferencesButton: string;
+    preferencesCtaTitle: string;
+    preferencesCtaBody: string;
+    observationHint: string;
     stagePrep: string;
     stageInitial: string;
     stageMiddle: string;
@@ -545,6 +680,7 @@ type Messages = {
     filterTried: string;
     filterNotTried: string;
     filterRisk: string;
+    filterRetry: string;
     emptyTitle: string;
     emptyBody: string;
     duplicateNameError: string;
@@ -573,6 +709,7 @@ type Messages = {
     recordsEmpty: string;
     savedMessage: string;
     saveFailedMessage: string;
+    retrySuggested: string;
   };
 };
 
@@ -628,6 +765,21 @@ const messages: Record<Locale, Messages> = {
         eveningSleepTitle: '저녁 수면 메모',
         eveningSleepBody: '섭취 후 수면 패턴을 간단히 적어두세요.',
         eveningSleepChip: '수면',
+      },
+      actions: {
+        observationTitle: '새 식재료 관찰 중이에요',
+        observationBody: '{{ingredients}} 반응을 오늘 한 번 더 살펴보세요.',
+        observationChip: '관찰',
+        riskTitle: '어제 반응을 다시 확인해보세요',
+        riskBody: '어제 {{count}}건의 주의 기록이 있어요. 오늘 식단 전 메모를 먼저 봐주세요.',
+        riskChip: '주의',
+        recordTitle: '오늘 기록이 아직 없어요',
+        recordBody: '먹인 뒤 바로 기록하면 다음 식단 추천이 더 정확해져요.',
+        recordChip: '기록',
+        defaultTitle: '오늘도 차분하게 이어가볼까요?',
+        defaultBody: '기록과 식단이 잘 이어지고 있어요. 오늘 추천만 가볍게 확인해보세요.',
+        defaultChip: '안내',
+        noneFallback: '새 식재료',
       },
       profileForm: {
         overline: '초기 설정',
@@ -774,6 +926,10 @@ const messages: Record<Locale, Messages> = {
       cautionReactionAlertBody: '토함, 발진, 보챔 같은 반응 기록을 다시 확인할 수 있게 알려드려요.',
       newIngredientObservationTitle: '신규 식재료 관찰 체크',
       newIngredientObservationBody: '새 식재료를 시작한 뒤 3일 관찰 일정을 챙겨드려요.',
+      mealPlanMorningToast: '오늘 첫 식단은 {{meal}}로 준비해봤어요.',
+      feedingRecordReminderToast: '오늘 먹인 내용이 있다면 가볍게 기록해보세요.',
+      cautionReactionAlertToast: '어제 주의 반응 {{count}}건이 있었어요. 오늘 식단 전에 다시 확인해보세요.',
+      newIngredientObservationToast: '지금 {{count}}개의 신규 식재료를 관찰 중이에요.',
       sectionMessage: '문자/이메일',
       emailUpdatesTitle: '이메일 소식 받기',
       emailUpdatesBody: '새 기능, 업데이트, 작은 서비스 소식을 이메일로 받아볼 수 있어요.',
@@ -791,6 +947,70 @@ const messages: Record<Locale, Messages> = {
       weaningStartGuideBody: '처음 이유식을 시작할 때 필요한 기초 상식과 자주 묻는 질문을 한 번에 볼 수 있어요.',
       weaningStartGuideAction: '가이드 보러가기',
       appInfoTitle: '앱 정보',
+      mealPreferences: '식단 기준 설정',
+      weeklyInsights: '주간 기록 요약',
+    },
+    mealPlanPreferencesScreen: {
+      title: '식단 기준 설정',
+      subtitle: '추천 식단이 우리 아기 상황에 더 가깝게 맞춰지도록 기준을 정리해요.',
+      stageTitle: '현재 단계',
+      stageBody: '지금 가장 가까운 이유식 단계를 골라주세요.',
+      mealsTitle: '하루 식사 수',
+      mealsBody: '현재 실제로 진행하는 식사 수를 선택해주세요.',
+      methodTitle: '진행 방식',
+      methodBody: '토핑, 전통, 혼합 중 지금 쓰는 방식을 반영해요.',
+      proteinTitle: '단백질 도입 여부',
+      proteinBody: '단백질을 이미 시작했다면 후보군에 함께 반영해요.',
+      proteinStarted: '이미 시작했어요',
+      proteinNotStarted: '아직 시작 전이에요',
+      textureTitle: '입자감 단계',
+      textureBody: '현재 가장 편하게 먹는 질감을 골라주세요.',
+      textureThin: '묽은 미음',
+      textureMash: '부드러운 으깨기',
+      textureChunk: '부드러운 입자',
+      textureFinger: '손에 쥐는 형태',
+      goalTitle: '보호자 목표',
+      goalBody: '이번 주 식단에서 무엇을 더 우선할지 정해주세요.',
+      goalVariety: '다양성 우선',
+      goalEasy: '간편함 우선',
+      goalFreezer: '냉동큐브 우선',
+      blockedTitle: '제외 식재료',
+      blockedBody: '추천에서 아예 빼고 싶은 재료예요.',
+      preferredTitle: '잘 먹는 식재료',
+      preferredBody: '자주 넣어도 좋은 재료를 선택해주세요.',
+      dislikedTitle: '비선호 식재료',
+      dislikedBody: '우선순위를 낮추고 싶은 재료예요.',
+      refusedTitle: '최근 거부한 식재료',
+      refusedBody: '며칠 쉬었다가 다시 시도하고 싶은 재료를 표시해요.',
+      saveButton: '식단 기준 저장',
+      saveSuccess: '식단 기준을 저장했어요.',
+    },
+    dataManagementScreen: {
+      title: '데이터 관리',
+      subtitle: '기록과 식재료, 가이드 진행 상태를 파일로 백업하거나 다시 불러올 수 있어요.',
+      exportTitle: '백업 내보내기',
+      exportBody: '현재 앱 데이터를 JSON 파일로 내보내고 공유할 수 있어요.',
+      exportButton: '백업 파일 만들기',
+      exportSuccess: '백업 파일을 준비했어요.',
+      exportFailed: '백업 파일을 만들지 못했어요.',
+      importTitle: '백업 가져오기',
+      importBody: '기존 파일을 선택하면 현재 데이터를 덮어쓰고 복원해요.',
+      importButton: '백업 파일 가져오기',
+      importSuccess: '백업 데이터를 복원했어요.',
+      importFailed: '백업 파일을 불러오지 못했어요.',
+    },
+    weeklyInsightsScreen: {
+      title: '주간 기록 요약',
+      subtitle: '지난 7일 기록을 한 장으로 다시 볼 수 있어요.',
+      recordsTitle: '기록 수',
+      recordsUnit: '건',
+      newIngredientsTitle: '새로 도입한 재료',
+      topIngredientTitle: '가장 자주 먹은 재료',
+      cautionTitle: '주의 반응',
+      completionTitle: '기록 완성도',
+      itemsUnit: '개',
+      timesUnit: '회',
+      emptyValue: '아직 없어요',
     },
     splashScreen: {
       eyebrow: '기록 준비 중',
@@ -871,17 +1091,50 @@ const messages: Record<Locale, Messages> = {
       partCountLabel: '파트 수',
       bookmarkTitle: '책갈피 모아보기',
       bookmarkBody: '중요한 챕터만 따로 모아두고 다시 바로 들어갈 수 있어요.',
+      bookmarkEmptyTitle: '아직 저장한 챕터가 없어요',
+      bookmarkEmptyBody: '챕터를 읽다가 책갈피를 눌러두면 여기서 다시 빠르게 이어볼 수 있어요.',
       partTitle: '파트 선택',
       partBody: '중요한 전환점 기준으로 파트를 나눠 필요한 챕터를 빠르게 찾아가세요.',
       partChipMeta: '{{read}} / {{total}} 챕터',
       faqTitle: 'FAQ',
       faqBody: '자주 묻는 질문만 먼저 모아 빠르게 볼 수 있어요.',
+      recommendedTitle: '지금 보면 좋은 챕터',
+      recommendedBody: '{{part}} 흐름에서 먼저 보면 좋은 챕터예요.',
       faqCategoryTitle: '카테고리',
       faqCategoryGettingStarted: '시작 준비',
+      faqCategoryTools: '준비물과 보관',
       faqCategoryIntake: '먹는 양과 거부',
+      faqCategorySchedule: '리듬과 확장',
       faqCategoryReaction: '반응과 관찰',
+      faqStartAgeTitle: '정확히 몇 개월부터 시작하면 될까요?',
+      faqStartAgeBody: '월령만 보지 말고 앉기, 목 가누기, 음식 관심 같은 준비 신호를 함께 보고 시작하는 편이 더 안전해요.',
+      faqMethodChoiceTitle: '토핑 이유식으로 시작해도 괜찮을까요?',
+      faqMethodChoiceBody: '보호자가 꾸준히 기록하고 관찰할 수 있다면 토핑 이유식으로 시작해도 괜찮아요. 중요한 건 방식보다 반복 가능한 흐름이에요.',
+      faqUtensilsTitle: '처음부터 준비물이 많이 필요할까요?',
+      faqUtensilsBody: '작은 볼, 부드러운 스푼, 턱받이 정도면 충분해요. 시작 전부터 과하게 준비할 필요는 없어요.',
+      faqIronStartTitle: '처음부터 철분 식재료를 꼭 넣어야 하나요?',
+      faqIronStartBody: '처음 며칠은 한 가지 재료에 익숙해지는 흐름이 먼저예요. 단백질이나 철분 식재료는 단계에 맞춰 천천히 넓혀가면 돼요.',
+      faqSpitOutTitle: '먹자마자 뱉어내면 안 맞는 걸까요?',
+      faqSpitOutBody: '처음엔 혀로 밀어내거나 낯선 질감을 뱉는 일이 흔해요. 바로 실패로 보지 말고 같은 재료를 차분히 다시 시도해보세요.',
+      faqTextureRefusalTitle: '묽기나 입자감이 갑자기 싫은가 봐요',
+      faqTextureRefusalBody: '같은 재료라도 농도, 온도, 덩어리감에 따라 반응이 달라질 수 있어요. 재료보다 질감 변화부터 천천히 조정해보세요.',
+      faqMealCountTitle: '하루 몇 끼로 늘려야 할지 모르겠어요',
+      faqMealCountBody: '잘 먹는 날이 며칠 이어지고 리듬이 안정될 때 다음 끼니를 늘리는 편이 좋아요. 달력보다 적응 속도를 먼저 보세요.',
+      faqProteinStartTitle: '단백질은 언제부터 시작하는 게 좋을까요?',
+      faqProteinStartBody: '기본 재료 몇 가지가 안정적으로 맞는 흐름이 잡힌 뒤에 시작하면 관찰이 더 쉬워요. 급하게 넣기보다 기록 가능한 타이밍이 중요해요.',
+      faqRashWhatTitle: '먹고 나서 빨갛게 올라오면 어떻게 해야 하나요?',
+      faqRashWhatBody: '사진과 시간을 먼저 남기고 다음 식단에서는 그 재료를 빼두세요. 퍼지거나 심해지면 전문가 상담이 먼저예요.',
+      faqVomitWhatTitle: '토했을 때 바로 알레르기로 봐야 하나요?',
+      faqVomitWhatBody: '한 번의 토함만으로 단정하긴 어려워요. 먹은 양, 시간, 다른 반응을 함께 기록하고 반복되는지 확인해야 해요.',
+      faqPoopChangeTitle: '변 색이나 냄새가 달라졌어요',
+      faqPoopChangeBody: '이유식을 시작하면 변 상태가 달라질 수 있어요. 다만 통증, 피, 심한 변비처럼 눈에 띄는 변화는 기록 후 상담을 고려하세요.',
+      faqHospitalWhenTitle: '어느 정도면 병원을 바로 가야 하나요?',
+      faqHospitalWhenBody: '숨쉬기 불편함, 입술이나 얼굴 붓기, 축 처짐처럼 강한 반응은 기록보다 즉시 진료가 먼저예요.',
+      faqSearchPlaceholder: '궁금한 내용을 검색해보세요',
+      faqSearchEmpty: '조건에 맞는 FAQ가 아직 없어요.',
       chapterIndex: '챕터 {{index}}',
       chapterDetailEyebrow: '지금 읽는 챕터',
+      chapterPointsTitle: '세부 포인트',
       noteTitle: '기억해두기',
       markRead: '읽었어요',
       markUnread: '읽음 해제',
@@ -893,18 +1146,21 @@ const messages: Record<Locale, Messages> = {
       prepSignalsBullet1: '목을 어느 정도 가누고 앉았을 때 상체가 비교적 안정적인지 봐주세요.',
       prepSignalsBullet2: '음식을 바라보거나 입을 따라 움직이는 등 관심 표현이 있는지 함께 살펴보세요.',
       prepSignalsBullet3: '하루 컨디션이 좋고 감기나 예방접종 직후가 아닌 날을 고르는 편이 좋아요.',
+      prepSignalsBullet4: '혀로 심하게 밀어내는 반응이 계속 강하면 며칠 더 지켜본 뒤 다시 시도해도 괜찮아요.',
       prepSignalsNote: '시작 시점은 빠른 것보다 아기 상태에 맞는지가 더 중요해요.',
       prepTimingTitle: '첫날 타이밍 잡기',
       prepTimingSummary: '처음 먹이는 시간과 분위기를 잘 고르면 보호자도 훨씬 덜 불안해져요.',
       prepTimingBullet1: '오전이나 낮처럼 병원 문의가 쉬운 시간대를 첫 시도로 잡아두세요.',
       prepTimingBullet2: '배가 너무 고프거나 너무 졸린 시간은 피하고, 평소보다 여유 있는 끼니로 잡아요.',
       prepTimingBullet3: '첫날은 일정 없는 날로 잡아 관찰 시간을 넉넉히 확보하는 것이 좋아요.',
+      prepTimingBullet4: '보호자가 혼자 너무 바쁜 시간보다 사진, 메모, 반응을 남길 수 있는 여유 시간을 고르는 편이 좋아요.',
       prepTimingNote: '첫날은 양보다 관찰 여유가 있는 시간대를 선택하는 것이 핵심이에요.',
       prepToolsTitle: '처음 필요한 준비물',
       prepToolsSummary: '많이 사기보다 당장 필요한 기본 도구만 있어도 충분히 시작할 수 있어요.',
       prepToolsBullet1: '부드러운 스푼, 작은 볼, 턱받이, 닦을 수 있는 가벼운 매트 정도면 시작이 가능해요.',
       prepToolsBullet2: '식재료보다 기록 준비도 중요해서 사진과 메모를 남길 수 있는 흐름을 같이 만들어두세요.',
       prepToolsBullet3: '도구는 예쁜 것보다 세척이 쉽고 매일 부담 없이 꺼낼 수 있는지가 더 중요해요.',
+      prepToolsBullet4: '냉동 용기나 큐브 트레이는 바로 사지 않아도 괜찮고, 실제로 남기는 양이 생긴 뒤 준비해도 늦지 않아요.',
       prepToolsNote: '준비물은 최소한으로 시작하고, 반복하면서 필요한 것만 추가해도 늦지 않아요.',
       partFirstFoodTitle: '중기 토핑 이유식',
       partFirstFoodDescription: '중기부터는 재료 수와 조합이 조금씩 넓어져요. 3일 관찰과 반응 기록이 더 중요해져요.',
@@ -913,18 +1169,21 @@ const messages: Record<Locale, Messages> = {
       foodFirstMenuBullet1: '쌀, 감자, 단호박처럼 비교적 단순한 재료 하나로 출발하면 관찰이 쉬워요.',
       foodFirstMenuBullet2: '두 가지 이상을 한 번에 시작하면 어떤 재료 때문인지 구분이 어려워질 수 있어요.',
       foodFirstMenuBullet3: '새로운 재료보다 이미 잘 맞는 재료를 섞고 싶어지는 날도 있지만 첫 주는 단순함이 중요해요.',
+      foodFirstMenuBullet4: '가족 식단에서 흔히 쓰는 재료를 먼저 고르면 이후 반복 노출과 장보기 흐름도 더 편해져요.',
       foodFirstMenuNote: '처음 메뉴는 영양 밸런스보다 반응을 읽기 쉬운 구조가 우선이에요.',
       foodPortionTitle: '초기 첫 양은 어느 정도?',
       foodPortionSummary: '초기에는 몇 숟가락만 먹어도 괜찮아요. 양보다 적응과 리듬이 먼저예요.',
       foodPortionBullet1: '한두 숟가락만 먹고 끝나도 정상으로 받아들이는 것이 보호자에게도 도움이 돼요.',
       foodPortionBullet2: '다 먹이기보다 표정, 삼킴, 거부 신호를 천천히 보는 것이 더 중요해요.',
       foodPortionBullet3: '먹는 양이 적더라도 반복 노출로 익숙해질 수 있으니 첫날 반응만으로 판단하지 마세요.',
+      foodPortionBullet4: '다음 끼니에 양을 바로 두 배로 늘리기보다 같은 정도를 유지하며 편안함이 생기는지 먼저 보는 편이 좋아요.',
       foodPortionNote: '첫 주의 핵심은 완식이 아니라 경험과 적응이에요.',
       foodThreeDayTitle: '중기 3일 관찰 루틴',
       foodThreeDaySummary: '중기 토핑 이유식은 재료가 늘어나는 만큼 같은 재료를 짧게 반복하며 반응을 보는 흐름이 중요해요.',
       foodThreeDayBullet1: '새 재료를 먹인 날과 그 다음 이틀 정도는 같은 재료를 중심으로 반응을 확인해보세요.',
       foodThreeDayBullet2: '관찰 기간에는 새로운 재료를 계속 추가하기보다 반응이 안정적인지 보는 데 집중해요.',
       foodThreeDayBullet3: '식단 앱에서 같은 재료 기록을 이어 남기면 패턴을 나중에 되짚기 쉬워져요.',
+      foodThreeDayBullet4: '관찰 중 이상 반응이 있으면 다음 식단에서 바로 제외하고 메모를 남겨두는 습관이 중요해요.',
       foodThreeDayNote: '새 재료를 빨리 늘리는 것보다 관찰 패턴을 만드는 것이 장기적으로 더 편해져요.',
       partObserveTitle: '후기 토핑 이유식',
       partObserveDescription: '후기에는 입자감과 조합이 더 넓어져요. 거부 대응, 반복 노출, 알레르기 걱정을 정리해요.',
@@ -933,18 +1192,21 @@ const messages: Record<Locale, Messages> = {
       observeReactionBullet1: '발진, 토함, 심한 보챔처럼 보호자가 바로 알아차릴 수 있는 반응을 먼저 기록해두세요.',
       observeReactionBullet2: '평소와 다르게 잠을 설치거나 변 상태가 달라지는 경우도 메모해두면 도움이 돼요.',
       observeReactionBullet3: '확실하지 않은 변화라도 날짜와 재료를 함께 남기면 나중에 비교가 쉬워져요.',
+      observeReactionBullet4: '반응이 애매한 날일수록 사진 한 장과 짧은 메모가 나중에 식단을 조정할 때 큰 도움이 돼요.',
       observeReactionNote: '기록은 정확한 진단보다 패턴을 남긴다는 목적에 더 가깝게 보면 좋아요.',
       observeRefusalTitle: '후기 거부했을 때 대처',
       observeRefusalSummary: '후기에는 선호와 비선호가 더 분명해질 수 있어요. 거부를 실패보다 적응 과정으로 보는 편이 좋아요.',
       observeRefusalBullet1: '입을 다물거나 몸을 돌리면 그날은 거기서 마무리하고 억지로 먹이지 않는 편이 좋아요.',
       observeRefusalBullet2: '며칠 쉬었다가 농도, 온도, 조합을 조금 바꿔 다시 시도해볼 수 있어요.',
       observeRefusalBullet3: '거부한 날도 기록해두면 어떤 상황에서 거부가 잦은지 보기 쉬워져요.',
+      observeRefusalBullet4: '같은 재료를 완전히 끊기보다 익숙한 재료 옆에 소량으로 다시 붙여보는 방식이 더 부드러울 수 있어요.',
       observeRefusalNote: '거부는 재료의 문제일 수도 있지만 컨디션이나 타이밍 때문일 수도 있어요.',
       observeRecordsTitle: '중기 기록은 어떻게 남길까?',
       observeRecordsSummary: '중기부터는 조합이 다양해져서 짧아도 꾸준한 기록이 다음 식단을 훨씬 쉽게 해줘요.',
       observeRecordsBullet1: '날짜, 시간, 식재료, 먹은 양, 반응만 남겨도 다음 시도에 큰 도움이 돼요.',
       observeRecordsBullet2: '사진이나 한 줄 메모를 함께 남기면 보호자 기억에만 의존하지 않아도 돼요.',
       observeRecordsBullet3: '처음엔 완벽하게 쓰기보다 같은 형식으로 빠르게 남기는 흐름을 만드는 것이 중요해요.',
+      observeRecordsBullet4: '잘 먹은 날과 힘들었던 날을 함께 남겨야 보호자가 식단 흐름을 더 정확히 읽을 수 있어요.',
       observeRecordsNote: '기록은 길게 쓰는 것보다 같은 기준으로 쌓이는 것이 더 중요해요.',
       partFaqTitle: '많이 묻는 상황',
       partFaqDescription: '시작 초기에 가장 자주 나오는 불안과 고민을 짧은 챕터로 정리했어요.',
@@ -954,6 +1216,7 @@ const messages: Record<Locale, Messages> = {
       faqLowIntakeBullet1: '몇 숟가락만 먹고 끝나도 처음에는 자연스러운 반응일 수 있어요.',
       faqLowIntakeBullet2: '며칠 단위로 봤을 때 점차 표정이 편해지고 받아들이는 속도가 늘어나는지 보세요.',
       faqLowIntakeBullet3: '먹는 양이 적더라도 컨디션이 괜찮다면 너무 급하게 양을 늘리려 하지 않아도 돼요.',
+      faqLowIntakeBullet4: '수유와 이유식 간격이 너무 짧지 않은지도 함께 확인하면 양이 적은 이유를 찾는 데 도움이 돼요.',
       faqLowIntakeNote: '잘 안 먹는 날의 기록도 남겨야 다음 시도를 덜 흔들리며 할 수 있어요.',
       faqRepeatTitle: '후기엔 같은 재료를 또 줘도 될까?',
       faqRepeatShortBody: '반복은 여전히 도움이 되고, 조합만 조금 바꿔도 충분해요.',
@@ -961,6 +1224,7 @@ const messages: Record<Locale, Messages> = {
       faqRepeatBullet1: '새 재료 관찰 기간에는 같은 재료가 반복되는 편이 반응 구분에 더 유리해요.',
       faqRepeatBullet2: '잘 먹던 재료는 보호자에게도 안전한 기본 식재료가 되어 식단 짜기가 쉬워져요.',
       faqRepeatBullet3: '반복이 길어질 때는 조금씩 조합만 바꿔 익숙함과 새로움을 함께 가져가면 좋아요.',
+      faqRepeatBullet4: '반복 자체를 지루함으로만 보지 말고, 아기가 편안하게 먹는 기반을 만드는 과정으로 보는 편이 좋아요.',
       faqRepeatNote: '초기엔 다양성보다 안정감이 먼저라는 점을 기억해두세요.',
       faqAllergyTitle: '후기에도 알레르기가 걱정될 때',
       faqAllergyShortBody: '좋은 컨디션, 소량, 기록 세 가지를 먼저 지켜주세요.',
@@ -968,6 +1232,7 @@ const messages: Record<Locale, Messages> = {
       faqAllergyBullet1: '새 재료는 아이 컨디션이 좋은 날 소량부터 시작하고 반응을 차분히 보세요.',
       faqAllergyBullet2: '이상 반응이 보이면 사진과 메모를 남기고 다음 식단에서는 즉시 제외해두는 편이 좋아요.',
       faqAllergyBullet3: '숨 가쁨, 얼굴 붓기처럼 심한 반응은 기록보다 즉시 전문가 도움을 우선해야 해요.',
+      faqAllergyBullet4: '한 번에 여러 새 재료를 겹치지 않으면 어떤 재료를 조심해야 하는지 훨씬 빨리 정리할 수 있어요.',
       faqAllergyNote: '앱 기록은 전문가 상담 전 상황을 정리하는 데 도움을 줄 수 있어요.',
       faqFirstDayTimeTitle: '첫날은 언제 먹여보는 게 좋을까요?',
       faqFirstDayTimeBody: '오전이나 낮처럼 반응을 여유 있게 볼 수 있는 시간대가 가장 무난해요.',
@@ -1017,6 +1282,9 @@ const messages: Record<Locale, Messages> = {
       reasonFeedingWeek: '이유식 주차 기준으로 식단을 구성했어요.',
       reasonMealCount: '현재 식사 횟수에 맞는 끼니 수만 보여줘요.',
       reasonBlocked: '주의/알러지 또는 제외 식재료는 자동 제외했어요.',
+      reasonObservation: '관찰 중인 식재료를 우선 이어가도록 조정했어요.',
+      reasonRefusal: '최근 거부하거나 비선호한 재료는 뒤로 미뤘어요.',
+      reasonFavorite: '잘 먹는 식재료를 먼저 섞어 넣었어요.',
       switchToRecordButton: '기록 전환',
       fedButton: '먹였어요',
       expandButton: '펼쳐보기',
@@ -1029,6 +1297,10 @@ const messages: Record<Locale, Messages> = {
       noneLabel: '없음',
       noteObserveNew: '신규 식재료는 같은 재료를 3일 관찰해보세요.',
       noteExcludeCaution: '주의 식재료는 이번 추천에서 제외했어요.',
+      preferencesButton: '식단 기준 수정',
+      preferencesCtaTitle: '추천 기준을 조금 더 채워주세요',
+      preferencesCtaBody: '단계, 식사 수, 입자감, 제외 재료를 채우면 식단이 더 정확해져요.',
+      observationHint: '{{ingredients}}는 아직 관찰 중이라 새로운 재료보다 먼저 이어서 추천했어요.',
       stagePrep: '준비기',
       stageInitial: '초기',
       stageMiddle: '중기',
@@ -1131,6 +1403,7 @@ const messages: Record<Locale, Messages> = {
       filterTried: '먹어봄',
       filterNotTried: '미도전',
       filterRisk: '주의/알러지',
+      filterRetry: '재시도',
       emptyTitle: '검색 결과가 없어요',
       emptyBody: '새 식재료를 추가해보세요.',
       duplicateNameError: '동일한 이름의 식재료가 이미 있어요.',
@@ -1159,6 +1432,7 @@ const messages: Record<Locale, Messages> = {
       recordsEmpty: '관련 기록이 없어요.',
       savedMessage: '저장되었습니다.',
       saveFailedMessage: '저장에 실패했어요. 다시 시도해주세요.',
+      retrySuggested: '다시 시도해볼 시점이에요',
     },
   },
   en: {
@@ -1212,6 +1486,21 @@ const messages: Record<Locale, Messages> = {
         eveningSleepTitle: 'Sleep note',
         eveningSleepBody: 'Capture sleep pattern after feeding.',
         eveningSleepChip: 'Sleep',
+      },
+      actions: {
+        observationTitle: 'Observation in progress',
+        observationBody: 'Check {{ingredients}} once more today.',
+        observationChip: 'Observe',
+        riskTitle: 'Recheck yesterday reactions',
+        riskBody: '{{count}} caution records came up yesterday. Review them before today meals.',
+        riskChip: 'Caution',
+        recordTitle: 'No record for today yet',
+        recordBody: 'Logging right after feeding makes the next recommendation sharper.',
+        recordChip: 'Record',
+        defaultTitle: 'Ready for another calm day?',
+        defaultBody: 'Things are flowing well. A quick look at today suggestions is enough.',
+        defaultChip: 'Guide',
+        noneFallback: 'new ingredients',
       },
       profileForm: {
         overline: 'Setup',
@@ -1358,6 +1647,10 @@ const messages: Record<Locale, Messages> = {
       cautionReactionAlertBody: 'Review records like vomiting, rash, or fussiness again when needed.',
       newIngredientObservationTitle: 'New ingredient observation',
       newIngredientObservationBody: 'Keep track of the 3-day observation window after a new ingredient starts.',
+      mealPlanMorningToast: 'Today’s first meal is planned as {{meal}}.',
+      feedingRecordReminderToast: 'If you fed today, take a moment to log it.',
+      cautionReactionAlertToast: 'There were {{count}} caution records yesterday. Review them before today meals.',
+      newIngredientObservationToast: 'You are still observing {{count}} new ingredients.',
       sectionMessage: 'Messages and email',
       emailUpdatesTitle: 'Email updates',
       emailUpdatesBody: 'Receive product updates and small service news by email.',
@@ -1375,6 +1668,70 @@ const messages: Record<Locale, Messages> = {
       weaningStartGuideBody: 'Browse the basics and common questions caregivers need when starting weaning for the first time.',
       weaningStartGuideAction: 'Open guide',
       appInfoTitle: 'App info',
+      mealPreferences: 'Meal preferences',
+      weeklyInsights: 'Weekly insights',
+    },
+    mealPlanPreferencesScreen: {
+      title: 'Meal preferences',
+      subtitle: 'Set the details that make meal recommendations feel closer to your baby’s real rhythm.',
+      stageTitle: 'Current stage',
+      stageBody: 'Pick the stage that feels the closest right now.',
+      mealsTitle: 'Meals per day',
+      mealsBody: 'Choose the number of meals you actually run each day.',
+      methodTitle: 'Method',
+      methodBody: 'Reflect the method you are following right now.',
+      proteinTitle: 'Protein introduction',
+      proteinBody: 'If protein has already started, it can be considered in the plan.',
+      proteinStarted: 'Already started',
+      proteinNotStarted: 'Not yet',
+      textureTitle: 'Texture level',
+      textureBody: 'Pick the texture your baby currently handles best.',
+      textureThin: 'Thin porridge',
+      textureMash: 'Soft mash',
+      textureChunk: 'Soft chunks',
+      textureFinger: 'Finger food',
+      goalTitle: 'Caregiver goal',
+      goalBody: 'Choose what matters most for this week plan.',
+      goalVariety: 'Variety first',
+      goalEasy: 'Keep it easy',
+      goalFreezer: 'Use freezer cubes',
+      blockedTitle: 'Excluded foods',
+      blockedBody: 'These ingredients should stay out of recommendations.',
+      preferredTitle: 'Well-liked foods',
+      preferredBody: 'Use these a little more often when possible.',
+      dislikedTitle: 'Less preferred foods',
+      dislikedBody: 'Lower their priority for now.',
+      refusedTitle: 'Recently refused foods',
+      refusedBody: 'Mark foods you want to pause and retry later.',
+      saveButton: 'Save meal preferences',
+      saveSuccess: 'Meal preferences saved.',
+    },
+    dataManagementScreen: {
+      title: 'Data management',
+      subtitle: 'Back up records, ingredients, and guide progress to a file, then restore them later.',
+      exportTitle: 'Export backup',
+      exportBody: 'Create a JSON backup of the current app data and share it out.',
+      exportButton: 'Create backup file',
+      exportSuccess: 'Backup file is ready.',
+      exportFailed: 'Could not create the backup file.',
+      importTitle: 'Import backup',
+      importBody: 'Choose a backup file to overwrite the current local data.',
+      importButton: 'Import backup file',
+      importSuccess: 'Backup restored.',
+      importFailed: 'Could not import the backup file.',
+    },
+    weeklyInsightsScreen: {
+      title: 'Weekly insights',
+      subtitle: 'Review the last 7 days in one calm summary.',
+      recordsTitle: 'Records',
+      recordsUnit: '',
+      newIngredientsTitle: 'New ingredients',
+      topIngredientTitle: 'Most frequent ingredient',
+      cautionTitle: 'Caution reactions',
+      completionTitle: 'Completion',
+      itemsUnit: '',
+      timesUnit: ' times',
+      emptyValue: 'No data yet',
     },
     splashScreen: {
       eyebrow: 'Getting ready',
@@ -1455,17 +1812,50 @@ const messages: Record<Locale, Messages> = {
       partCountLabel: 'Parts',
       bookmarkTitle: 'Bookmarked chapters',
       bookmarkBody: 'Save the chapters you want to revisit quickly.',
+      bookmarkEmptyTitle: 'No saved chapters yet',
+      bookmarkEmptyBody: 'Use bookmarks while reading and they will appear here for quick access.',
       partTitle: 'Choose a part',
       partBody: 'The guide is split by key turning points so you can jump straight to what you need.',
       partChipMeta: '{{read}} / {{total}} chapters',
       faqTitle: 'FAQ',
       faqBody: 'Start with the most common questions in one quick list.',
+      recommendedTitle: 'Good chapters for right now',
+      recommendedBody: 'These chapters fit the current {{part}} flow best.',
       faqCategoryTitle: 'Categories',
       faqCategoryGettingStarted: 'Getting started',
+      faqCategoryTools: 'Tools and storage',
       faqCategoryIntake: 'Intake and refusal',
+      faqCategorySchedule: 'Routine and expansion',
       faqCategoryReaction: 'Reactions and observation',
+      faqStartAgeTitle: 'What age is the right time to begin?',
+      faqStartAgeBody: 'Age matters, but head control, sitting support, and food interest are usually better signals to watch together.',
+      faqMethodChoiceTitle: 'Is topping-style weaning okay for the first start?',
+      faqMethodChoiceBody: 'Yes, if the caregiver can repeat the routine calmly and keep records. The method matters less than a stable flow.',
+      faqUtensilsTitle: 'Do I need a lot of tools from the start?',
+      faqUtensilsBody: 'Not really. A small bowl, a soft spoon, and a bib are enough for the first few days.',
+      faqIronStartTitle: 'Do iron-rich foods need to be included right away?',
+      faqIronStartBody: 'The first few days are more about getting used to one simple ingredient. Iron-rich foods can be added gradually by stage.',
+      faqSpitOutTitle: 'My baby spits it right back out. Is that a bad sign?',
+      faqSpitOutBody: 'Not always. Many babies push food out at first because the texture is unfamiliar. Try the same ingredient again calmly.',
+      faqTextureRefusalTitle: 'The baby suddenly dislikes the texture',
+      faqTextureRefusalBody: 'The same ingredient can feel very different depending on thickness, temperature, or lumpiness. Adjust texture before changing foods.',
+      faqMealCountTitle: 'How do I know when to increase meal count?',
+      faqMealCountBody: 'Increase only after the current rhythm feels stable for several days. Adaptation matters more than the calendar alone.',
+      faqProteinStartTitle: 'When is a good time to start protein foods?',
+      faqProteinStartBody: 'After a few basic ingredients feel stable, protein is easier to observe and log. Timing should support clear records.',
+      faqRashWhatTitle: 'What should I do if a rash appears after eating?',
+      faqRashWhatBody: 'Take a photo, note the time, and pause that ingredient for now. If it spreads or worsens, seek professional advice.',
+      faqVomitWhatTitle: 'Does vomiting always mean an allergy?',
+      faqVomitWhatBody: 'Not necessarily. One episode is not enough to conclude that. Log the amount, timing, and any other reactions together.',
+      faqPoopChangeTitle: 'Stool color or smell changed after solids',
+      faqPoopChangeBody: 'Changes can happen after solids begin. But pain, blood, or severe constipation should be logged and reviewed more carefully.',
+      faqHospitalWhenTitle: 'When should I go to the hospital right away?',
+      faqHospitalWhenBody: 'Breathing trouble, swelling of the lips or face, or unusual limpness should be treated as urgent, before logging anything else.',
+      faqSearchPlaceholder: 'Search what you are wondering about',
+      faqSearchEmpty: 'No FAQ matches that search yet.',
       chapterIndex: 'Chapter {{index}}',
       chapterDetailEyebrow: 'Current chapter',
+      chapterPointsTitle: 'Key points',
       noteTitle: 'Keep in mind',
       markRead: 'Mark as read',
       markUnread: 'Mark unread',
@@ -1477,18 +1867,21 @@ const messages: Record<Locale, Messages> = {
       prepSignalsBullet1: 'Notice whether head and upper body control look steadier when sitting with support.',
       prepSignalsBullet2: 'Watch for food interest such as looking at meals or opening the mouth when others eat.',
       prepSignalsBullet3: 'Pick a day when your baby feels well and is not recovering from vaccines or illness.',
+      prepSignalsBullet4: 'If strong tongue-thrusting still shows up often, it can be reasonable to wait a few more days and check again.',
       prepSignalsNote: 'The best start date is the one that matches your baby’s readiness, not the fastest one.',
       prepTimingTitle: 'Picking the first day',
       prepTimingSummary: 'Good timing lowers stress for both the baby and the caregiver.',
       prepTimingBullet1: 'Choose morning or midday so help and observation are easier if needed.',
       prepTimingBullet2: 'Avoid times when your baby is overly hungry or sleepy.',
       prepTimingBullet3: 'Try the first meal on a day with fewer outside plans so you can observe calmly.',
+      prepTimingBullet4: 'Choose a time when the caregiver can also take a quick photo or note without feeling rushed.',
       prepTimingNote: 'Observation time matters more than finishing the meal.',
       prepToolsTitle: 'What to prepare first',
       prepToolsSummary: 'You only need a few practical tools to begin.',
       prepToolsBullet1: 'A soft spoon, a small bowl, a bib, and a wipeable mat are enough to start.',
       prepToolsBullet2: 'Prepare your logging flow too, because notes and photos matter as much as the food itself.',
       prepToolsBullet3: 'Choose tools that are easy to wash and easy to use every day.',
+      prepToolsBullet4: 'There is no need to buy freezer tools first. Add them later only if leftovers actually start to appear.',
       prepToolsNote: 'Start simple and add items only when the routine shows you need them.',
       partFirstFoodTitle: 'First foods',
       partFirstFoodDescription: 'Learn what to offer first, how much to give, and how to use a 3-day routine.',
@@ -1497,18 +1890,21 @@ const messages: Record<Locale, Messages> = {
       foodFirstMenuBullet1: 'Start with something simple such as rice, potato, or pumpkin.',
       foodFirstMenuBullet2: 'Introducing multiple new ingredients at once makes reactions harder to interpret.',
       foodFirstMenuBullet3: 'The first week works best when you keep the menu very simple.',
+      foodFirstMenuBullet4: 'Choosing a food the family already uses often can make repetition and shopping easier later on.',
       foodFirstMenuNote: 'Early menus are about clarity and comfort more than variety.',
       foodPortionTitle: 'How much at first?',
       foodPortionSummary: 'A few spoonfuls can be enough in the early stage.',
       foodPortionBullet1: 'It is normal if your baby only takes one or two spoonfuls at first.',
       foodPortionBullet2: 'Focus on swallowing, expression, and comfort rather than on volume.',
       foodPortionBullet3: 'Do not judge progress from one day alone; repeated exposure matters.',
+      foodPortionBullet4: 'Instead of doubling the amount quickly, keep it similar for a few days and watch whether comfort improves.',
       foodPortionNote: 'The first week is about practice, not full meals.',
       foodThreeDayTitle: 'The 3-day routine',
       foodThreeDaySummary: 'Staying with the same new ingredient for a few days makes patterns easier to see.',
       foodThreeDayBullet1: 'After starting a new ingredient, keep it in focus for about 2 to 3 days.',
       foodThreeDayBullet2: 'During that window, avoid adding many other new foods.',
       foodThreeDayBullet3: 'Consistent logging makes the pattern much easier to review later.',
+      foodThreeDayBullet4: 'If something feels off, pause that ingredient in the next meal and write down what changed right away.',
       foodThreeDayNote: 'Growing slowly but clearly is often easier than moving fast.',
       partObserveTitle: 'Late topping weaning',
       partObserveDescription: 'As textures and combinations expand, focus on refusal, repeated exposure, and allergy concerns.',
@@ -1517,18 +1913,21 @@ const messages: Record<Locale, Messages> = {
       observeReactionBullet1: 'Write down clear signs first, such as rash, vomiting, or unusual fussiness.',
       observeReactionBullet2: 'Also note changes in stool, sleep, or overall mood when they stand out.',
       observeReactionBullet3: 'Even uncertain changes become useful when tied to a date and ingredient.',
+      observeReactionBullet4: 'A quick photo and a short note are often enough to make later comparison much easier.',
       observeReactionNote: 'Logging is mainly about finding patterns, not making a diagnosis.',
       observeRefusalTitle: 'When refusal shows up in the late stage',
       observeRefusalSummary: 'In the late stage, preferences become stronger. Refusal should still be treated as part of adaptation, not failure.',
       observeRefusalBullet1: 'If your baby turns away or closes the mouth, it is okay to stop for that meal.',
       observeRefusalBullet2: 'You can try again later with a different texture, temperature, or pairing.',
       observeRefusalBullet3: 'Refusal logs help you notice whether timing or condition plays a role.',
+      observeRefusalBullet4: 'Instead of removing the ingredient completely, try bringing it back in a small amount beside a familiar food.',
       observeRefusalNote: 'Sometimes refusal is about timing or mood more than the ingredient itself.',
       observeRecordsTitle: 'How to log in the middle stage',
       observeRecordsSummary: 'As combinations grow, short but steady records make the next choice much easier.',
       observeRecordsBullet1: 'Date, time, ingredient, intake, and reaction are enough to start.',
       observeRecordsBullet2: 'Photos or a short note help when memory becomes fuzzy.',
       observeRecordsBullet3: 'Consistency matters more than long, detailed writing.',
+      observeRecordsBullet4: 'Log good days and difficult days together so the overall pattern stays balanced.',
       observeRecordsNote: 'A repeatable format is more valuable than a perfect log.',
       partFaqTitle: 'Common worries',
       partFaqDescription: 'Quick answers to the questions caregivers ask most often at the start.',
@@ -1538,6 +1937,7 @@ const messages: Record<Locale, Messages> = {
       faqLowIntakeBullet1: 'A tiny amount can still count as a meaningful first experience.',
       faqLowIntakeBullet2: 'Look for gradual comfort and acceptance over several days.',
       faqLowIntakeBullet3: 'If your baby feels well overall, avoid pushing volume too quickly.',
+      faqLowIntakeBullet4: 'Check whether milk and solids are too close together, because timing alone can affect intake.',
       faqLowIntakeNote: 'Record low-intake days too so the pattern stays clear.',
       faqRepeatTitle: 'Can I still repeat ingredients in the late stage?',
       faqRepeatShortBody: 'Repetition still helps, even if you only change the pairing a little.',
@@ -1545,6 +1945,7 @@ const messages: Record<Locale, Messages> = {
       faqRepeatBullet1: 'Repeating the same ingredient supports a cleaner observation window.',
       faqRepeatBullet2: 'Safe familiar foods become a strong base for future meal planning.',
       faqRepeatBullet3: 'Later, you can add variety by changing pairings instead of everything at once.',
+      faqRepeatBullet4: 'Repetition can be seen as building comfort, not as doing something wrong.',
       faqRepeatNote: 'Early stability often matters more than early variety.',
       faqAllergyTitle: 'What if I still worry about allergies in the late stage?',
       faqAllergyShortBody: 'Start with a small amount, on a good day, and keep a clear record.',
@@ -1552,6 +1953,7 @@ const messages: Record<Locale, Messages> = {
       faqAllergyBullet1: 'Introduce concerning ingredients on a calm day in a very small amount.',
       faqAllergyBullet2: 'If something feels off, log it right away and pause that ingredient.',
       faqAllergyBullet3: 'For severe symptoms, seek professional help first and use the log as context.',
+      faqAllergyBullet4: 'Avoid stacking several new foods at once if you want the reaction history to stay clear.',
       faqAllergyNote: 'The app can support your notes, but urgent reactions always come first.',
       faqFirstDayTimeTitle: 'What time works best for the first day?',
       faqFirstDayTimeBody: 'Morning or midday is usually best because you have more time to observe calmly.',
@@ -1601,6 +2003,9 @@ const messages: Record<Locale, Messages> = {
       reasonFeedingWeek: 'Built from the current feeding week.',
       reasonMealCount: 'Only meals matching the daily meal count are shown.',
       reasonBlocked: 'Blocked, caution, and allergy ingredients are excluded automatically.',
+      reasonObservation: 'Observation foods are kept in front until the window ends.',
+      reasonRefusal: 'Recently refused or disliked foods were pushed back.',
+      reasonFavorite: 'Well-liked ingredients were pulled forward first.',
       switchToRecordButton: 'Go to records',
       fedButton: 'Fed now',
       expandButton: 'Expand',
@@ -1613,6 +2018,10 @@ const messages: Record<Locale, Messages> = {
       noneLabel: 'None',
       noteObserveNew: 'Observe the same new ingredient for 3 days.',
       noteExcludeCaution: 'Caution ingredients were excluded from this plan.',
+      preferencesButton: 'Edit meal preferences',
+      preferencesCtaTitle: 'Add a bit more planning detail',
+      preferencesCtaBody: 'Stage, meal count, texture, and excluded foods make the plan much more accurate.',
+      observationHint: '{{ingredients}} are still under observation, so they stay ahead of other new foods.',
       stagePrep: 'Prep',
       stageInitial: 'Initial',
       stageMiddle: 'Middle',
@@ -1715,6 +2124,7 @@ const messages: Record<Locale, Messages> = {
       filterTried: 'Tried',
       filterNotTried: 'Not tried',
       filterRisk: 'Caution/Allergy',
+      filterRetry: 'Retry',
       emptyTitle: 'No search results',
       emptyBody: 'Try adding a new ingredient.',
       duplicateNameError: 'Ingredient with the same name already exists.',
@@ -1743,6 +2153,7 @@ const messages: Record<Locale, Messages> = {
       recordsEmpty: 'No related records.',
       savedMessage: 'Saved.',
       saveFailedMessage: 'Saving failed. Please try again.',
+      retrySuggested: 'Good time to retry',
     },
   },
 };

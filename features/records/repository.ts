@@ -382,3 +382,51 @@ export async function listMealRecordsByIngredientId(ingredientId: string): Promi
 export async function createMealRecord(record: FeedingRecord): Promise<void> {
   return createFeedingRecord(record);
 }
+
+export async function restoreFeedingRecords(records: FeedingRecord[]): Promise<void> {
+  const db = await getDatabase();
+  await ensureRecordsMigrated();
+
+  await db.withTransactionAsync(async () => {
+    await db.runAsync('DELETE FROM feeding_record_ingredients');
+    await db.runAsync('DELETE FROM feeding_records');
+
+    for (const record of records) {
+      await db.runAsync(
+        `
+          INSERT OR REPLACE INTO feeding_records (
+            id, baby_id, date_time, amount_type, amount_gram, amount_level,
+            reaction_type, note, photo_url, source_plan_id, slot, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        record.id,
+        record.babyId,
+        record.dateTime,
+        record.amountType,
+        record.amountGram ?? null,
+        record.amountLevel ?? null,
+        record.reactionType,
+        record.note ?? null,
+        record.photoUrl ?? null,
+        record.sourcePlanId ?? null,
+        record.slot ?? null,
+        record.createdAt,
+        record.updatedAt
+      );
+
+      for (const ingredient of record.ingredients) {
+        await db.runAsync(
+          `
+            INSERT OR REPLACE INTO feeding_record_ingredients (
+              id, record_id, ingredient_id, ingredient_name
+            ) VALUES (?, ?, ?, ?)
+          `,
+          ingredient.id,
+          record.id,
+          ingredient.ingredientId ?? null,
+          ingredient.ingredientName
+        );
+      }
+    }
+  });
+}

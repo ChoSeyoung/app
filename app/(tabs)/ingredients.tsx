@@ -32,7 +32,7 @@ import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
 import { useToast } from '@/hooks/use-toast';
 import { formatDisplayDate } from '@/utils/date';
 
-type IngredientFilter = 'ALL' | 'TRIED' | 'NOT_TRIED' | 'RISK';
+type IngredientFilter = 'ALL' | 'TRIED' | 'NOT_TRIED' | 'RISK' | 'RETRY';
 
 type CategoryOption = {
   value: IngredientCategory;
@@ -143,6 +143,8 @@ export default function IngredientsScreen() {
             ? item.status === 'TRIED'
             : filter === 'NOT_TRIED'
               ? item.status === 'NOT_TRIED'
+              : filter === 'RETRY'
+                ? item.retrySuggested === true
               : item.status === 'CAUTION' || item.status === 'ALLERGY';
 
       const passQuery = normalized ? normalizeName(item.name).includes(normalized) : true;
@@ -221,27 +223,15 @@ export default function IngredientsScreen() {
 
     try {
       await setStatus(selectedIngredient.id, status);
-      const [nextReactions, mealRecords] = await Promise.all([
-        listReactions(selectedIngredient.id),
-        listMealRecordsByIngredientId(selectedIngredient.id),
-      ]);
-
-      setReactions(nextReactions);
-      setRelatedRecords(
-        mealRecords.map((record) => ({
-          id: record.id,
-          date: record.dateTime.slice(0, 10),
-          items: record.ingredients.map((item) => item.ingredientName),
-        }))
-      );
+      await refresh();
       showToast({
         message: t('ingredientScreen.savedMessage'),
-        variant: 'success',
+        level: 'success',
       });
     } catch {
       showToast({
         message: t('ingredientScreen.saveFailedMessage'),
-        variant: 'error',
+        level: 'error',
       });
     }
   };
@@ -331,6 +321,11 @@ export default function IngredientsScreen() {
                 {item.latestNote}
               </Text>
             ) : null}
+            {item.retrySuggested ? (
+              <Text style={[styles.retryPreview, { color: theme.text }]} numberOfLines={1}>
+                {t('ingredientScreen.retrySuggested')}
+              </Text>
+            ) : null}
           </View>
         </Pressable>
       );
@@ -359,6 +354,7 @@ export default function IngredientsScreen() {
           ['TRIED', t('ingredientScreen.filterTried')],
           ['NOT_TRIED', t('ingredientScreen.filterNotTried')],
           ['RISK', t('ingredientScreen.filterRisk')],
+          ['RETRY', t('ingredientScreen.filterRetry')],
         ] as const).map(([value, label]) => (
           <Pressable
             key={value}
@@ -374,6 +370,8 @@ export default function IngredientsScreen() {
                       ? '#f7f2ff'
                       : value === 'RISK'
                         ? '#fff4ea'
+                        : value === 'RETRY'
+                          ? '#eef7dd'
                         : tones.paper,
               },
             ]}>
@@ -718,6 +716,11 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.sans,
     fontSize: 12,
     lineHeight: 18,
+  },
+  retryPreview: {
+    fontFamily: Fonts.sans,
+    fontSize: 11,
+    fontWeight: '700',
   },
   modalBackdrop: {
     flex: 1,

@@ -1,4 +1,4 @@
-import type { BabyProfile, FeedingMethod, FeedingStage } from '@/constants/baby-profile';
+import type { BabyProfile, CaregiverGoal, FeedingMethod, FeedingStage, TextureLevel } from '@/constants/baby-profile';
 import type { Ingredient } from '@/features/ingredients/model';
 import type { MealSlot } from '@/features/records/model';
 
@@ -24,6 +24,8 @@ export type MealPlanSummary = {
   mealsPerDay: 1 | 2 | 3;
   feedingMethod: FeedingMethod;
   proteinStarted: boolean;
+  textureLevel?: TextureLevel;
+  caregiverGoal?: CaregiverGoal;
 };
 
 export type MealPlanResult = {
@@ -31,7 +33,18 @@ export type MealPlanResult = {
   today: MealPlanDay;
   week: MealPlanDay[];
   blockedIngredientNames: string[];
-  recommendationReasonKeys: Array<'BY_FEEDING_WEEK' | 'BY_MEAL_COUNT' | 'EXCLUDE_BLOCKED'>;
+  observationIngredientNames: string[];
+  recentMemoHints: string[];
+  recommendationReasonKeys: Array<
+    'BY_FEEDING_WEEK' | 'BY_MEAL_COUNT' | 'EXCLUDE_BLOCKED' | 'OBSERVATION_LOCK' | 'AVOID_RECENT_REFUSAL' | 'PREFER_FAVORITES'
+  >;
+};
+
+export type MealPlanGenerationSignals = {
+  recentRiskIngredientIds?: string[];
+  recentRefusedIngredientIds?: string[];
+  observationIngredientIds?: string[];
+  recentMemoHints?: string[];
 };
 
 const SLOT_ORDER: MealSlot[] = ['breakfast', 'lunch', 'dinner'];
@@ -112,7 +125,8 @@ export function generateMealPlan(
   profile: BabyProfile,
   ingredients: Ingredient[],
   selectedDate: Date,
-  generationOffset = 0
+  generationOffset = 0,
+  signals: MealPlanGenerationSignals = {}
 ): MealPlanResult {
   const today = new Date();
   const birthDate = new Date(`${profile.birthDate}T00:00:00`);
@@ -124,26 +138,52 @@ export function generateMealPlan(
   const mealsPerDay = profile.mealsPerDay ?? deriveMealsPerDay(feedingStage);
   const feedingMethod = profile.feedingMethod ?? 'TOPPING';
   const proteinStarted = profile.proteinStarted ?? feedingDays >= 21;
+  const recentRiskIngredientIds = new Set(signals.recentRiskIngredientIds ?? []);
+  const recentRefusedIngredientIds = new Set([
+    ...(profile.recentRefusedIngredientIds ?? []),
+    ...(profile.dislikedIngredientIds ?? []),
+    ...(signals.recentRefusedIngredientIds ?? []),
+  ]);
+  const preferredIngredientIds = new Set([
+    ...(profile.preferredIngredientIds ?? []),
+    ...ingredients.filter((item) => item.isFavorite).map((item) => item.id),
+  ]);
+  const observationIngredientIds = new Set(signals.observationIngredientIds ?? []);
 
   const blockedIds = new Set([
     ...(profile.blockedIngredientIds ?? []),
     ...ingredients.filter((item) => item.status === 'ALLERGY').map((item) => item.id),
+    ...recentRiskIngredientIds,
   ]);
 
   const safeIngredients = ingredients
     .filter((item) => item.status === 'TRIED' && !blockedIds.has(item.id))
-    .sort((a, b) => categoryOrder(a.category) - categoryOrder(b.category) || a.name.localeCompare(b.name, 'ko'));
+    .sort((a, b) => {
+      const favoriteDiff =
+        Number(preferredIngredientIds.has(b.id)) - Number(preferredIngredientIds.has(a.id));
+      if (favoriteDiff !== 0) return favoriteDiff;
+
+      const refusalDiff =
+        Number(recentRefusedIngredientIds.has(a.id)) - Number(recentRefusedIngredientIds.has(b.id));
+      if (refusalDiff !== 0) return refusalDiff;
+
+      return categoryOrder(a.category) - categoryOrder(b.category) || a.name.localeCompare(b.name, 'ko');
+    });
 
   const newIngredients = ingredients.filter(
     (item) =>
       item.status === 'NOT_TRIED' &&
       !blockedIds.has(item.id) &&
+      !recentRefusedIngredientIds.has(item.id) &&
       item.category !== 'DAIRY' &&
       (proteinStarted || item.category !== 'PROTEIN')
   );
 
-  const cautionIngredients = ingredients.filter((item) => item.status === 'CAUTION');
+  const cautionIngredients = ingredients.filter((item) => item.status === 'CAUTION' || recentRiskIngredientIds.has(item.id));
   const blockedIngredientNames = ingredients.filter((item) => blockedIds.has(item.id)).map((item) => item.name);
+  const observationIngredientNames = ingredients
+    .filter((item) => observationIngredientIds.has(item.id))
+    .map((item) => item.name);
 
   const activeSlots = SLOT_ORDER.slice(0, mealsPerDay);
   const weekStartIndex = (selectedDate.getDay() + 6) % 7;
@@ -157,10 +197,19 @@ export function generateMealPlan(
     const rotatingSafe =
       safeIngredients[(safeIndex + dayIndex + generationOffset) % Math.max(safeIngredients.length, 1)];
     const nextNew = newIngredients[(newIndex + generationOffset) % Math.max(newIngredients.length, 1)];
-    const shouldIntroduceNew = dayIndex < 3 && slot === activeSlots[0] && Boolean(nextNew);
+    const shouldIntroduceNew =
+      observationIngredientIds.size === 0 && dayIndex < 3 && slot === activeSlots[0] && Boolean(nextNew);
 
     const ingredientNames = [grain?.name, rotatingSafe?.name]
       .filter((value): value is string => Boolean(value));
+
+    if (observationIngredientNames.length > 0 && slot === activeSlots[0]) {
+      observationIngredientNames.slice(0, 1).forEach((name) => {
+        if (!ingredientNames.includes(name)) {
+          ingredientNames.push(name);
+        }
+      });
+    }
 
     if (shouldIntroduceNew && nextNew && !ingredientNames.includes(nextNew.name)) {
       ingredientNames.push(nextNew.name);
@@ -180,7 +229,12 @@ export function generateMealPlan(
       timeLabel: SLOT_META[slot].timeLabel,
       ingredientNames,
       containsNewIngredient: shouldIntroduceNew && Boolean(nextNew),
-      noteType: shouldIntroduceNew ? 'OBSERVE_NEW' : cautionIngredients.length > 0 ? 'EXCLUDE_CAUTION' : undefined,
+      noteType:
+        observationIngredientNames.length > 0 || shouldIntroduceNew
+          ? 'OBSERVE_NEW'
+          : cautionIngredients.length > 0
+            ? 'EXCLUDE_CAUTION'
+            : undefined,
     };
   };
 
@@ -204,10 +258,21 @@ export function generateMealPlan(
       mealsPerDay,
       feedingMethod,
       proteinStarted,
+      textureLevel: profile.textureLevel,
+      caregiverGoal: profile.caregiverGoal,
     },
     today: todayPlan,
     week,
     blockedIngredientNames,
-    recommendationReasonKeys: ['BY_FEEDING_WEEK', 'BY_MEAL_COUNT', 'EXCLUDE_BLOCKED'],
+    observationIngredientNames,
+    recentMemoHints: signals.recentMemoHints ?? [],
+    recommendationReasonKeys: [
+      'BY_FEEDING_WEEK',
+      'BY_MEAL_COUNT',
+      'EXCLUDE_BLOCKED',
+      ...(observationIngredientNames.length > 0 ? (['OBSERVATION_LOCK'] as const) : []),
+      ...(recentRefusedIngredientIds.size > 0 ? (['AVOID_RECENT_REFUSAL'] as const) : []),
+      ...(preferredIngredientIds.size > 0 ? (['PREFER_FAVORITES'] as const) : []),
+    ],
   };
 }

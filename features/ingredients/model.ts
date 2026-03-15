@@ -33,6 +33,9 @@ export type Ingredient = IngredientBase & {
   isFavorite: boolean;
   imageUri?: string;
   latestNote?: string;
+  lastReactionDate?: string;
+  lastReactionType?: IngredientReactionType;
+  retrySuggested?: boolean;
 };
 
 export type IngredientReactionType = 'NONE' | 'CAUTION' | 'ALLERGY' | 'OTHER';

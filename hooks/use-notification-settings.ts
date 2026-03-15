@@ -5,6 +5,7 @@ import {
   NOTIFICATION_SETTINGS_STORAGE_KEY,
   type NotificationSettings,
 } from '@/constants/notification-settings';
+import { syncNotificationSchedules } from '@/lib/notifications';
 import { safeGetItem, safeSetItem } from '@/lib/safe-storage';
 
 type NotificationSettingsListener = (next: NotificationSettings) => void;
@@ -91,6 +92,7 @@ export function useNotificationSettings(): {
   const updateSettings = useCallback(async (next: NotificationSettings) => {
     await safeSetItem(NOTIFICATION_SETTINGS_STORAGE_KEY, JSON.stringify(next));
     publishNotificationSettings(next);
+    await syncNotificationSchedules(next);
   }, []);
 
   return {

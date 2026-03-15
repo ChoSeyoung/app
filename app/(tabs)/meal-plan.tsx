@@ -1,5 +1,6 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,8 +11,10 @@ import { t, tList } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
 import { Colors, Fonts } from '@/constants/theme';
 import { generateMealPlan } from '@/features/meal-plan/engine';
+import { deriveMealPlanSignals } from '@/features/meal-plan/signals';
 import type { RecordDraft, RecordedMealItem } from '@/features/records/model';
 import { setLatestRecordDraft } from '@/features/records/record-draft-store';
+import { listFeedingRecords } from '@/features/records/repository';
 import { useBabyProfile } from '@/hooks/use-baby-profile';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useIngredients } from '@/hooks/use-ingredients';
@@ -117,12 +120,26 @@ function mealNoteLabel(noteType?: 'OBSERVE_NEW' | 'EXCLUDE_CAUTION'): string {
   }
 }
 
-function reasonLabel(key: 'BY_FEEDING_WEEK' | 'BY_MEAL_COUNT' | 'EXCLUDE_BLOCKED'): string {
+function reasonLabel(
+  key:
+    | 'BY_FEEDING_WEEK'
+    | 'BY_MEAL_COUNT'
+    | 'EXCLUDE_BLOCKED'
+    | 'OBSERVATION_LOCK'
+    | 'AVOID_RECENT_REFUSAL'
+    | 'PREFER_FAVORITES'
+): string {
   switch (key) {
     case 'BY_FEEDING_WEEK':
       return t('mealPlanScreen.reasonFeedingWeek');
     case 'BY_MEAL_COUNT':
       return t('mealPlanScreen.reasonMealCount');
+    case 'OBSERVATION_LOCK':
+      return t('mealPlanScreen.reasonObservation');
+    case 'AVOID_RECENT_REFUSAL':
+      return t('mealPlanScreen.reasonRefusal');
+    case 'PREFER_FAVORITES':
+      return t('mealPlanScreen.reasonFavorite');
     case 'EXCLUDE_BLOCKED':
     default:
       return t('mealPlanScreen.reasonBlocked');
@@ -169,16 +186,40 @@ export default function MealPlanScreen() {
   const [displayedMonth, setDisplayedMonth] = useState(new Date());
   const [feedingStartDateInput, setFeedingStartDateInput] = useState('');
   const [isCalendarExpanded, setIsCalendarExpanded] = useState(false);
+  const [records, setRecords] = useState<Awaited<ReturnType<typeof listFeedingRecords>>>([]);
   const { topStyle, sectionsStyle } = useScreenEnterAnimation();
+
+  useFocusEffect(
+    useCallback(
+      () => {
+        void (async () => {
+          setRecords(await listFeedingRecords());
+        })();
+      },
+      []
+    )
+  );
 
   const weekDates = useMemo(() => getWeekDates(selectedDate), [selectedDate]);
   const monthDates = useMemo(() => getMonthGridDates(displayedMonth), [displayedMonth]);
+  const mealPlanSignals = useMemo(
+    () => deriveMealPlanSignals({ ingredients, records }),
+    [ingredients, records]
+  );
 
   const plan = useMemo(() => {
     if (!profile?.feedingStartDate) return null;
-    return generateMealPlan(profile, ingredients, selectedDate);
-  }, [ingredients, profile, selectedDate]);
+    return generateMealPlan(profile, ingredients, selectedDate, 0, mealPlanSignals);
+  }, [ingredients, mealPlanSignals, profile, selectedDate]);
   const planDateSet = useMemo(() => new Set(plan?.week.map((item) => item.date) ?? []), [plan]);
+  const needsPreferenceSetup = Boolean(
+    profile &&
+      (!profile.feedingStage ||
+        !profile.mealsPerDay ||
+        !profile.feedingMethod ||
+        profile.proteinStarted === undefined ||
+        !profile.textureLevel)
+  );
 
   const handleFedFromPlan = (date: string, slot: 'breakfast' | 'lunch' | 'dinner', ingredientNames: string[], timeLabel: string) => {
     const seededItems: RecordedMealItem[] = ingredientNames.map((name, index) => ({
@@ -279,12 +320,31 @@ export default function MealPlanScreen() {
                     {buildBabyInfoSummary(plan.summary.calendarAgeDays, plan.summary.feedingWeek, profile)}
                   </Text>
                 </View>
+                <Pressable
+                  onPress={() => router.push('/meal-plan-preferences')}
+                  style={[styles.heroInlineButton, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                  <Text style={[styles.heroInlineButtonText, { color: theme.text }]}>
+                    {t('mealPlanScreen.preferencesButton')}
+                  </Text>
+                </Pressable>
               </View>
             </View>
           ) : null}
         </Animated.View>
 
         <Animated.View style={[sectionsStyle, styles.cardStack]}>
+          {plan && needsPreferenceSetup ? (
+            <View style={[styles.card, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+              <Text style={[styles.cardTitle, { color: theme.text }]}>{t('mealPlanScreen.preferencesCtaTitle')}</Text>
+              <Text style={[styles.cardBody, { color: theme.icon }]}>{t('mealPlanScreen.preferencesCtaBody')}</Text>
+              <Pressable
+                onPress={() => router.push('/meal-plan-preferences')}
+                style={[styles.primaryButton, { backgroundColor: theme.accent }]}>
+                <Text style={styles.primaryButtonText}>{t('mealPlanScreen.preferencesButton')}</Text>
+              </Pressable>
+            </View>
+          ) : null}
+
           {plan ? (
           <View style={[styles.card, styles.decorativeCard, { backgroundColor: tones.lavender, borderColor: theme.border }]}>
             <View style={[styles.decorBubble, styles.decorBubbleTopRight, { backgroundColor: tones.paper }]} />
@@ -502,6 +562,18 @@ export default function MealPlanScreen() {
                   </Text>
                 ))}
               </View>
+              {plan.observationIngredientNames.length > 0 ? (
+                <Text style={[styles.reasonItem, { color: theme.text }]}>
+                  {t('mealPlanScreen.observationHint', {
+                    ingredients: plan.observationIngredientNames.join(', '),
+                  })}
+                </Text>
+              ) : null}
+              {plan.recentMemoHints.map((memo) => (
+                <Text key={memo} style={[styles.reasonItem, { color: theme.icon }]}>
+                  · {memo}
+                </Text>
+              ))}
             </View>
           </>
         ) : null}
@@ -618,6 +690,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: '#1c1c1c',
+  },
+  heroInlineButton: {
+    minHeight: 36,
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-start',
+  },
+  heroInlineButtonText: {
+    fontFamily: Fonts.sans,
+    fontSize: 12,
+    fontWeight: '700',
   },
   weekdayRow: {
     flexDirection: 'row',

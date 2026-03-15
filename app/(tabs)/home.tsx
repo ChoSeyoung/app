@@ -14,6 +14,7 @@ import { Spacing } from '@/constants/spacing';
 import { Colors, Fonts } from '@/constants/theme';
 import type { Ingredient } from '@/features/ingredients/model';
 import { generateMealPlan } from '@/features/meal-plan/engine';
+import { deriveMealPlanSignals } from '@/features/meal-plan/signals';
 import type { FeedingRecord } from '@/features/records/model';
 import { listFeedingRecords } from '@/features/records/repository';
 import { useBabyProfile } from '@/hooks/use-baby-profile';
@@ -119,31 +120,64 @@ export default function HomeScreen() {
     });
   }, [weekdays]);
 
-  const quickCards = [
-    {
-      title: t('home.cards.morningReactionTitle'),
-      body: t('home.cards.morningReactionBody'),
-      tone: '#F4D7D0',
-      chip: t('home.cards.morningReactionChip'),
-    },
-    {
-      title: t('home.cards.newIngredientTitle'),
-      body: t('home.cards.newIngredientBody'),
-      tone: '#DCD4F3',
-      chip: t('home.cards.newIngredientChip'),
-    },
-    {
-      title: t('home.cards.eveningSleepTitle'),
-      body: t('home.cards.eveningSleepBody'),
-      tone: '#EEEAD6',
-      chip: t('home.cards.eveningSleepChip'),
-    },
-  ];
+  const mealPlanSignals = useMemo(
+    () => deriveMealPlanSignals({ ingredients, records: allFeedingRecords }),
+    [allFeedingRecords, ingredients]
+  );
   const todayMealPlan = useMemo(() => {
     if (!profile) return null;
-    return generateMealPlan(profile, ingredients, new Date()).today;
-  }, [ingredients, profile]);
+    return generateMealPlan(profile, ingredients, new Date(), 0, mealPlanSignals).today;
+  }, [ingredients, mealPlanSignals, profile]);
   const latestTodayRecord = todayFeedingRecords[0] ?? null;
+  const quickCards = useMemo(() => {
+    const cards = [];
+
+    if (mealPlanSignals.observationIngredientIds.length > 0) {
+      const names = ingredients
+        .filter((item) => mealPlanSignals.observationIngredientIds.includes(item.id))
+        .slice(0, 2)
+        .map((item) => item.name);
+      cards.push({
+        title: t('home.actions.observationTitle'),
+        body: t('home.actions.observationBody', { ingredients: names.join(', ') || t('home.actions.noneFallback') }),
+        tone: '#DCD4F3',
+        chip: t('home.actions.observationChip'),
+        route: '/(tabs)/meal-plan',
+      });
+    }
+
+    if (mealPlanSignals.yesterdayRiskCount > 0) {
+      cards.push({
+        title: t('home.actions.riskTitle'),
+        body: t('home.actions.riskBody', { count: mealPlanSignals.yesterdayRiskCount }),
+        tone: '#F4D7D0',
+        chip: t('home.actions.riskChip'),
+        route: '/(tabs)/journey',
+      });
+    }
+
+    if (!latestTodayRecord) {
+      cards.push({
+        title: t('home.actions.recordTitle'),
+        body: t('home.actions.recordBody'),
+        tone: '#EEEAD6',
+        chip: t('home.actions.recordChip'),
+        route: '/(tabs)/journey',
+      });
+    }
+
+    if (cards.length === 0) {
+      cards.push({
+        title: t('home.actions.defaultTitle'),
+        body: t('home.actions.defaultBody'),
+        tone: '#EEEAD6',
+        chip: t('home.actions.defaultChip'),
+        route: '/(tabs)/meal-plan',
+      });
+    }
+
+    return cards;
+  }, [ingredients, latestTodayRecord, mealPlanSignals]);
   const cautionAlerts = useMemo<CautionAlertItem[]>(() => {
     const recordAlerts = allFeedingRecords
       .filter(
@@ -341,6 +375,7 @@ export default function HomeScreen() {
                     body={card.body}
                     toneColor={card.tone}
                     chipLabel={card.chip}
+                    onPress={() => router.push(card.route)}
                   />
                 ))}
               </ScrollView>

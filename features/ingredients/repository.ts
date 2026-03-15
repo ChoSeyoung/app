@@ -420,10 +420,14 @@ function composeIngredients(
 ): Ingredient[] {
   const statusMap = new Map(statuses.map((item) => [item.ingredientId, item] as const));
   const latestNoteMap = new Map<string, string>();
+  const latestReactionMap = new Map<string, IngredientReaction>();
 
   [...reactions]
     .sort((a, b) => b.date.localeCompare(a.date))
     .forEach((item) => {
+      if (!latestReactionMap.has(item.ingredientId)) {
+        latestReactionMap.set(item.ingredientId, item);
+      }
       if (!item.note?.trim()) return;
       if (!latestNoteMap.has(item.ingredientId)) {
         latestNoteMap.set(item.ingredientId, item.note.trim());
@@ -433,6 +437,14 @@ function composeIngredients(
   return masterIngredients
     .map((item) => {
       const statusEntry = statusMap.get(item.id);
+      const latestReaction = latestReactionMap.get(item.id);
+      const lastReactionAge =
+        latestReaction?.date
+          ? Math.floor(
+              (new Date().getTime() - new Date(`${latestReaction.date}T00:00:00`).getTime()) /
+                (1000 * 60 * 60 * 24)
+            )
+          : null;
       return {
         id: item.id,
         name: item.name,
@@ -443,6 +455,13 @@ function composeIngredients(
         isFavorite: statusEntry?.isFavorite ?? false,
         imageUri: item.imageUri,
         latestNote: latestNoteMap.get(item.id),
+        lastReactionDate: latestReaction?.date,
+        lastReactionType: latestReaction?.reactionType,
+        retrySuggested:
+          statusEntry?.status === 'CAUTION' &&
+          latestReaction?.reactionType === 'CAUTION' &&
+          lastReactionAge !== null &&
+          lastReactionAge >= 7,
         createdAt: item.createdAt,
         updatedAt: statusEntry?.updatedAt ?? item.updatedAt,
       } satisfies Ingredient;
@@ -512,6 +531,87 @@ async function getMasterIngredientById(ingredientId: string): Promise<MasterIngr
 
 export async function listIngredients(): Promise<Ingredient[]> {
   return readCombinedIngredients();
+}
+
+export async function exportIngredientData(): Promise<{
+  customIngredients: MasterIngredient[];
+  statuses: IngredientStatusEntry[];
+  reactions: IngredientReaction[];
+}> {
+  const [customIngredients, statuses, reactions] = await Promise.all([
+    readCustomIngredients(),
+    readIngredientStatuses(),
+    readIngredientReactions(),
+  ]);
+
+  return {
+    customIngredients,
+    statuses,
+    reactions,
+  };
+}
+
+export async function restoreIngredientData(input: {
+  customIngredients?: MasterIngredient[];
+  statuses?: IngredientStatusEntry[];
+  reactions?: IngredientReaction[];
+}): Promise<void> {
+  const db = await getDatabase();
+  await ensureIngredientsStorageMigrated();
+
+  await db.withTransactionAsync(async () => {
+    await db.runAsync('DELETE FROM ingredient_reactions');
+    await db.runAsync('DELETE FROM ingredient_statuses');
+    await db.runAsync('DELETE FROM custom_ingredients');
+
+    for (const item of input.customIngredients ?? []) {
+      await db.runAsync(
+        `
+          INSERT OR REPLACE INTO custom_ingredients (
+            id, name, normalized_name, category, source, image_uri, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        item.id,
+        item.name,
+        normalizeName(item.name),
+        item.category,
+        item.source,
+        item.imageUri ?? null,
+        item.createdAt,
+        item.updatedAt
+      );
+    }
+
+    for (const status of input.statuses ?? []) {
+      await db.runAsync(
+        `
+          INSERT OR REPLACE INTO ingredient_statuses (
+            ingredient_id, status, first_tried_date, is_favorite, updated_at
+          ) VALUES (?, ?, ?, ?, ?)
+        `,
+        status.ingredientId,
+        status.status,
+        status.firstTriedDate ?? null,
+        status.isFavorite ? 1 : 0,
+        status.updatedAt
+      );
+    }
+
+    for (const reaction of input.reactions ?? []) {
+      await db.runAsync(
+        `
+          INSERT OR REPLACE INTO ingredient_reactions (
+            id, ingredient_id, date, reaction_type, note
+          ) VALUES (?, ?, ?, ?, ?)
+        `,
+        reaction.id,
+        reaction.ingredientId,
+        reaction.date,
+        reaction.reactionType,
+        reaction.note ?? null
+      );
+    }
+  });
 }
 
 export async function getIngredientById(ingredientId: string): Promise<Ingredient | null> {

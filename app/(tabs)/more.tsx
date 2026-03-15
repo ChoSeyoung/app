@@ -12,11 +12,9 @@ import { Spacing } from '@/constants/spacing';
 import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
-import { useToast } from '@/hooks/use-toast';
 
 export default function MoreScreen() {
   const router = useRouter();
-  const { showToast } = useToast();
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
@@ -97,12 +95,19 @@ export default function MoreScreen() {
               <IconSymbol name="chevron.right" size={20} color={theme.icon} />
             </Pressable>
             <Pressable
-              onPress={() =>
-                showToast({
-                  message: t('profileScreen.comingSoon'),
-                  variant: 'info',
-                })
-              }
+              onPress={() => router.push('/meal-plan-preferences')}
+              style={[styles.menuItem, { backgroundColor: tones.cream, borderColor: theme.border }]}>
+              <Text style={[styles.menuText, { color: theme.text }]}>{t('moreScreen.mealPreferences')}</Text>
+              <IconSymbol name="chevron.right" size={20} color={theme.icon} />
+            </Pressable>
+            <Pressable
+              onPress={() => router.push('/weekly-insights')}
+              style={[styles.menuItem, { backgroundColor: tones.cream, borderColor: theme.border }]}>
+              <Text style={[styles.menuText, { color: theme.text }]}>{t('moreScreen.weeklyInsights')}</Text>
+              <IconSymbol name="chevron.right" size={20} color={theme.icon} />
+            </Pressable>
+            <Pressable
+              onPress={() => router.push('/data-management')}
               style={[styles.menuItem, { backgroundColor: tones.cream, borderColor: theme.border }]}>
               <Text style={[styles.menuText, { color: theme.text }]}>{t('profileScreen.dataManagement')}</Text>
               <IconSymbol name="chevron.right" size={20} color={theme.icon} />

@@ -1,5 +1,8 @@
+import Constants from 'expo-constants';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { GOOGLE_TEST_BANNER_UNIT_ID } from '@/constants/ads';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
 import { Colors, Fonts } from '@/constants/theme';
@@ -25,6 +28,24 @@ export function AdSlotCard({
 }: AdSlotCardProps) {
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
+  const isExpoGo = Constants.appOwnership === 'expo';
+  const [BannerAdComponent, setBannerAdComponent] = useState<null | ((props: { unitId: string; size: string }) => any)>(null);
+  const [bannerSize, setBannerSize] = useState('ANCHORED_ADAPTIVE_BANNER');
+  const [adUnitId, setAdUnitId] = useState(GOOGLE_TEST_BANNER_UNIT_ID);
+
+  useEffect(() => {
+    if (isExpoGo) return;
+
+    void import('react-native-google-mobile-ads')
+      .then(({ BannerAd, BannerAdSize, TestIds }) => {
+        setBannerAdComponent(() => BannerAd as unknown as (props: { unitId: string; size: string }) => any);
+        setBannerSize(BannerAdSize.ANCHORED_ADAPTIVE_BANNER);
+        setAdUnitId(__DEV__ ? TestIds.BANNER : GOOGLE_TEST_BANNER_UNIT_ID);
+      })
+      .catch(() => {
+        setBannerAdComponent(null);
+      });
+  }, [isExpoGo]);
 
   return (
     <View style={[styles.card, { backgroundColor: toneMap[tone], borderColor: theme.border }]}>
@@ -33,9 +54,15 @@ export function AdSlotCard({
       </View>
       <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
       <Text style={[styles.body, { color: theme.icon }]}>{body}</Text>
-      <View style={[styles.placeholder, { borderColor: theme.border, backgroundColor: '#FFF9EE' }]}>
-        <Text style={[styles.placeholderText, { color: theme.icon }]}>{t('starterGuideScreen.adPlaceholder')}</Text>
-      </View>
+      {isExpoGo || !BannerAdComponent ? (
+        <View style={[styles.placeholder, { borderColor: theme.border, backgroundColor: '#FFF9EE' }]}>
+          <Text style={[styles.placeholderText, { color: theme.icon }]}>{t('starterGuideScreen.adPlaceholder')}</Text>
+        </View>
+      ) : (
+        <View style={[styles.bannerWrap, { borderColor: theme.border, backgroundColor: '#FFF9EE' }]}>
+          <BannerAdComponent unitId={adUnitId} size={bannerSize} />
+        </View>
+      )}
     </View>
   );
 }
@@ -82,6 +109,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
+  },
+  bannerWrap: {
+    minHeight: 72,
+    borderWidth: 1,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    paddingVertical: 8,
   },
   placeholderText: {
     fontFamily: Fonts.sans,

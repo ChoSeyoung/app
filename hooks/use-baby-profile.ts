@@ -18,7 +18,22 @@ function isValidProfile(value: unknown): value is BabyProfile {
   if (!value || typeof value !== 'object') return false;
 
   const candidate = value as Partial<BabyProfile>;
-  return typeof candidate.babyName === 'string' && typeof candidate.birthDate === 'string';
+  return (
+    typeof candidate.babyName === 'string' &&
+    typeof candidate.birthDate === 'string' &&
+    (candidate.blockedIngredientIds === undefined ||
+      (Array.isArray(candidate.blockedIngredientIds) &&
+        candidate.blockedIngredientIds.every((item) => typeof item === 'string'))) &&
+    (candidate.preferredIngredientIds === undefined ||
+      (Array.isArray(candidate.preferredIngredientIds) &&
+        candidate.preferredIngredientIds.every((item) => typeof item === 'string'))) &&
+    (candidate.dislikedIngredientIds === undefined ||
+      (Array.isArray(candidate.dislikedIngredientIds) &&
+        candidate.dislikedIngredientIds.every((item) => typeof item === 'string'))) &&
+    (candidate.recentRefusedIngredientIds === undefined ||
+      (Array.isArray(candidate.recentRefusedIngredientIds) &&
+        candidate.recentRefusedIngredientIds.every((item) => typeof item === 'string')))
+  );
 }
 
 function publishProfile(next: BabyProfile | null): void {
