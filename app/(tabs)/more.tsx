@@ -19,7 +19,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { SUPPORT_EMAIL } from '@/constants/app-info';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
 
@@ -29,12 +29,7 @@ export default function MoreScreen() {
   const theme = Colors[colorScheme];
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
   const { topStyle, sectionsStyle } = useScreenEnterAnimation();
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
 
   const openSupportEmail = async () => {
     const subject = t('profileScreen.contactDeveloperSubject');

@@ -1,5 +1,14 @@
 import { Platform } from 'react-native';
 
+export const DecorativeTones = {
+  blush: '#F4D7D0',
+  lavender: '#DCD4F3',
+  cream: '#EEEAD6',
+  paper: '#FFFCF6',
+  peach: '#FFF1E5',
+  butter: '#F7D980',
+} as const;
+
 export const Colors = {
   light: {
     text: '#1c1c1c',

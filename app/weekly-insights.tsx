@@ -18,7 +18,7 @@ import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import type { FeedingRecord } from '@/features/records/model';
 import { listFeedingRecords } from '@/features/records/repository';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -37,12 +37,7 @@ export default function WeeklyInsightsScreen() {
   const { ingredients } = useIngredients();
   const [records, setRecords] = useState<FeedingRecord[]>([]);
   const { topStyle, sectionsStyle } = useScreenEnterAnimation();
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
 
   useFocusEffect(
     useCallback(() => {

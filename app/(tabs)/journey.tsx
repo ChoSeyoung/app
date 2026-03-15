@@ -26,9 +26,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PageBackground } from '@/components/design-system/page-background';
-import { t } from '@/constants/i18n';
+import { t, tList } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import type {
   FeedingRecord,
   ReactionType,
@@ -152,12 +152,7 @@ export default function JourneyScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const { showToast } = useToast();
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
   const [records, setRecords] = useState<FeedingRecord[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<FeedingRecord | null>(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -183,7 +178,7 @@ export default function JourneyScreen() {
   );
   const monthGridDates = useMemo(() => getMonthGridDates(displayedMonth), [displayedMonth]);
   const weekDates = useMemo(() => getWeekDates(selectedDate), [selectedDate]);
-  const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+  const weekdays = tList('home.weekdays');
   const recordDateSet = useMemo(
     () => new Set(records.map((record) => formatDateLabel(record.dateTime))),
     [records]

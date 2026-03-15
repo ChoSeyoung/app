@@ -19,7 +19,7 @@ import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useBabyProfile } from '@/hooks/use-baby-profile';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useStarterGuideReadiness } from '@/hooks/use-starter-guide-readiness';
@@ -48,13 +48,7 @@ export default function WeaningReadinessChecklistScreen() {
     birthDate: profile?.birthDate,
     readinessCheckedIds: progress.readinessCheckedIds,
   });
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-    peach: '#FFF1E5',
-  };
+  const tones = DecorativeTones;
 
   const readinessStatusTone = useMemo(() => {
     switch (readinessStatus) {

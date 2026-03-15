@@ -39,6 +39,9 @@ type Messages = {
     profileRequiredAction: string;
     heroTitle: string;
     heroBody: string;
+    todayMealChipRecommended: string;
+    todayMealChipNewIngredient: string;
+    mealsRecommendedCount: string;
     sideLabel: string;
     editProfile: string;
     cards: {
@@ -182,6 +185,10 @@ type Messages = {
     saveButton: string;
     saveSuccess: string;
     validationStartDateFormat: string;
+  };
+  modalScreen: {
+    title: string;
+    homeLink: string;
   };
   openSourceScreen: {
     title: string;
@@ -381,6 +388,7 @@ type Messages = {
     partTitle: string;
     partBody: string;
     partChipMeta: string;
+    faqEyebrow: string;
     faqTitle: string;
     faqBody: string;
     recommendedTitle: string;
@@ -681,6 +689,12 @@ type Messages = {
     filterNotTried: string;
     filterRisk: string;
     filterRetry: string;
+    categoryGrain: string;
+    categoryVegetable: string;
+    categoryFruit: string;
+    categoryProtein: string;
+    categoryDairy: string;
+    categoryOther: string;
     emptyTitle: string;
     emptyBody: string;
     duplicateNameError: string;
@@ -753,6 +767,9 @@ const messages: Record<Locale, Messages> = {
       profileRequiredAction: '아기 프로필 입력하기',
       heroTitle: '오늘 먹일 식단',
       heroBody: '오늘 추천 식단과 도입할 재료를 확인해보세요.',
+      todayMealChipRecommended: '오늘 추천 식단',
+      todayMealChipNewIngredient: '신규 재료 포함',
+      mealsRecommendedCount: '{{count}}끼 추천',
       sideLabel: '저녁',
       editProfile: '프로필 수정',
       cards: {
@@ -897,6 +914,10 @@ const messages: Record<Locale, Messages> = {
       saveButton: '프로필 저장',
       saveSuccess: '프로필을 저장했어요.',
       validationStartDateFormat: '이유식 시작일은 숫자 8자리(YYYYMMDD)로 입력해주세요.',
+    },
+    modalScreen: {
+      title: '모달 화면',
+      homeLink: '홈으로 돌아가기',
     },
     openSourceScreen: {
       title: '오픈소스 라이선스',
@@ -1096,6 +1117,7 @@ const messages: Record<Locale, Messages> = {
       partTitle: '파트 선택',
       partBody: '중요한 전환점 기준으로 파트를 나눠 필요한 챕터를 빠르게 찾아가세요.',
       partChipMeta: '{{read}} / {{total}} 챕터',
+      faqEyebrow: '자주 묻는 질문',
       faqTitle: 'FAQ',
       faqBody: '자주 묻는 질문만 먼저 모아 빠르게 볼 수 있어요.',
       recommendedTitle: '지금 보면 좋은 챕터',
@@ -1404,6 +1426,12 @@ const messages: Record<Locale, Messages> = {
       filterNotTried: '미도전',
       filterRisk: '주의/알러지',
       filterRetry: '재시도',
+      categoryGrain: '곡물',
+      categoryVegetable: '채소',
+      categoryFruit: '과일',
+      categoryProtein: '단백질',
+      categoryDairy: '유제품',
+      categoryOther: '기타',
       emptyTitle: '검색 결과가 없어요',
       emptyBody: '새 식재료를 추가해보세요.',
       duplicateNameError: '동일한 이름의 식재료가 이미 있어요.',
@@ -1474,6 +1502,9 @@ const messages: Record<Locale, Messages> = {
       profileRequiredAction: 'Set baby profile',
       heroTitle: 'Today meal plan',
       heroBody: 'Check today suggestions and ingredients to introduce.',
+      todayMealChipRecommended: 'Today recommendation',
+      todayMealChipNewIngredient: 'New ingredient included',
+      mealsRecommendedCount: '{{count}} meals planned',
       sideLabel: 'Evening',
       editProfile: 'Edit profile',
       cards: {
@@ -1618,6 +1649,10 @@ const messages: Record<Locale, Messages> = {
       saveButton: 'Save profile',
       saveSuccess: 'Profile saved.',
       validationStartDateFormat: 'Feeding start date must be 8 digits (YYYYMMDD).',
+    },
+    modalScreen: {
+      title: 'Modal screen',
+      homeLink: 'Go back home',
     },
     openSourceScreen: {
       title: 'Open-source licenses',
@@ -1817,6 +1852,7 @@ const messages: Record<Locale, Messages> = {
       partTitle: 'Choose a part',
       partBody: 'The guide is split by key turning points so you can jump straight to what you need.',
       partChipMeta: '{{read}} / {{total}} chapters',
+      faqEyebrow: 'FAQ',
       faqTitle: 'FAQ',
       faqBody: 'Start with the most common questions in one quick list.',
       recommendedTitle: 'Good chapters for right now',
@@ -2125,6 +2161,12 @@ const messages: Record<Locale, Messages> = {
       filterNotTried: 'Not tried',
       filterRisk: 'Caution/Allergy',
       filterRetry: 'Retry',
+      categoryGrain: 'Grains',
+      categoryVegetable: 'Vegetables',
+      categoryFruit: 'Fruits',
+      categoryProtein: 'Protein',
+      categoryDairy: 'Dairy',
+      categoryOther: 'Other',
       emptyTitle: 'No search results',
       emptyBody: 'Try adding a new ingredient.',
       duplicateNameError: 'Ingredient with the same name already exists.',

@@ -17,7 +17,7 @@ import { PageBackground } from '@/components/design-system/page-background';
 import { t } from '@/constants/i18n';
 import { TERMS_OF_SERVICE_SECTIONS } from '@/constants/legal-documents';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
 
@@ -26,12 +26,7 @@ export default function TermsOfServiceScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const { topStyle, sectionsStyle } = useScreenEnterAnimation();
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={[styles.page, { backgroundColor: theme.background }]}>

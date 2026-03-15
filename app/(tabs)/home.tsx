@@ -21,7 +21,7 @@ import { SectionHeader } from '@/components/design-system/section-header';
 import { WeekCalendar } from '@/components/design-system/week-calendar';
 import { getLocale, t, tList } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import type { Ingredient } from '@/features/ingredients/model';
 import { generateMealPlan } from '@/features/meal-plan/engine';
 import { deriveMealPlanSignals } from '@/features/meal-plan/signals';
@@ -86,13 +86,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-    butter: '#F7D980',
-  };
+  const tones = DecorativeTones;
   const { profile, isLoading } = useBabyProfile();
   const { ingredients } = useIngredients();
   const [todayFeedingRecords, setTodayFeedingRecords] = useState<FeedingRecord[]>([]);
@@ -312,10 +306,10 @@ export default function HomeScreen() {
                     <Text style={styles.heroInfoPillText}>
                       {todayMealPlan?.meals[0]
                         ? todayMealPlan.meals.length > 1
-                          ? `${todayMealPlan.meals.length}끼 추천`
+                          ? t('home.mealsRecommendedCount', { count: todayMealPlan.meals.length })
                           : todayMealPlan.meals[0].containsNewIngredient
-                            ? '신규 재료 포함'
-                            : '오늘 추천 식단'
+                            ? t('home.todayMealChipNewIngredient')
+                            : t('home.todayMealChipRecommended')
                         : latestTodayRecord
                           ? `${formatTimeLabel(latestTodayRecord.dateTime)} ${t('home.todayRecordStatusView')}`
                           : t('home.todayRecordStatusEmptyAction')}

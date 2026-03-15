@@ -16,7 +16,7 @@ import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useNotificationSettings } from '@/hooks/use-notification-settings';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
@@ -54,12 +54,7 @@ export default function NotificationSettingsScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const { topStyle, sectionsStyle } = useScreenEnterAnimation();
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
   const { settings, updateSettings } = useNotificationSettings();
 
   const patchSettings = async (patch: Partial<typeof settings>) => {

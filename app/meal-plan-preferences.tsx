@@ -19,7 +19,7 @@ import { PageBackground } from '@/components/design-system/page-background';
 import type { BabyProfile, CaregiverGoal, FeedingMethod, FeedingStage, TextureLevel } from '@/constants/baby-profile';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useBabyProfile } from '@/hooks/use-baby-profile';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useIngredients } from '@/hooks/use-ingredients';
@@ -133,12 +133,7 @@ export default function MealPlanPreferencesScreen() {
   const { profile, saveProfile } = useBabyProfile();
   const { ingredients } = useIngredients();
   const { showToast } = useToast();
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
 
   const [draft, setDraft] = useState<Partial<BabyProfile>>({});
 
@@ -237,9 +232,9 @@ export default function MealPlanPreferencesScreen() {
               title={t('mealPlanPreferencesScreen.mealsTitle')}
               body={t('mealPlanPreferencesScreen.mealsBody')}
               options={[
-                { value: 1, label: '1식' },
-                { value: 2, label: '2식' },
-                { value: 3, label: '3식' },
+                { value: 1, label: t('home.profileForm.mealsOne') },
+                { value: 2, label: t('home.profileForm.mealsTwo') },
+                { value: 3, label: t('home.profileForm.mealsThree') },
               ]}
               selectedValue={draft.mealsPerDay}
               onSelect={(value) => setDraft((current) => ({ ...current, mealsPerDay: value }))}

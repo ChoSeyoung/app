@@ -35,7 +35,7 @@ import type {
   Ingredient,
   IngredientStatus,
 } from '@/features/ingredients/model';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useIngredients } from '@/hooks/use-ingredients';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useScreenEnterAnimation } from '@/hooks/use-screen-enter-animation';
@@ -99,23 +99,18 @@ function categoryVisual(category: IngredientCategory): { emoji: string; bg: stri
 }
 
 const CATEGORY_OPTIONS: CategoryOption[] = [
-  { value: 'GRAIN', label: '곡물' },
-  { value: 'VEGETABLE', label: '채소' },
-  { value: 'FRUIT', label: '과일' },
-  { value: 'PROTEIN', label: '단백질' },
-  { value: 'DAIRY', label: '유제품' },
-  { value: 'OTHER', label: '기타' },
+  { value: 'GRAIN', label: t('ingredientScreen.categoryGrain') },
+  { value: 'VEGETABLE', label: t('ingredientScreen.categoryVegetable') },
+  { value: 'FRUIT', label: t('ingredientScreen.categoryFruit') },
+  { value: 'PROTEIN', label: t('ingredientScreen.categoryProtein') },
+  { value: 'DAIRY', label: t('ingredientScreen.categoryDairy') },
+  { value: 'OTHER', label: t('ingredientScreen.categoryOther') },
 ];
 
 export default function IngredientsScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
   const { height: windowHeight } = useWindowDimensions();
   const { ingredients, isLoading, refresh, setStatus, toggleFavorite, addReaction } =
     useIngredients();

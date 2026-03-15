@@ -89,8 +89,12 @@ npx expo start
 
 - `app/(tabs)/index.tsx`: 라우팅 게이트 (프로필 입력 여부에 따라 분기)
 - `app/(tabs)/intro.tsx`: 아기 프로필 입력 화면 (이름/생년월일/사진 순차 입력)
-- `app/(tabs)/home.tsx`: 홈 서비스 화면 (프로필 기반 웰컴 메시지/아바타/월령 노출)
-- `app/(tabs)/meal-plan.tsx`, `app/(tabs)/journey.tsx`, `app/(tabs)/profile.tsx`: 보조 탭 화면
+- `app/(tabs)/home.tsx`: 홈 서비스 화면 (오늘 식단, 기록 현황, 빠른 행동 카드)
+- `app/(tabs)/meal-plan.tsx`: 식단 추천 및 주간 계획 화면
+- `app/(tabs)/journey.tsx`: 날짜별 이유식 기록 화면
+- `app/(tabs)/ingredients.tsx`: 식재료 상태와 메모 관리 화면
+- `app/(tabs)/more.tsx`: 설정, 앱 정보, 가이드 허브 화면
+- `app/_layout.tsx`: 탭 외 상세/설정/문서 화면을 등록하는 루트 스택
 
 ## 로컬라이제이션 정책
 

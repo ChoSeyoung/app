@@ -15,7 +15,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { GOOGLE_TEST_BANNER_UNIT_ID } from '@/constants/ads';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 type AdSlotCardProps = {
@@ -25,10 +25,10 @@ type AdSlotCardProps = {
 };
 
 const toneMap = {
-  paper: '#FFFCF6',
-  cream: '#EEEAD6',
-  blush: '#F4D7D0',
-  lavender: '#DCD4F3',
+  paper: DecorativeTones.paper,
+  cream: DecorativeTones.cream,
+  blush: DecorativeTones.blush,
+  lavender: DecorativeTones.lavender,
 } as const;
 
 export function AdSlotCard({

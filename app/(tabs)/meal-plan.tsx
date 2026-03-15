@@ -19,7 +19,7 @@ import { PageBackground } from '@/components/design-system/page-background';
 import type { BabyProfile, FeedingMethod, FeedingStage } from '@/constants/baby-profile';
 import { t, tList } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { generateMealPlan } from '@/features/meal-plan/engine';
 import { deriveMealPlanSignals } from '@/features/meal-plan/signals';
 import type { RecordDraft, RecordedMealItem } from '@/features/records/model';
@@ -186,12 +186,7 @@ export default function MealPlanScreen() {
   const weekdays = tList('home.weekdays');
   const { profile, saveProfile } = useBabyProfile();
   const { ingredients } = useIngredients();
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [displayedMonth, setDisplayedMonth] = useState(new Date());
   const [feedingStartDateInput, setFeedingStartDateInput] = useState('');

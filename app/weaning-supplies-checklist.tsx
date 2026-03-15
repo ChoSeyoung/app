@@ -17,7 +17,7 @@ import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useStarterGuideProgress } from '@/hooks/use-starter-guide-progress';
 import { useStarterGuideSupplies } from '@/hooks/use-starter-guide-supplies';
@@ -28,12 +28,7 @@ export default function WeaningSuppliesChecklistScreen() {
   const theme = Colors[colorScheme];
   const { progress, toggleSuppliesChecked } = useStarterGuideProgress();
   const { suppliesItems, checkedSuppliesCount } = useStarterGuideSupplies(progress.suppliesCheckedIds);
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
 
   const goBack = () => {
     if (router.canGoBack()) {

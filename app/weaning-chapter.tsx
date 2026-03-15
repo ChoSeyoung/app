@@ -17,7 +17,7 @@ import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useStarterGuideContent } from '@/hooks/use-starter-guide-content';
 import { useStarterGuideProgress } from '@/hooks/use-starter-guide-progress';
@@ -29,13 +29,7 @@ export default function WeaningChapterScreen() {
   const theme = Colors[colorScheme];
   const parts = useStarterGuideContent();
   const { progress, toggleBookmark, toggleRead } = useStarterGuideProgress();
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-    peach: '#FFF1E5',
-  };
+  const tones = DecorativeTones;
 
   const part = parts.find((item) => item.id === partId) ?? parts[0];
   const chapter = part?.chapters.find((item) => item.id === chapterId) ?? part?.chapters[0];

@@ -20,9 +20,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
-import { t } from '@/constants/i18n';
+import { t, tList } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
-import { Colors, Fonts } from '@/constants/theme';
+import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import type { IngredientCategory } from '@/features/ingredients/model';
 import { ensureIngredientRecorded } from '@/features/ingredients/repository';
 import type {
@@ -69,8 +69,6 @@ const AMOUNT_LEVELS: AmountLevel[] = ['HIGH', 'MEDIUM', 'LOW'];
 const REACTION_TYPES: ReactionType[] = ['NONE', 'NORMAL', 'FUSSY', 'VOMIT', 'RASH'];
 const TIME_MINUTES = Array.from({ length: 12 }, (_, index) => index * 5);
 const TIME_HOURS_12 = Array.from({ length: 12 }, (_, index) => index + 1);
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
-
 function pad(value: number): string {
   return String(value).padStart(2, '0');
 }
@@ -276,12 +274,8 @@ export default function RecordEditorScreen() {
   const params = useLocalSearchParams<{ recordId?: string }>();
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
-  const tones = {
-    blush: '#F4D7D0',
-    lavender: '#DCD4F3',
-    cream: '#EEEAD6',
-    paper: '#FFFCF6',
-  };
+  const tones = DecorativeTones;
+  const weekdays = tList('home.weekdays');
   const { profile } = useBabyProfile();
   const { showToast } = useToast();
   const { ingredients } = useIngredients();
@@ -783,7 +777,7 @@ export default function RecordEditorScreen() {
                 </View>
 
                 <View style={styles.calendarWeekdayRow}>
-                  {WEEKDAYS.map((label) => (
+                  {weekdays.map((label) => (
                     <Text key={label} style={[styles.calendarWeekdayText, { color: theme.icon }]}>
                       {label}
                     </Text>
