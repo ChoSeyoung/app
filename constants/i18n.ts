@@ -32,6 +32,22 @@ type Messages = {
     cautionAlertTitle: string;
     cautionAlertBody: string;
     cautionAlertFallback: string;
+    focusActionSectionTitle: string;
+    focusActionObservationTitle: string;
+    focusActionObservationBody: string;
+    focusActionObservationAction: string;
+    focusActionRiskTitle: string;
+    focusActionRiskBody: string;
+    focusActionRiskAction: string;
+    focusActionRecordTitle: string;
+    focusActionRecordBody: string;
+    focusActionRecordAction: string;
+    focusActionMealTitle: string;
+    focusActionMealBody: string;
+    focusActionMealAction: string;
+    focusActionDefaultTitle: string;
+    focusActionDefaultBody: string;
+    focusActionDefaultAction: string;
     myJournal: string;
     quickJournal: string;
     profileRequiredTitle: string;
@@ -283,6 +299,10 @@ type Messages = {
     stepsTitle: string;
     savedMessage: string;
     actionToggleFavorite: string;
+    filterAll: string;
+    filterFavorite: string;
+    favoriteEmptyTitle: string;
+    favoriteEmptyBody: string;
     stageInitial: string;
     stageMiddle: string;
     stageLate: string;
@@ -659,6 +679,14 @@ type Messages = {
     reasonObservation: string;
     reasonRefusal: string;
     reasonFavorite: string;
+    reasonSummaryObservationTitle: string;
+    reasonSummaryObservationBody: string;
+    reasonSummaryRefusalTitle: string;
+    reasonSummaryRefusalBody: string;
+    reasonSummaryFavoriteTitle: string;
+    reasonSummaryFavoriteBody: string;
+    reasonSummaryDefaultTitle: string;
+    reasonSummaryDefaultBody: string;
     switchToRecordButton: string;
     fedButton: string;
     expandButton: string;
@@ -841,6 +869,22 @@ const messages: Record<Locale, Messages> = {
       cautionAlertTitle: '주의 반응 알림',
       cautionAlertBody: '최근 기록 기준 주의가 필요한 반응을 확인하세요.',
       cautionAlertFallback: '최근 메모나 첫 시도일을 확인해보세요.',
+      focusActionSectionTitle: '지금 할 일',
+      focusActionObservationTitle: '관찰 중인 식재료를 다시 확인해보세요',
+      focusActionObservationBody: '{{ingredients}} 반응을 한 번 더 살펴보면 다음 식단이 더 안전해져요.',
+      focusActionObservationAction: '관찰 기록 보기',
+      focusActionRiskTitle: '주의 반응 기록을 먼저 살펴보세요',
+      focusActionRiskBody: '최근 주의 기록 {{count}}건이 있어요. 오늘 식단 전 메모부터 확인해보세요.',
+      focusActionRiskAction: '주의 기록 확인',
+      focusActionRecordTitle: '오늘 기록을 먼저 남겨보세요',
+      focusActionRecordBody: '먹인 직후 기록을 남기면 식단 추천과 반응 추적이 훨씬 쉬워져요.',
+      focusActionRecordAction: '기록 추가하기',
+      focusActionMealTitle: '오늘 추천 식단을 가볍게 확인해보세요',
+      focusActionMealBody: '{{meal}} 구성을 먼저 보고 시작하면 덜 흔들려요.',
+      focusActionMealAction: '식단 보러가기',
+      focusActionDefaultTitle: '오늘도 차분하게 이어가볼까요?',
+      focusActionDefaultBody: '특별한 주의 신호는 없어요. 오늘 식단과 기록만 가볍게 이어가면 충분해요.',
+      focusActionDefaultAction: '추천 확인하기',
       myJournal: '오늘의 기록',
       quickJournal: '빠른 기록',
       profileRequiredTitle: '아기 프로필을 먼저 입력해주세요',
@@ -1093,6 +1137,10 @@ const messages: Record<Locale, Messages> = {
       stepsTitle: '만드는 순서',
       savedMessage: '레시피를 저장했어요.',
       actionToggleFavorite: '레시피 저장',
+      filterAll: '전체',
+      filterFavorite: '좋아요',
+      favoriteEmptyTitle: '저장한 레시피가 없어요',
+      favoriteEmptyBody: '마음에 드는 레시피를 하트로 저장해두면 여기에서 다시 볼 수 있어요.',
       stageInitial: '초기',
       stageMiddle: '중기',
       stageLate: '후기',
@@ -1514,6 +1562,14 @@ const messages: Record<Locale, Messages> = {
       preferencesButton: '식단 기준 수정',
       preferencesCtaTitle: '추천 기준을 조금 더 채워주세요',
       preferencesCtaBody: '단계, 식사 수, 입자감, 제외 재료를 채우면 식단이 더 정확해져요.',
+      reasonSummaryObservationTitle: '관찰 중인 재료를 우선 이어가요',
+      reasonSummaryObservationBody: '새 재료보다 현재 관찰 중인 식재료 흐름을 먼저 이어가도록 조정했어요.',
+      reasonSummaryRefusalTitle: '최근 거부 흐름을 반영했어요',
+      reasonSummaryRefusalBody: '거부하거나 비선호한 재료는 잠시 뒤로 미루고 더 무난한 조합을 앞에 두었어요.',
+      reasonSummaryFavoriteTitle: '잘 먹는 재료를 먼저 섞었어요',
+      reasonSummaryFavoriteBody: '익숙한 재료를 먼저 섞어 부담을 줄이고 다음 한 입으로 이어지기 쉽게 맞췄어요.',
+      reasonSummaryDefaultTitle: '현재 단계와 식사 수를 기준으로 골랐어요',
+      reasonSummaryDefaultBody: '이유식 {{week}}주차와 하루 {{meals}}식 기준으로 무난하게 이어가기 좋은 식단을 보여줘요.',
       observationHint: '{{ingredients}}는 아직 관찰 중이라 새로운 재료보다 먼저 이어서 추천했어요.',
       stagePrep: '준비기',
       stageInitial: '초기',
@@ -1687,6 +1743,22 @@ const messages: Record<Locale, Messages> = {
       cautionAlertTitle: 'Caution reaction alerts',
       cautionAlertBody: 'Review reactions that may need attention from recent records.',
       cautionAlertFallback: 'Check the latest memo or first tried date.',
+      focusActionSectionTitle: 'Next best step',
+      focusActionObservationTitle: 'Revisit the ingredient under observation',
+      focusActionObservationBody: 'A quick second look at {{ingredients}} helps keep the next meal safer.',
+      focusActionObservationAction: 'View observation',
+      focusActionRiskTitle: 'Review caution reactions first',
+      focusActionRiskBody: 'There are {{count}} recent caution records. Check the memo before today meals.',
+      focusActionRiskAction: 'Open caution records',
+      focusActionRecordTitle: 'Add today record first',
+      focusActionRecordBody: 'Logging right after feeding makes planning and reaction tracking much easier.',
+      focusActionRecordAction: 'Add record',
+      focusActionMealTitle: 'Take a quick look at today plan',
+      focusActionMealBody: 'Start with {{meal}} to keep the day calm and consistent.',
+      focusActionMealAction: 'Open meal plan',
+      focusActionDefaultTitle: 'Ready for another calm day?',
+      focusActionDefaultBody: 'There is no urgent signal right now. A quick check of meals and records is enough.',
+      focusActionDefaultAction: 'Check suggestions',
       myJournal: 'My Journal',
       quickJournal: 'Quick Journal',
       profileRequiredTitle: 'Please set up baby profile first',
@@ -1939,6 +2011,10 @@ const messages: Record<Locale, Messages> = {
       stepsTitle: 'Steps',
       savedMessage: 'Recipe saved.',
       actionToggleFavorite: 'Save recipe',
+      filterAll: 'All',
+      filterFavorite: 'Saved',
+      favoriteEmptyTitle: 'No saved recipes yet',
+      favoriteEmptyBody: 'Tap the heart on a recipe you like and it will show up here.',
       stageInitial: 'Initial',
       stageMiddle: 'Middle',
       stageLate: 'Late',
@@ -2360,6 +2436,14 @@ const messages: Record<Locale, Messages> = {
       preferencesButton: 'Edit meal preferences',
       preferencesCtaTitle: 'Add a bit more planning detail',
       preferencesCtaBody: 'Stage, meal count, texture, and excluded foods make the plan much more accurate.',
+      reasonSummaryObservationTitle: 'Observation foods stay in front',
+      reasonSummaryObservationBody: 'Foods already under observation were kept ahead of brand-new items for a steadier flow.',
+      reasonSummaryRefusalTitle: 'Recent refusal was reflected',
+      reasonSummaryRefusalBody: 'Recently refused or disliked foods were pushed back in favor of gentler combinations.',
+      reasonSummaryFavoriteTitle: 'Well-liked foods lead the plan',
+      reasonSummaryFavoriteBody: 'Familiar foods were pulled forward first so the meal feels easier to continue.',
+      reasonSummaryDefaultTitle: 'Built from stage and meal count',
+      reasonSummaryDefaultBody: 'The plan follows feeding week {{week}} and {{meals}} meals a day to stay easy to use.',
       observationHint: '{{ingredients}} are still under observation, so they stay ahead of other new foods.',
       stagePrep: 'Prep',
       stageInitial: 'Initial',

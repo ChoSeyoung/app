@@ -156,6 +156,39 @@ function reasonLabel(
   }
 }
 
+function buildPlanReasonSummary(plan: ReturnType<typeof generateMealPlan>): { title: string; body: string } {
+  if (plan.observationIngredientNames.length > 0) {
+    return {
+      title: t('mealPlanScreen.reasonSummaryObservationTitle'),
+      body: t('mealPlanScreen.reasonSummaryObservationBody', {
+        ingredients: plan.observationIngredientNames.join(', '),
+      }),
+    };
+  }
+
+  if (plan.recommendationReasonKeys.includes('AVOID_RECENT_REFUSAL')) {
+    return {
+      title: t('mealPlanScreen.reasonSummaryRefusalTitle'),
+      body: t('mealPlanScreen.reasonSummaryRefusalBody'),
+    };
+  }
+
+  if (plan.recommendationReasonKeys.includes('PREFER_FAVORITES')) {
+    return {
+      title: t('mealPlanScreen.reasonSummaryFavoriteTitle'),
+      body: t('mealPlanScreen.reasonSummaryFavoriteBody'),
+    };
+  }
+
+  return {
+    title: t('mealPlanScreen.reasonSummaryDefaultTitle'),
+    body: t('mealPlanScreen.reasonSummaryDefaultBody', {
+      week: plan.summary.feedingWeek,
+      meals: plan.summary.mealsPerDay,
+    }),
+  };
+}
+
 function buildBabyInfoSummary(
   calendarAgeDays: number,
   feedingWeek: number,
@@ -249,6 +282,7 @@ export default function MealPlanScreen() {
 
   const selectedDateIso = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
   const selectedDayPlan = plan?.week.find((item) => item.date === selectedDateIso) ?? plan?.today ?? null;
+  const reasonSummary = useMemo(() => (plan ? buildPlanReasonSummary(plan) : null), [plan]);
 
   const handleSaveFeedingStartDate = async () => {
     if (!profile) return;
@@ -560,11 +594,17 @@ export default function MealPlanScreen() {
             <View style={[styles.card, styles.decorativeCard, { backgroundColor: '#f7f1ff', borderColor: theme.border }]}>
               <View style={[styles.decorBubble, styles.decorBubbleTopRight, { backgroundColor: tones.paper }]} />
               <Text style={[styles.cardTitle, { color: theme.text }]}>{t('mealPlanScreen.insightTitle')}</Text>
+              {reasonSummary ? (
+                <View style={[styles.reasonSummaryCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                  <Text style={[styles.reasonSummaryTitle, { color: theme.text }]}>{reasonSummary.title}</Text>
+                  <Text style={[styles.reasonSummaryBody, { color: theme.icon }]}>{reasonSummary.body}</Text>
+                </View>
+              ) : null}
               <View style={styles.reasonList}>
                 {plan.recommendationReasonKeys.map((reasonKey) => (
-                  <Text key={reasonKey} style={[styles.reasonItem, { color: theme.icon }]}>
-                    - {reasonLabel(reasonKey)}
-                  </Text>
+                  <View key={reasonKey} style={[styles.reasonChip, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                    <Text style={[styles.reasonChipText, { color: theme.icon }]}>{reasonLabel(reasonKey)}</Text>
+                  </View>
                 ))}
               </View>
               {plan.observationIngredientNames.length > 0 ? (
@@ -945,7 +985,34 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   reasonList: {
+    gap: 8,
+  },
+  reasonSummaryCard: {
+    borderWidth: 1,
+    borderRadius: 18,
+    padding: 14,
     gap: 6,
+  },
+  reasonSummaryTitle: {
+    fontFamily: Fonts.rounded,
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  reasonSummaryBody: {
+    fontFamily: Fonts.sans,
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  reasonChip: {
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  reasonChipText: {
+    fontFamily: Fonts.sans,
+    fontSize: 13,
+    lineHeight: 18,
   },
   reasonItem: {
     fontFamily: Fonts.sans,

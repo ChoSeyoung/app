@@ -22,6 +22,7 @@ import { Spacing } from '@/constants/spacing';
 import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useWeaningRecipes } from '@/hooks/use-weaning-recipes';
+import { useState } from 'react';
 
 export default function WeaningRecipesScreen() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function WeaningRecipesScreen() {
   const tones = DecorativeTones;
   const { showToast } = useToast();
   const { recipes, toggleFavorite } = useWeaningRecipes();
+  const [filter, setFilter] = useState<'ALL' | 'FAVORITE'>('ALL');
 
   const goBack = () => {
     if (router.canGoBack()) {
@@ -47,11 +49,13 @@ export default function WeaningRecipesScreen() {
     });
   };
 
+  const filteredRecipes = filter === 'FAVORITE' ? recipes.filter((item) => item.isFavorite) : recipes;
+
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={[styles.page, { backgroundColor: theme.background }]}>
       <PageBackground topColor="#F4DDD3" middleColor="#E2D9F7" bottomColor="#F3ECD4" />
       <FlatList
-        data={recipes}
+        data={filteredRecipes}
         keyExtractor={(item) => item.id}
         numColumns={2}
         showsVerticalScrollIndicator={false}
@@ -70,6 +74,28 @@ export default function WeaningRecipesScreen() {
               topBubbleColor={tones.paper}
               bottomBubbleColor={tones.blush}
             />
+            <View style={styles.filterRow}>
+              {([
+                ['ALL', t('recipeScreen.filterAll')],
+                ['FAVORITE', t('recipeScreen.filterFavorite')],
+              ] as const).map(([value, label]) => {
+                const isActive = filter === value;
+                return (
+                  <Pressable
+                    key={value}
+                    onPress={() => setFilter(value)}
+                    style={[
+                      styles.filterChip,
+                      {
+                        backgroundColor: isActive ? theme.accentSoft : tones.paper,
+                        borderColor: theme.border,
+                      },
+                    ]}>
+                    <Text style={[styles.filterChipText, { color: theme.text }]}>{label}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
         }
         renderItem={({ item, index }) => {
@@ -103,6 +129,12 @@ export default function WeaningRecipesScreen() {
             </Pressable>
           );
         }}
+        ListEmptyComponent={
+          <View style={[styles.emptyCard, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+            <Text style={[styles.emptyTitle, { color: theme.text }]}>{t('recipeScreen.favoriteEmptyTitle')}</Text>
+            <Text style={[styles.emptyBody, { color: theme.icon }]}>{t('recipeScreen.favoriteEmptyBody')}</Text>
+          </View>
+        }
       />
     </SafeAreaView>
   );
@@ -117,6 +149,21 @@ const styles = StyleSheet.create({
     gap: Spacing.cardStackGap,
   },
   cardStack: { gap: Spacing.cardStackGap },
+  filterRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  filterChip: {
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  filterChipText: {
+    fontFamily: Fonts.sans,
+    fontSize: 12,
+    fontWeight: '700',
+  },
   columnWrap: {
     gap: 12,
     marginTop: Spacing.cardStackGap,
@@ -167,6 +214,23 @@ const styles = StyleSheet.create({
   recipeBody: {
     fontFamily: Fonts.sans,
     fontSize: 12,
+    lineHeight: 18,
+  },
+  emptyCard: {
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: Spacing.cardPadding,
+    gap: 8,
+    marginTop: Spacing.cardStackGap,
+  },
+  emptyTitle: {
+    fontFamily: Fonts.rounded,
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  emptyBody: {
+    fontFamily: Fonts.sans,
+    fontSize: 13,
     lineHeight: 18,
   },
 });

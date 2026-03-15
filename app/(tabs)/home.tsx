@@ -82,6 +82,14 @@ type CautionAlertItem = {
   body: string;
 };
 
+type FocusActionCard = {
+  title: string;
+  body: string;
+  action: string;
+  route: '/(tabs)/meal-plan' | '/(tabs)/journey' | '/(tabs)/ingredients';
+  tone: string;
+};
+
 export default function HomeScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme() ?? 'light';
@@ -214,6 +222,65 @@ export default function HomeScreen() {
 
     return [...recordAlerts, ...ingredientAlerts];
   }, [allFeedingRecords, ingredients]);
+  const focusAction = useMemo<FocusActionCard>(() => {
+    if (mealPlanSignals.observationIngredientIds.length > 0) {
+      const names = ingredients
+        .filter((item) => mealPlanSignals.observationIngredientIds.includes(item.id))
+        .slice(0, 2)
+        .map((item) => item.name)
+        .join(', ');
+
+      return {
+        title: t('home.focusActionObservationTitle'),
+        body: t('home.focusActionObservationBody', {
+          ingredients: names || t('home.actions.noneFallback'),
+        }),
+        action: t('home.focusActionObservationAction'),
+        route: '/(tabs)/journey',
+        tone: '#EEEAD6',
+      };
+    }
+
+    if (cautionAlerts.length > 0) {
+      return {
+        title: t('home.focusActionRiskTitle'),
+        body: t('home.focusActionRiskBody', { count: cautionAlerts.length }),
+        action: t('home.focusActionRiskAction'),
+        route: '/(tabs)/journey',
+        tone: '#F4D7D0',
+      };
+    }
+
+    if (!latestTodayRecord) {
+      return {
+        title: t('home.focusActionRecordTitle'),
+        body: t('home.focusActionRecordBody'),
+        action: t('home.focusActionRecordAction'),
+        route: '/(tabs)/journey',
+        tone: '#DCD4F3',
+      };
+    }
+
+    if (todayMealPlan?.meals[0]) {
+      return {
+        title: t('home.focusActionMealTitle'),
+        body: t('home.focusActionMealBody', {
+          meal: `${todayMealPlan.meals[0].timeLabel} · ${todayMealPlan.meals[0].ingredientNames.join(', ')}`,
+        }),
+        action: t('home.focusActionMealAction'),
+        route: '/(tabs)/meal-plan',
+        tone: '#EEEAD6',
+      };
+    }
+
+    return {
+      title: t('home.focusActionDefaultTitle'),
+      body: t('home.focusActionDefaultBody'),
+      action: t('home.focusActionDefaultAction'),
+      route: '/(tabs)/meal-plan',
+      tone: '#EEEAD6',
+    };
+  }, [cautionAlerts.length, ingredients, latestTodayRecord, mealPlanSignals.observationIngredientIds, todayMealPlan]);
 
   if (isLoading) {
     return (
@@ -280,6 +347,20 @@ export default function HomeScreen() {
         </Animated.View>
 
         <Animated.View style={sectionsStyle}>
+          <View style={styles.sectionBlock}>
+            <SectionHeader title={t('home.focusActionSectionTitle')} />
+            <Pressable
+              onPress={() => router.push(focusAction.route)}
+              style={[styles.focusCard, styles.decorativeCard, { backgroundColor: focusAction.tone, borderColor: theme.border }]}>
+              <View style={[styles.decorBubble, styles.cardBubbleCorner, { backgroundColor: tones.paper }]} />
+              <Text style={[styles.focusTitle, { color: theme.text }]}>{focusAction.title}</Text>
+              <Text style={[styles.focusBody, { color: theme.icon }]}>{focusAction.body}</Text>
+              <View style={[styles.focusActionChip, { backgroundColor: theme.accentSoft }]}>
+                <Text style={[styles.focusActionChipText, { color: theme.text }]}>{focusAction.action}</Text>
+              </View>
+            </Pressable>
+          </View>
+
           <View style={styles.sectionBlock}>
             <SectionHeader title={t('home.todayMealCardTitle')} />
 
@@ -714,6 +795,33 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 16,
     padding: Spacing.cardPadding,
+  },
+  focusCard: {
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: Spacing.cardPadding,
+    gap: 10,
+  },
+  focusTitle: {
+    fontFamily: Fonts.rounded,
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  focusBody: {
+    fontFamily: Fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  focusActionChip: {
+    alignSelf: 'flex-start',
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  focusActionChipText: {
+    fontFamily: Fonts.sans,
+    fontSize: 12,
+    fontWeight: '700',
   },
   cautionList: {
     gap: 12,
