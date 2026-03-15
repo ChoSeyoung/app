@@ -31,7 +31,7 @@ export function FoldableCard({
   theme,
   backgroundColor,
   borderColor,
-  iconName = 'info-outline',
+  iconName,
   defaultExpanded = false,
   style,
   children,
@@ -102,7 +102,7 @@ export function FoldableCard({
       <Pressable onPress={toggle} style={[styles.card, { backgroundColor, borderColor }, style]}>
         <View style={styles.header}>
           <View style={styles.titleWrap}>
-            <MaterialIcons name={iconName} size={18} color={theme.text} />
+            {iconName ? <MaterialIcons name={iconName} size={18} color={theme.text} /> : null}
             <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
           </View>
           <Animated.View style={{ transform: [{ rotate: arrowRotation }] }}>

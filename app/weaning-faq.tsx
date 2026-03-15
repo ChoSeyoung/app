@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { FoldableCard } from '@/components/design-system/foldable-card';
@@ -18,6 +18,7 @@ export default function WeaningFaqScreen() {
   const theme = Colors[colorScheme];
   const { categories, items } = useStarterGuideFaq();
   const [selectedCategoryId, setSelectedCategoryId] = useState(categories[0]?.id ?? '');
+  const [query, setQuery] = useState('');
   const tones = {
     blush: '#F4D7D0',
     lavender: '#DCD4F3',
@@ -26,8 +27,15 @@ export default function WeaningFaqScreen() {
   };
 
   const filteredItems = useMemo(
-    () => items.filter((item) => item.categoryId === selectedCategoryId),
-    [items, selectedCategoryId]
+    () =>
+      items.filter((item) => {
+        const passCategory = query.trim() ? true : item.categoryId === selectedCategoryId;
+        const passQuery = query.trim()
+          ? `${item.title} ${item.body}`.toLowerCase().includes(query.trim().toLowerCase())
+          : true;
+        return passCategory && passQuery;
+      }),
+    [items, query, selectedCategoryId]
   );
 
   const goBack = () => {
@@ -57,6 +65,13 @@ export default function WeaningFaqScreen() {
 
           <View style={[styles.categoryCard, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('starterGuideScreen.faqCategoryTitle')}</Text>
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder={t('starterGuideScreen.faqSearchPlaceholder')}
+              placeholderTextColor="#9a9a9a"
+              style={[styles.searchInput, { borderColor: theme.border, color: theme.text, backgroundColor: tones.cream }]}
+            />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryList}>
               {categories.map((category) => {
                 const selected = category.id === selectedCategoryId;
@@ -80,18 +95,23 @@ export default function WeaningFaqScreen() {
           </View>
 
           <View style={styles.faqList}>
-            {filteredItems.map((item) => (
-              <FoldableCard
-                key={item.id}
-                title={item.title}
-                theme={theme}
-                backgroundColor={tones.paper}
-                borderColor={theme.border}
-                iconName="help-outline"
-                style={styles.decorativeCard}>
-                <Text style={[styles.faqBodyText, { color: theme.icon }]}>{item.body}</Text>
-              </FoldableCard>
-            ))}
+            {filteredItems.length ? (
+              filteredItems.map((item) => (
+                <FoldableCard
+                  key={item.id}
+                  title={item.title}
+                  theme={theme}
+                  backgroundColor={tones.paper}
+                  borderColor={theme.border}
+                  style={styles.decorativeCard}>
+                  <Text style={[styles.faqBodyText, { color: theme.icon }]}>{item.body}</Text>
+                </FoldableCard>
+              ))
+            ) : (
+              <View style={[styles.emptyCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                <Text style={[styles.faqBodyText, { color: theme.icon }]}>{t('starterGuideScreen.faqSearchEmpty')}</Text>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -129,6 +149,15 @@ const styles = StyleSheet.create({
   categoryList: {
     gap: 8,
   },
+  searchInput: {
+    minHeight: Spacing.formControlMinHeight,
+    borderWidth: 1,
+    borderRadius: Spacing.formControlRadius,
+    paddingHorizontal: Spacing.formControlHorizontal,
+    paddingVertical: Spacing.formControlVertical,
+    fontFamily: Fonts.sans,
+    fontSize: 14,
+  },
   categoryChip: {
     overflow: 'hidden',
     borderWidth: 1,
@@ -141,6 +170,11 @@ const styles = StyleSheet.create({
   },
   faqList: {
     gap: 10,
+  },
+  emptyCard: {
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: Spacing.cardPadding,
   },
   faqBodyText: {
     fontFamily: Fonts.sans,

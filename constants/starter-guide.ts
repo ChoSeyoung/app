@@ -2,7 +2,7 @@ export type StarterGuideChapterDefinition = {
   id: string;
   titleKey: string;
   summaryKey: string;
-  bulletKeys: [string, string, string];
+  bulletKeys: string[];
   noteKey: string;
 };
 
@@ -169,8 +169,33 @@ export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
           'starterGuideScreen.prepSignalsBullet1',
           'starterGuideScreen.prepSignalsBullet2',
           'starterGuideScreen.prepSignalsBullet3',
+          'starterGuideScreen.prepSignalsBullet4',
         ],
         noteKey: 'starterGuideScreen.prepSignalsNote',
+      },
+      {
+        id: 'prep-timing',
+        titleKey: 'starterGuideScreen.prepTimingTitle',
+        summaryKey: 'starterGuideScreen.prepTimingSummary',
+        bulletKeys: [
+          'starterGuideScreen.prepTimingBullet1',
+          'starterGuideScreen.prepTimingBullet2',
+          'starterGuideScreen.prepTimingBullet3',
+          'starterGuideScreen.prepTimingBullet4',
+        ],
+        noteKey: 'starterGuideScreen.prepTimingNote',
+      },
+      {
+        id: 'prep-tools',
+        titleKey: 'starterGuideScreen.prepToolsTitle',
+        summaryKey: 'starterGuideScreen.prepToolsSummary',
+        bulletKeys: [
+          'starterGuideScreen.prepToolsBullet1',
+          'starterGuideScreen.prepToolsBullet2',
+          'starterGuideScreen.prepToolsBullet3',
+          'starterGuideScreen.prepToolsBullet4',
+        ],
+        noteKey: 'starterGuideScreen.prepToolsNote',
       },
       {
         id: 'food-first-menu',
@@ -180,6 +205,7 @@ export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
           'starterGuideScreen.foodFirstMenuBullet1',
           'starterGuideScreen.foodFirstMenuBullet2',
           'starterGuideScreen.foodFirstMenuBullet3',
+          'starterGuideScreen.foodFirstMenuBullet4',
         ],
         noteKey: 'starterGuideScreen.foodFirstMenuNote',
       },
@@ -191,6 +217,7 @@ export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
           'starterGuideScreen.foodPortionBullet1',
           'starterGuideScreen.foodPortionBullet2',
           'starterGuideScreen.foodPortionBullet3',
+          'starterGuideScreen.foodPortionBullet4',
         ],
         noteKey: 'starterGuideScreen.foodPortionNote',
       },
@@ -209,8 +236,33 @@ export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
           'starterGuideScreen.foodThreeDayBullet1',
           'starterGuideScreen.foodThreeDayBullet2',
           'starterGuideScreen.foodThreeDayBullet3',
+          'starterGuideScreen.foodThreeDayBullet4',
         ],
         noteKey: 'starterGuideScreen.foodThreeDayNote',
+      },
+      {
+        id: 'observe-reaction',
+        titleKey: 'starterGuideScreen.observeReactionTitle',
+        summaryKey: 'starterGuideScreen.observeReactionSummary',
+        bulletKeys: [
+          'starterGuideScreen.observeReactionBullet1',
+          'starterGuideScreen.observeReactionBullet2',
+          'starterGuideScreen.observeReactionBullet3',
+          'starterGuideScreen.observeReactionBullet4',
+        ],
+        noteKey: 'starterGuideScreen.observeReactionNote',
+      },
+      {
+        id: 'observe-records',
+        titleKey: 'starterGuideScreen.observeRecordsTitle',
+        summaryKey: 'starterGuideScreen.observeRecordsSummary',
+        bulletKeys: [
+          'starterGuideScreen.observeRecordsBullet1',
+          'starterGuideScreen.observeRecordsBullet2',
+          'starterGuideScreen.observeRecordsBullet3',
+          'starterGuideScreen.observeRecordsBullet4',
+        ],
+        noteKey: 'starterGuideScreen.observeRecordsNote',
       },
     ],
   },
@@ -227,6 +279,7 @@ export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
           'starterGuideScreen.observeRefusalBullet1',
           'starterGuideScreen.observeRefusalBullet2',
           'starterGuideScreen.observeRefusalBullet3',
+          'starterGuideScreen.observeRefusalBullet4',
         ],
         noteKey: 'starterGuideScreen.observeRefusalNote',
       },
@@ -238,6 +291,7 @@ export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
           'starterGuideScreen.faqRepeatBullet1',
           'starterGuideScreen.faqRepeatBullet2',
           'starterGuideScreen.faqRepeatBullet3',
+          'starterGuideScreen.faqRepeatBullet4',
         ],
         noteKey: 'starterGuideScreen.faqRepeatNote',
       },
@@ -249,6 +303,7 @@ export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
           'starterGuideScreen.faqLowIntakeBullet1',
           'starterGuideScreen.faqLowIntakeBullet2',
           'starterGuideScreen.faqLowIntakeBullet3',
+          'starterGuideScreen.faqLowIntakeBullet4',
         ],
         noteKey: 'starterGuideScreen.faqLowIntakeNote',
       },
@@ -260,6 +315,7 @@ export const STARTER_GUIDE_PARTS: StarterGuidePartDefinition[] = [
           'starterGuideScreen.faqAllergyBullet1',
           'starterGuideScreen.faqAllergyBullet2',
           'starterGuideScreen.faqAllergyBullet3',
+          'starterGuideScreen.faqAllergyBullet4',
         ],
         noteKey: 'starterGuideScreen.faqAllergyNote',
       },

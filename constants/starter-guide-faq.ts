@@ -16,8 +16,16 @@ export const STARTER_GUIDE_FAQ_CATEGORIES: StarterGuideFaqCategory[] = [
     titleKey: 'starterGuideScreen.faqCategoryGettingStarted',
   },
   {
+    id: 'tools-and-storage',
+    titleKey: 'starterGuideScreen.faqCategoryTools',
+  },
+  {
     id: 'intake-and-refusal',
     titleKey: 'starterGuideScreen.faqCategoryIntake',
+  },
+  {
+    id: 'schedule-and-expansion',
+    titleKey: 'starterGuideScreen.faqCategorySchedule',
   },
   {
     id: 'reaction-and-observation',
@@ -26,6 +34,24 @@ export const STARTER_GUIDE_FAQ_CATEGORIES: StarterGuideFaqCategory[] = [
 ];
 
 export const STARTER_GUIDE_FAQ_ITEMS: StarterGuideFaqItem[] = [
+  {
+    id: 'faq-start-age',
+    categoryId: 'getting-started',
+    titleKey: 'starterGuideScreen.faqStartAgeTitle',
+    bodyKey: 'starterGuideScreen.faqStartAgeBody',
+  },
+  {
+    id: 'faq-method-choice',
+    categoryId: 'getting-started',
+    titleKey: 'starterGuideScreen.faqMethodChoiceTitle',
+    bodyKey: 'starterGuideScreen.faqMethodChoiceBody',
+  },
+  {
+    id: 'faq-utensils',
+    categoryId: 'tools-and-storage',
+    titleKey: 'starterGuideScreen.faqUtensilsTitle',
+    bodyKey: 'starterGuideScreen.faqUtensilsBody',
+  },
   {
     id: 'faq-repeat',
     categoryId: 'getting-started',
@@ -52,9 +78,15 @@ export const STARTER_GUIDE_FAQ_ITEMS: StarterGuideFaqItem[] = [
   },
   {
     id: 'faq-water',
-    categoryId: 'getting-started',
+    categoryId: 'schedule-and-expansion',
     titleKey: 'starterGuideScreen.faqWaterTitle',
     bodyKey: 'starterGuideScreen.faqWaterBody',
+  },
+  {
+    id: 'faq-iron-start',
+    categoryId: 'schedule-and-expansion',
+    titleKey: 'starterGuideScreen.faqIronStartTitle',
+    bodyKey: 'starterGuideScreen.faqIronStartBody',
   },
   {
     id: 'faq-constipation',
@@ -64,14 +96,62 @@ export const STARTER_GUIDE_FAQ_ITEMS: StarterGuideFaqItem[] = [
   },
   {
     id: 'faq-skip-day',
-    categoryId: 'intake-and-refusal',
+    categoryId: 'schedule-and-expansion',
     titleKey: 'starterGuideScreen.faqSkipDayTitle',
     bodyKey: 'starterGuideScreen.faqSkipDayBody',
   },
   {
+    id: 'faq-spit-out',
+    categoryId: 'intake-and-refusal',
+    titleKey: 'starterGuideScreen.faqSpitOutTitle',
+    bodyKey: 'starterGuideScreen.faqSpitOutBody',
+  },
+  {
+    id: 'faq-texture-refusal',
+    categoryId: 'intake-and-refusal',
+    titleKey: 'starterGuideScreen.faqTextureRefusalTitle',
+    bodyKey: 'starterGuideScreen.faqTextureRefusalBody',
+  },
+  {
+    id: 'faq-meal-count',
+    categoryId: 'schedule-and-expansion',
+    titleKey: 'starterGuideScreen.faqMealCountTitle',
+    bodyKey: 'starterGuideScreen.faqMealCountBody',
+  },
+  {
+    id: 'faq-protein-start',
+    categoryId: 'schedule-and-expansion',
+    titleKey: 'starterGuideScreen.faqProteinStartTitle',
+    bodyKey: 'starterGuideScreen.faqProteinStartBody',
+  },
+  {
     id: 'faq-cold-storage',
-    categoryId: 'getting-started',
+    categoryId: 'tools-and-storage',
     titleKey: 'starterGuideScreen.faqStorageTitle',
     bodyKey: 'starterGuideScreen.faqStorageBody',
+  },
+  {
+    id: 'faq-rash-what',
+    categoryId: 'reaction-and-observation',
+    titleKey: 'starterGuideScreen.faqRashWhatTitle',
+    bodyKey: 'starterGuideScreen.faqRashWhatBody',
+  },
+  {
+    id: 'faq-vomit-what',
+    categoryId: 'reaction-and-observation',
+    titleKey: 'starterGuideScreen.faqVomitWhatTitle',
+    bodyKey: 'starterGuideScreen.faqVomitWhatBody',
+  },
+  {
+    id: 'faq-poop-change',
+    categoryId: 'reaction-and-observation',
+    titleKey: 'starterGuideScreen.faqPoopChangeTitle',
+    bodyKey: 'starterGuideScreen.faqPoopChangeBody',
+  },
+  {
+    id: 'faq-hospital-when',
+    categoryId: 'reaction-and-observation',
+    titleKey: 'starterGuideScreen.faqHospitalWhenTitle',
+    bodyKey: 'starterGuideScreen.faqHospitalWhenBody',
   },
 ];

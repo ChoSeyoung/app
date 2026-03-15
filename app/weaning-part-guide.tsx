@@ -68,8 +68,14 @@ export default function WeaningPartGuideScreen() {
             const isBookmarked = progress.bookmarkedChapterIds.includes(chapter.id);
 
             return (
-              <View
+              <Pressable
                 key={chapter.id}
+                onPress={() =>
+                  router.push({
+                    pathname: '/weaning-chapter',
+                    params: { partId: part.id, chapterId: chapter.id },
+                  })
+                }
                 style={[styles.chapterCard, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
                 <View style={styles.chapterHeader}>
                   <View style={styles.chapterHeaderTextWrap}>
@@ -106,25 +112,7 @@ export default function WeaningPartGuideScreen() {
                     </Pressable>
                   </View>
                 </View>
-
-                <View style={styles.lessonList}>
-                  {chapter.bullets.map((item, bulletIndex) => (
-                    <View
-                      key={`${chapter.id}-${bulletIndex}`}
-                      style={[styles.lessonRow, { backgroundColor: tones.cream, borderColor: theme.border }]}>
-                      <View style={[styles.lessonBadge, { backgroundColor: theme.accentSoft }]}>
-                        <Text style={[styles.lessonBadgeText, { color: theme.text }]}>{bulletIndex + 1}</Text>
-                      </View>
-                      <Text style={[styles.lessonText, { color: theme.text }]}>{item}</Text>
-                    </View>
-                  ))}
-                </View>
-
-                <View style={[styles.noteCard, { backgroundColor: tones.blush, borderColor: theme.border }]}>
-                  <Text style={[styles.noteLabel, { color: theme.text }]}>{t('starterGuideScreen.noteTitle')}</Text>
-                  <Text style={[styles.noteText, { color: theme.icon }]}>{chapter.note}</Text>
-                </View>
-              </View>
+              </Pressable>
             );
           })}
         </View>
@@ -153,7 +141,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 22,
     padding: Spacing.cardPadding,
-    gap: 14,
+    gap: 10,
   },
   chapterHeader: {
     flexDirection: 'row',
@@ -191,49 +179,5 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  lessonList: {
-    gap: 10,
-  },
-  lessonRow: {
-    borderWidth: 1,
-    borderRadius: 18,
-    padding: 12,
-    flexDirection: 'row',
-    gap: 10,
-  },
-  lessonBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  lessonBadgeText: {
-    fontFamily: Fonts.sans,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  lessonText: {
-    flex: 1,
-    fontFamily: Fonts.sans,
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  noteCard: {
-    borderWidth: 1,
-    borderRadius: 18,
-    padding: 14,
-    gap: 6,
-  },
-  noteLabel: {
-    fontFamily: Fonts.rounded,
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  noteText: {
-    fontFamily: Fonts.sans,
-    fontSize: 14,
-    lineHeight: 20,
   },
 });

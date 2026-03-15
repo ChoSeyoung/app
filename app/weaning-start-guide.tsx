@@ -44,11 +44,17 @@ export default function WeaningStartGuideScreen() {
   };
 
   const allChapters = parts.flatMap((part) => part.chapters);
-  const bookmarkedChapters = allChapters.filter((chapter) => progress.bookmarkedChapterIds.includes(chapter.id));
   const faqPreview = faqItems.slice(0, 5);
   const readCount = progress.readChapterIds.length;
   const totalCount = allChapters.length;
   const isAllChecklistsComplete = isReadinessChecklistComplete && isSuppliesChecklistComplete;
+  const recommendedPart =
+    profile?.feedingStage === 'MIDDLE'
+      ? parts[1]
+      : profile?.feedingStage === 'LATE' || profile?.feedingStage === 'COMPLETE'
+        ? parts[2]
+        : parts[0];
+  const recommendedChapters = recommendedPart?.chapters.slice(0, 2) ?? [];
 
   const goBack = () => {
     if (router.canGoBack()) {
@@ -100,10 +106,16 @@ export default function WeaningStartGuideScreen() {
             <View style={styles.readinessFoldableContent}>
               <View style={styles.checklistActionCardWrap}>
                 <View style={[styles.checklistActionCard, { backgroundColor: tones.cream, borderColor: theme.border }]}>
+                  <View style={[styles.inlineDecorBubble, styles.checklistCardBubble, { backgroundColor: tones.paper }]} />
                   <View style={styles.checklistActionHeader}>
-                    <Text style={[styles.checklistActionTitle, { color: theme.text }]}>
-                      {t('starterGuideScreen.readinessChecklistTitle')}
-                    </Text>
+                    <View style={styles.checklistTitleRow}>
+                      <View style={[styles.miniIconBadge, { backgroundColor: tones.paper }]}>
+                        <MaterialIcons name="wb-twilight" size={16} color={theme.text} />
+                      </View>
+                      <Text style={[styles.checklistActionTitle, { color: theme.text }]}>
+                        {t('starterGuideScreen.readinessChecklistTitle')}
+                      </Text>
+                    </View>
                     <View style={[styles.progressBadge, { backgroundColor: theme.accentSoft }]}>
                       <Text style={[styles.progressBadgeText, { color: theme.text }]}>
                         {t('starterGuideScreen.readinessSignalsLabel', {
@@ -128,10 +140,16 @@ export default function WeaningStartGuideScreen() {
                 </View>
 
                 <View style={[styles.checklistActionCard, { backgroundColor: tones.blush, borderColor: theme.border }]}>
+                  <View style={[styles.inlineDecorBubble, styles.checklistCardBubble, { backgroundColor: tones.paper }]} />
                   <View style={styles.checklistActionHeader}>
-                    <Text style={[styles.checklistActionTitle, { color: theme.text }]}>
-                      {t('starterGuideScreen.suppliesChecklistTitle')}
-                    </Text>
+                    <View style={styles.checklistTitleRow}>
+                      <View style={[styles.miniIconBadge, { backgroundColor: tones.paper }]}>
+                        <MaterialIcons name="inventory-2" size={16} color={theme.text} />
+                      </View>
+                      <Text style={[styles.checklistActionTitle, { color: theme.text }]}>
+                        {t('starterGuideScreen.suppliesChecklistTitle')}
+                      </Text>
+                    </View>
                     <View style={[styles.progressBadge, { backgroundColor: theme.accentSoft }]}>
                       <Text style={[styles.progressBadgeText, { color: theme.text }]}>
                         {t('starterGuideScreen.suppliesProgressLabel', {
@@ -183,10 +201,12 @@ export default function WeaningStartGuideScreen() {
                 <Text style={[styles.metaLabel, { color: theme.icon }]}>{t('starterGuideScreen.readCountLabel')}</Text>
                 <Text style={[styles.metaValue, { color: theme.text }]}>{readCount}</Text>
               </View>
-              <View style={[styles.metaCard, { backgroundColor: tones.blush, borderColor: theme.border }]}>
+              <Pressable
+                onPress={() => router.push('/weaning-bookmarks')}
+                style={[styles.metaCard, { backgroundColor: tones.blush, borderColor: theme.border }]}>
                 <Text style={[styles.metaLabel, { color: theme.icon }]}>{t('starterGuideScreen.bookmarkCountLabel')}</Text>
                 <Text style={[styles.metaValue, { color: theme.text }]}>{progress.bookmarkedChapterIds.length}</Text>
-              </View>
+              </Pressable>
               <View style={[styles.metaCard, { backgroundColor: tones.peach, borderColor: theme.border }]}>
                 <Text style={[styles.metaLabel, { color: theme.icon }]}>{t('starterGuideScreen.partCountLabel')}</Text>
                 <Text style={[styles.metaValue, { color: theme.text }]}>{parts.length}</Text>
@@ -196,35 +216,33 @@ export default function WeaningStartGuideScreen() {
         </Animated.View>
 
         <Animated.View style={[sectionsStyle, styles.cardStack]}>
-          {bookmarkedChapters.length > 0 ? (
-            <View style={[styles.bookmarkCard, styles.decorativeCard, { backgroundColor: tones.blush, borderColor: theme.border }]}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('starterGuideScreen.bookmarkTitle')}</Text>
-              <Text style={[styles.sectionBody, { color: theme.icon }]}>{t('starterGuideScreen.bookmarkBody')}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.bookmarkList}>
-                {bookmarkedChapters.map((chapter) => {
-                  const targetPart = parts.find((part) => part.chapters.some((item) => item.id === chapter.id));
-                  return (
-                    <Pressable
-                      key={chapter.id}
-                      onPress={() =>
-                        router.push({
-                          pathname: '/weaning-part-guide',
-                          params: { partId: targetPart?.id ?? parts[0]?.id },
-                        })
-                      }
-                      style={[styles.bookmarkChip, { backgroundColor: tones.paper, borderColor: theme.border }]}>
-                      <MaterialIcons name="bookmark" size={16} color="#EA7A34" />
-                      <Text style={[styles.bookmarkChipText, { color: theme.text }]} numberOfLines={1}>
-                        {chapter.title}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </ScrollView>
+          {recommendedPart ? (
+            <View style={[styles.partCard, styles.decorativeCard, { backgroundColor: tones.blush, borderColor: theme.border }]}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('starterGuideScreen.recommendedTitle')}</Text>
+              <Text style={[styles.sectionBody, { color: theme.icon }]}>
+                {t('starterGuideScreen.recommendedBody', { part: recommendedPart.title })}
+              </Text>
+              <View style={styles.partList}>
+                {recommendedChapters.map((chapter) => (
+                  <Pressable
+                    key={chapter.id}
+                    onPress={() => router.push({ pathname: '/weaning-chapter', params: { chapterId: chapter.id } })}
+                    style={[styles.partCardItem, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                    <View style={styles.partCardHeader}>
+                      <View style={styles.partTextWrap}>
+                        <Text style={[styles.partCardTitle, { color: theme.text }]}>{chapter.title}</Text>
+                        <Text style={[styles.partCardBody, { color: theme.icon }]}>{chapter.summary}</Text>
+                      </View>
+                      <MaterialIcons name="chevron-right" size={22} color={theme.icon} />
+                    </View>
+                  </Pressable>
+                ))}
+              </View>
             </View>
           ) : null}
 
           <View style={[styles.partCard, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+            <View style={[styles.decorBubble, styles.partBubble, { backgroundColor: tones.blush }]} />
             <View style={styles.sectionHeaderRow}>
               <View>
                 <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('starterGuideScreen.partTitle')}</Text>
@@ -257,36 +275,37 @@ export default function WeaningStartGuideScreen() {
           </View>
 
           <View style={[styles.faqCard, styles.decorativeCard, { backgroundColor: tones.cream, borderColor: theme.border }]}>
+            <View style={[styles.decorBubble, styles.faqBubble, { backgroundColor: tones.paper }]} />
             <View style={styles.faqHeader}>
+              <View style={[styles.sectionEyebrow, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                <MaterialIcons name="forum" size={14} color={theme.text} />
+                <Text style={[styles.sectionEyebrowText, { color: theme.text }]}>FAQ</Text>
+              </View>
               <View>
                 <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('starterGuideScreen.faqTitle')}</Text>
                 <Text style={[styles.sectionBody, { color: theme.icon }]}>{t('starterGuideScreen.faqBody')}</Text>
               </View>
-              <Pressable
-                onPress={() => router.push('/weaning-faq')}
-                style={[styles.secondaryAction, { backgroundColor: tones.paper, borderColor: theme.border }]}>
-                <Text style={[styles.secondaryActionText, { color: theme.text }]}>{t('common.seeAll')}</Text>
-              </Pressable>
             </View>
 
             <View style={styles.faqPreviewList}>
               {faqPreview.map((item) => (
-                <Pressable
+                <FoldableCard
                   key={item.id}
-                  onPress={() => router.push('/weaning-faq')}
-                  style={[styles.faqPreviewItem, { backgroundColor: tones.paper, borderColor: theme.border }]}>
-                  <View style={styles.faqPreviewHeader}>
-                    <MaterialIcons name="help-outline" size={18} color={theme.text} />
-                    <Text style={[styles.faqPreviewTitle, { color: theme.text }]} numberOfLines={1}>
-                      {item.title}
-                    </Text>
-                  </View>
-                  <Text style={[styles.faqPreviewBody, { color: theme.icon }]} numberOfLines={2}>
-                    {item.body}
-                  </Text>
-                </Pressable>
+                  title={item.title}
+                  theme={theme}
+                  backgroundColor={tones.paper}
+                  borderColor={theme.border}
+                  style={styles.faqPreviewItem}>
+                  <Text style={[styles.faqPreviewBody, { color: theme.icon }]}>{item.body}</Text>
+                </FoldableCard>
               ))}
             </View>
+
+            <Pressable
+              onPress={() => router.push('/weaning-faq')}
+              style={[styles.secondaryAction, styles.faqSeeAllAction, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+              <Text style={[styles.secondaryActionText, { color: theme.text }]}>{t('common.seeAll')}</Text>
+            </Pressable>
           </View>
 
           <AdSlotCard tone="lavender" />
@@ -323,6 +342,35 @@ const styles = StyleSheet.create({
     height: 98,
     right: -24,
     top: -18,
+  },
+  bookmarkBubble: {
+    width: 84,
+    height: 84,
+    right: -18,
+    top: -18,
+  },
+  partBubble: {
+    width: 118,
+    height: 118,
+    right: -34,
+    top: -26,
+  },
+  faqBubble: {
+    width: 96,
+    height: 96,
+    right: -24,
+    top: -24,
+  },
+  inlineDecorBubble: {
+    position: 'absolute',
+    borderRadius: 999,
+    opacity: 0.72,
+  },
+  checklistCardBubble: {
+    width: 76,
+    height: 76,
+    top: -20,
+    right: -12,
   },
   overviewCard: {
     borderWidth: 1,
@@ -402,19 +450,41 @@ const styles = StyleSheet.create({
   checklistActionHeader: {
     gap: 8,
   },
+  checklistTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  miniIconBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   checklistActionTitle: {
     fontFamily: Fonts.rounded,
     fontSize: 17,
     fontWeight: '700',
   },
-  bookmarkCard: {
-    borderWidth: 1,
-    borderRadius: 20,
-    padding: Spacing.cardPadding,
-    gap: 10,
-  },
   sectionHeaderRow: {
-    gap: 4,
+    gap: 8,
+  },
+  sectionEyebrow: {
+    alignSelf: 'flex-start',
+    minHeight: 30,
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  sectionEyebrowText: {
+    fontFamily: Fonts.sans,
+    fontSize: 11,
+    fontWeight: '700',
   },
   sectionTitle: {
     fontFamily: Fonts.rounded,
@@ -425,24 +495,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.sans,
     fontSize: 14,
     lineHeight: 20,
-  },
-  bookmarkList: {
-    gap: 8,
-  },
-  bookmarkChip: {
-    maxWidth: 220,
-    borderWidth: 1,
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  bookmarkChipText: {
-    fontFamily: Fonts.sans,
-    fontSize: 13,
-    fontWeight: '700',
   },
   partCard: {
     borderWidth: 1,
@@ -491,30 +543,17 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   faqHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: 12,
+    gap: 4,
   },
   faqPreviewList: {
     gap: 10,
   },
   faqPreviewItem: {
-    borderWidth: 1,
-    borderRadius: 18,
-    padding: 14,
-    gap: 8,
-  },
-  faqPreviewHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  faqPreviewTitle: {
-    flex: 1,
-    fontFamily: Fonts.rounded,
-    fontSize: 16,
-    fontWeight: '700',
+    shadowColor: '#C9B8A4',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
   },
   faqPreviewBody: {
     fontFamily: Fonts.sans,
@@ -551,5 +590,8 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.sans,
     fontSize: 13,
     fontWeight: '700',
+  },
+  faqSeeAllAction: {
+    alignSelf: 'stretch',
   },
 });
