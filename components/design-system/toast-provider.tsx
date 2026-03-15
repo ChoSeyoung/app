@@ -21,6 +21,7 @@ import {
 import {
   Animated,
   Easing,
+  PanResponder,
   Pressable,
   StyleSheet,
   Text,
@@ -57,6 +58,12 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 const TOAST_DURATION_MS = 2600;
 const ANIMATION_DURATION_MS = 220;
 const TOAST_BOTTOM_OFFSET = 12;
+const SWIPE_DISMISS_X = 72;
+const SWIPE_DISMISS_Y = 38;
+const UPWARD_DRAG_CAP = -18;
+const AXIS_LOCK_START = 10;
+const HORIZONTAL_LOCK_RATIO = 0.9;
+const VERTICAL_LOCK_RATIO = 1.35;
 
 function getToastTheme(level: ToastLevel, colorScheme: 'light' | 'dark') {
   const theme = Colors[colorScheme];
@@ -65,7 +72,6 @@ function getToastTheme(level: ToastLevel, colorScheme: 'light' | 'dark') {
     case 'success':
       return {
         icon: 'check-circle',
-        badgeLabel: 'SUCCESS',
         card: colorScheme === 'dark' ? '#21362B' : '#EEF7F0',
         badge: theme.success,
         chip: colorScheme === 'dark' ? '#2E4B39' : '#DDF1E2',
@@ -75,7 +81,6 @@ function getToastTheme(level: ToastLevel, colorScheme: 'light' | 'dark') {
     case 'warning':
       return {
         icon: 'priority-high',
-        badgeLabel: 'CAUTION',
         card: colorScheme === 'dark' ? '#40311E' : '#FFF3DE',
         badge: '#D99227',
         chip: colorScheme === 'dark' ? '#4B3820' : '#FCE7BE',
@@ -85,7 +90,6 @@ function getToastTheme(level: ToastLevel, colorScheme: 'light' | 'dark') {
     case 'error':
       return {
         icon: 'error-outline',
-        badgeLabel: 'ERROR',
         card: colorScheme === 'dark' ? '#3B2724' : '#FBEDEA',
         badge: theme.danger,
         chip: colorScheme === 'dark' ? '#4A322E' : '#F6D9D2',
@@ -95,7 +99,6 @@ function getToastTheme(level: ToastLevel, colorScheme: 'light' | 'dark') {
     case 'highlight':
       return {
         icon: 'auto-awesome',
-        badgeLabel: 'NICE',
         card: colorScheme === 'dark' ? '#372B49' : '#F3EAFF',
         badge: '#9A67EA',
         chip: colorScheme === 'dark' ? '#45355E' : '#E7D9FF',
@@ -106,7 +109,6 @@ function getToastTheme(level: ToastLevel, colorScheme: 'light' | 'dark') {
     default:
       return {
         icon: 'notifications-none',
-        badgeLabel: 'INFO',
         card: colorScheme === 'dark' ? '#3A3120' : '#FFF6DD',
         badge: theme.accent,
         chip: colorScheme === 'dark' ? '#514325' : '#FCE7BE',
@@ -124,7 +126,13 @@ export function ToastProvider({ children }: PropsWithChildren) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-12)).current;
+  const dragX = useRef(new Animated.Value(0)).current;
+  const dragY = useRef(new Animated.Value(0)).current;
+  const dragXValueRef = useRef(0);
+  const dragYValueRef = useRef(0);
   const currentToastRef = useRef<ToastState | null>(null);
+  const hideToastRef = useRef<(direction?: 'left' | 'right' | 'down') => void>(() => {});
+  const gestureAxisRef = useRef<'horizontal' | 'vertical' | null>(null);
 
   useEffect(() => {
     currentToastRef.current = toast;
@@ -136,30 +144,180 @@ export function ToastProvider({ children }: PropsWithChildren) {
     timerRef.current = null;
   }, []);
 
-  const hideToast = useCallback(() => {
+  const startHideTimer = useCallback(
+    (durationMs: number) => {
+      clearTimer();
+      timerRef.current = setTimeout(() => {
+        hideToastRef.current('down');
+      }, durationMs);
+    },
+    [clearTimer]
+  );
+
+  const hideToast = useCallback(
+    (direction: 'left' | 'right' | 'down' = 'down') => {
+      clearTimer();
+
+      const targetX = direction === 'left' ? -320 : direction === 'right' ? 320 : 0;
+      const targetDragY = direction === 'down' ? 120 : 0;
+      const targetBaseY = direction === 'down' ? 28 : 0;
+
+      Animated.parallel([
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: ANIMATION_DURATION_MS,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: targetBaseY,
+          duration: ANIMATION_DURATION_MS,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(dragX, {
+          toValue: targetX,
+          duration: ANIMATION_DURATION_MS,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(dragY, {
+          toValue: targetDragY,
+          duration: ANIMATION_DURATION_MS,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+      ]).start(({ finished }) => {
+        if (!finished) return;
+        dragX.setValue(0);
+        dragY.setValue(0);
+        dragXValueRef.current = 0;
+        dragYValueRef.current = 0;
+        translateY.setValue(-12);
+        setToast((current) => {
+          if (!currentToastRef.current) return current;
+          return null;
+        });
+      });
+    },
+    [clearTimer, dragX, dragY, opacity, translateY]
+  );
+
+  useEffect(() => {
+    hideToastRef.current = hideToast;
+  }, [hideToast]);
+
+  const resetToastPosition = useCallback(() => {
     clearTimer();
 
     Animated.parallel([
-      Animated.timing(opacity, {
+      Animated.spring(dragX, {
         toValue: 0,
-        duration: ANIMATION_DURATION_MS,
-        easing: Easing.out(Easing.quad),
+        damping: 16,
+        stiffness: 220,
+        mass: 0.8,
         useNativeDriver: true,
       }),
-      Animated.timing(translateY, {
-        toValue: 28,
-        duration: ANIMATION_DURATION_MS,
-        easing: Easing.out(Easing.quad),
+      Animated.spring(dragY, {
+        toValue: 0,
+        damping: 16,
+        stiffness: 220,
+        mass: 0.8,
         useNativeDriver: true,
       }),
-    ]).start(({ finished }) => {
-      if (!finished) return;
-      setToast((current) => {
-        if (!currentToastRef.current) return current;
-        return null;
-      });
+      Animated.spring(translateY, {
+        toValue: 0,
+        damping: 16,
+        stiffness: 220,
+        mass: 0.8,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      dragXValueRef.current = 0;
+      dragYValueRef.current = 0;
+      gestureAxisRef.current = null;
+      const activeToast = currentToastRef.current;
+      if (!activeToast) return;
+      startHideTimer(activeToast.durationMs ?? TOAST_DURATION_MS);
     });
-  }, [clearTimer, opacity, translateY]);
+  }, [clearTimer, dragX, dragY, startHideTimer, translateY]);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => false,
+      onStartShouldSetPanResponderCapture: () => false,
+      onMoveShouldSetPanResponder: (_, gestureState) =>
+        Math.abs(gestureState.dx) > 8 || Math.abs(gestureState.dy) > 8,
+      onPanResponderGrant: () => {
+        clearTimer();
+        gestureAxisRef.current = null;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (!gestureAxisRef.current) {
+          const absX = Math.abs(gestureState.dx);
+          const absY = Math.abs(gestureState.dy);
+
+          if (absX < AXIS_LOCK_START && absY < AXIS_LOCK_START) {
+            return;
+          }
+
+          if (absX >= AXIS_LOCK_START && absX >= absY * HORIZONTAL_LOCK_RATIO) {
+            gestureAxisRef.current = 'horizontal';
+          } else if (absY >= AXIS_LOCK_START && absY >= absX * VERTICAL_LOCK_RATIO) {
+            gestureAxisRef.current = 'vertical';
+          } else {
+            return;
+          }
+        }
+
+        if (gestureAxisRef.current === 'horizontal') {
+          const isMostlyHorizontal = Math.abs(gestureState.dy) <= Math.abs(gestureState.dx) * 0.55;
+          const nextX = isMostlyHorizontal ? gestureState.dx : dragXValueRef.current;
+          dragXValueRef.current = nextX;
+          dragYValueRef.current = 0;
+          dragX.setValue(nextX);
+          dragY.setValue(0);
+          return;
+        }
+
+        dragX.setValue(0);
+        dragXValueRef.current = 0;
+
+        if (gestureState.dy < 0) {
+          const nextY = Math.max(UPWARD_DRAG_CAP, gestureState.dy * 0.32);
+          dragYValueRef.current = nextY;
+          dragY.setValue(nextY);
+          return;
+        }
+
+        dragYValueRef.current = gestureState.dy;
+        dragY.setValue(gestureState.dy);
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        const absX = Math.abs(dragXValueRef.current);
+        const downY = Math.max(0, dragYValueRef.current);
+        const lockedAxis = gestureAxisRef.current;
+
+        if (absX >= SWIPE_DISMISS_X && absX >= downY) {
+          gestureAxisRef.current = null;
+          hideToast(dragXValueRef.current < 0 ? 'left' : 'right');
+          return;
+        }
+
+        if (lockedAxis !== 'horizontal' && downY >= SWIPE_DISMISS_Y) {
+          gestureAxisRef.current = null;
+          hideToast('down');
+          return;
+        }
+
+        resetToastPosition();
+      },
+      onPanResponderTerminate: () => {
+        gestureAxisRef.current = null;
+        resetToastPosition();
+      },
+    })
+  ).current;
 
   const showToast = useCallback(
     (options: ShowToastOptions) => {
@@ -174,8 +332,15 @@ export function ToastProvider({ children }: PropsWithChildren) {
 
       opacity.stopAnimation();
       translateY.stopAnimation();
+      dragX.stopAnimation();
+      dragY.stopAnimation();
       opacity.setValue(0);
       translateY.setValue(28);
+      dragX.setValue(0);
+      dragY.setValue(0);
+      dragXValueRef.current = 0;
+      dragYValueRef.current = 0;
+      gestureAxisRef.current = null;
       setToast(nextToast);
 
       requestAnimationFrame(() => {
@@ -195,11 +360,9 @@ export function ToastProvider({ children }: PropsWithChildren) {
         ]).start();
       });
 
-      timerRef.current = setTimeout(() => {
-        hideToast();
-      }, nextToast.durationMs);
+      startHideTimer(nextToast.durationMs);
     },
-    [clearTimer, hideToast, opacity, translateY]
+    [clearTimer, dragX, dragY, opacity, startHideTimer, translateY]
   );
 
   useEffect(() => () => {
@@ -208,7 +371,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
 
   const contextValue: ToastContextValue = {
     showToast,
-    hideToast,
+    hideToast: () => hideToast('down'),
   };
 
   const toastTheme = getToastTheme(toast?.level ?? toast?.variant ?? 'info', colorScheme);
@@ -225,9 +388,10 @@ export function ToastProvider({ children }: PropsWithChildren) {
               {
                 bottom: Math.max(insets.bottom, 8) + TOAST_BOTTOM_OFFSET,
                 opacity,
-                transform: [{ translateY }],
+                transform: [{ translateX: dragX }, { translateY: Animated.add(translateY, dragY) }],
               },
-            ]}>
+            ]}
+            {...panResponder.panHandlers}>
             <View
               style={[
                 styles.toastCard,
@@ -246,9 +410,6 @@ export function ToastProvider({ children }: PropsWithChildren) {
                 </View>
 
                 <View style={styles.textWrap}>
-                  <View style={[styles.levelChip, { backgroundColor: toastTheme.chip, borderColor: theme.border }]}>
-                    <Text style={[styles.levelChipText, { color: theme.text }]}>{toastTheme.badgeLabel}</Text>
-                  </View>
                   <Text
                     style={[styles.message, { color: theme.text }]}
                     numberOfLines={1}
@@ -262,8 +423,10 @@ export function ToastProvider({ children }: PropsWithChildren) {
                   <Pressable
                     hitSlop={8}
                     onPress={() => {
-                      toast.onActionPress?.();
-                      hideToast();
+                      hideToast('down');
+                      requestAnimationFrame(() => {
+                        toast.onActionPress?.();
+                      });
                     }}
                     style={[styles.actionChip, { backgroundColor: toastTheme.chip, borderColor: theme.border }]}>
                     <Text style={[styles.actionLabel, { color: theme.text }]} numberOfLines={1}>
@@ -327,21 +490,7 @@ const styles = StyleSheet.create({
   },
   textWrap: {
     flex: 1,
-    gap: 3,
-  },
-  levelChip: {
-    alignSelf: 'flex-start',
-    borderWidth: 1,
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginBottom: 1,
-  },
-  levelChipText: {
-    fontFamily: Fonts.sans,
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    gap: 0,
   },
   message: {
     fontFamily: Fonts.rounded,

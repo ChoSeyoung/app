@@ -1,4 +1,4 @@
-import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
 import { BABY_PROFILE_STORAGE_KEY, type BabyProfile } from '@/constants/baby-profile';
@@ -16,8 +16,14 @@ import { safeGetItem, safeSetItem } from '@/lib/safe-storage';
 
 const NOTIFICATION_ID_STORAGE_KEY = '@weaning-diary/notification-ids';
 const ANDROID_CHANNEL_ID = 'daily-reminders';
+const NOTIFICATIONS_UNSUPPORTED_IN_EXPO_GO = Constants.appOwnership === 'expo';
 
 type ScheduledNotificationMap = Record<string, string>;
+
+type NotificationsModule = typeof import('expo-notifications');
+
+let notificationsModulePromise: Promise<NotificationsModule | null> | null = null;
+let notificationHandlerInitialized = false;
 
 function isBabyProfile(value: unknown): value is BabyProfile {
   if (!value || typeof value !== 'object') return false;
@@ -26,7 +32,43 @@ function isBabyProfile(value: unknown): value is BabyProfile {
 }
 
 function isNotificationMap(value: unknown): value is ScheduledNotificationMap {
-  return Boolean(value) && typeof value === 'object' && Object.values(value as Record<string, unknown>).every((item) => typeof item === 'string');
+  return (
+    Boolean(value) &&
+    typeof value === 'object' &&
+    Object.values(value as Record<string, unknown>).every((item) => typeof item === 'string')
+  );
+}
+
+export function isNotificationRuntimeSupported(): boolean {
+  return !NOTIFICATIONS_UNSUPPORTED_IN_EXPO_GO;
+}
+
+async function getNotificationsModule(): Promise<NotificationsModule | null> {
+  if (NOTIFICATIONS_UNSUPPORTED_IN_EXPO_GO) {
+    return null;
+  }
+
+  if (!notificationsModulePromise) {
+    notificationsModulePromise = import('expo-notifications')
+      .then((module) => {
+        if (!notificationHandlerInitialized) {
+          module.setNotificationHandler({
+            handleNotification: async () => ({
+              shouldPlaySound: true,
+              shouldSetBadge: false,
+              shouldShowBanner: true,
+              shouldShowList: true,
+            }),
+          });
+          notificationHandlerInitialized = true;
+        }
+
+        return module;
+      })
+      .catch(() => null);
+  }
+
+  return notificationsModulePromise;
 }
 
 async function readStoredNotificationIds(): Promise<ScheduledNotificationMap> {
@@ -86,13 +128,13 @@ function resolveScheduleTime(
   return fallback;
 }
 
-async function ensurePermissions(): Promise<boolean> {
-  const current = await Notifications.getPermissionsAsync();
-  if (current.granted || current.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL) {
+async function ensurePermissions(notifications: NotificationsModule): Promise<boolean> {
+  const current = await notifications.getPermissionsAsync();
+  if (current.granted || current.ios?.status === notifications.IosAuthorizationStatus.PROVISIONAL) {
     return true;
   }
 
-  const requested = await Notifications.requestPermissionsAsync({
+  const requested = await notifications.requestPermissionsAsync({
     ios: {
       allowAlert: true,
       allowBadge: true,
@@ -100,25 +142,25 @@ async function ensurePermissions(): Promise<boolean> {
     },
   });
 
-  return requested.granted || requested.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL;
+  return requested.granted || requested.ios?.status === notifications.IosAuthorizationStatus.PROVISIONAL;
 }
 
-async function ensureChannel(): Promise<void> {
+async function ensureChannel(notifications: NotificationsModule): Promise<void> {
   if (Platform.OS !== 'android') return;
 
-  await Notifications.setNotificationChannelAsync(ANDROID_CHANNEL_ID, {
+  await notifications.setNotificationChannelAsync(ANDROID_CHANNEL_ID, {
     name: 'Daily reminders',
-    importance: Notifications.AndroidImportance.DEFAULT,
+    importance: notifications.AndroidImportance.DEFAULT,
     lightColor: '#F1A977',
   });
 }
 
-async function cancelScheduledNotifications(): Promise<void> {
+async function cancelScheduledNotifications(notifications: NotificationsModule): Promise<void> {
   const current = await readStoredNotificationIds();
   await Promise.all(
     Object.values(current).map(async (id) => {
       try {
-        await Notifications.cancelScheduledNotificationAsync(id);
+        await notifications.cancelScheduledNotificationAsync(id);
       } catch {
         // Ignore missing identifiers after reinstall or refresh.
       }
@@ -128,29 +170,38 @@ async function cancelScheduledNotifications(): Promise<void> {
 }
 
 async function scheduleDailyNotification(
-  content: Notifications.NotificationContentInput,
+  notifications: NotificationsModule,
+  content: {
+    title: string;
+    body: string;
+  },
   time: { hour: number; minute: number }
 ): Promise<string> {
-  return Notifications.scheduleNotificationAsync({
+  return notifications.scheduleNotificationAsync({
     content: {
       ...content,
       sound: true,
       ...(Platform.OS === 'android' ? { channelId: ANDROID_CHANNEL_ID } : {}),
     },
     trigger: {
-      type: Notifications.SchedulableTriggerInputTypes.DAILY,
+      type: notifications.SchedulableTriggerInputTypes.DAILY,
       hour: time.hour,
       minute: time.minute,
-    } as Notifications.DailyTriggerInput,
+    } as never,
   });
 }
 
 export async function syncNotificationSchedules(
   explicitSettings?: NotificationSettings
 ): Promise<void> {
+  const notifications = await getNotificationsModule();
+  if (!notifications) {
+    return;
+  }
+
   const settings = explicitSettings ?? (await loadNotificationSettings());
-  await ensureChannel();
-  await cancelScheduledNotifications();
+  await ensureChannel(notifications);
+  await cancelScheduledNotifications(notifications);
 
   const shouldRequestPermission =
     settings.mealPlanMorning ||
@@ -162,7 +213,7 @@ export async function syncNotificationSchedules(
     return;
   }
 
-  const granted = await ensurePermissions();
+  const granted = await ensurePermissions(notifications);
   if (!granted) {
     return;
   }
@@ -182,6 +233,7 @@ export async function syncNotificationSchedules(
 
   if (settings.mealPlanMorning && plan?.today.meals[0]) {
     nextIds.mealPlanMorning = await scheduleDailyNotification(
+      notifications,
       {
         title: t('notificationSettingsScreen.mealPlanMorningTitle'),
         body: t('notificationSettingsScreen.mealPlanMorningToast', {
@@ -194,6 +246,7 @@ export async function syncNotificationSchedules(
 
   if (settings.feedingRecordReminder) {
     nextIds.feedingRecordReminder = await scheduleDailyNotification(
+      notifications,
       {
         title: t('notificationSettingsScreen.feedingRecordReminderTitle'),
         body: t('notificationSettingsScreen.feedingRecordReminderToast'),
@@ -204,6 +257,7 @@ export async function syncNotificationSchedules(
 
   if (settings.cautionReactionAlert && signals.yesterdayRiskCount > 0) {
     nextIds.cautionReactionAlert = await scheduleDailyNotification(
+      notifications,
       {
         title: t('notificationSettingsScreen.cautionReactionAlertTitle'),
         body: t('notificationSettingsScreen.cautionReactionAlertToast', {
@@ -216,6 +270,7 @@ export async function syncNotificationSchedules(
 
   if (settings.newIngredientObservation && signals.observationIngredientIds.length > 0) {
     nextIds.newIngredientObservation = await scheduleDailyNotification(
+      notifications,
       {
         title: t('notificationSettingsScreen.newIngredientObservationTitle'),
         body: t('notificationSettingsScreen.newIngredientObservationToast', {
@@ -228,12 +283,3 @@ export async function syncNotificationSchedules(
 
   await writeStoredNotificationIds(nextIds);
 }
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});

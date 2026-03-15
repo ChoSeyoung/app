@@ -390,9 +390,6 @@ export default function HomeScreen() {
             <SectionHeader title={t('home.cautionAlertTitle')} />
             <View style={[styles.cautionCard, styles.decorativeCard, { borderColor: '#E9C88A', backgroundColor: '#FFF4DE' }]}>
               <View style={[styles.decorBubble, styles.cardBubbleCorner, { backgroundColor: '#FFE8BD' }]} />
-              <View style={[styles.softEyebrow, { backgroundColor: '#FFE8BD' }]}>
-                <Text style={[styles.softEyebrowText, { color: '#7a5300' }]}>{t('home.cautionAlertTitle')}</Text>
-              </View>
               {cautionAlerts.length > 0 ? (
                 <View style={styles.cautionList}>
                   {cautionAlerts.map((alert) => (

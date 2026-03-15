@@ -76,12 +76,15 @@ export default function RootLayout() {
               <Stack.Screen name="weaning-part-guide" options={{ headerShown: false }} />
               <Stack.Screen name="weaning-chapter" options={{ headerShown: false }} />
               <Stack.Screen name="weaning-bookmarks" options={{ headerShown: false }} />
+              <Stack.Screen name="weaning-recipes" options={{ headerShown: false }} />
+              <Stack.Screen name="weaning-recipe-detail" options={{ headerShown: false }} />
               <Stack.Screen name="weaning-faq" options={{ headerShown: false }} />
               <Stack.Screen name="open-source-licenses" options={{ headerShown: false }} />
               <Stack.Screen name="notification-settings" options={{ headerShown: false }} />
               <Stack.Screen name="meal-plan-preferences" options={{ headerShown: false }} />
               <Stack.Screen name="data-management" options={{ headerShown: false }} />
               <Stack.Screen name="weekly-insights" options={{ headerShown: false }} />
+              <Stack.Screen name="developer-toast-lab" options={{ headerShown: false }} />
               <Stack.Screen name="terms-of-service" options={{ headerShown: false }} />
               <Stack.Screen name="privacy-policy" options={{ headerShown: false }} />
               <Stack.Screen name="record-editor" options={{ headerShown: false }} />

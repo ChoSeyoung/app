@@ -205,6 +205,15 @@ spacing token source: `constants/spacing.ts`
 - 식재료 상태 배지는 정보 강조용으로만 쓰고, 카드 바탕색은 카테고리/상태와 별개로 부드러운 파스텔 계열을 유지한다.
 - 식재료 검색 결과, 선택 칩, 플레이스홀더 이미지까지도 귀여운 다이어리 톤을 해치지 않도록 정리한다.
 
+### 3.11.1 Photo + Copy Card Pattern
+- 식재료 카드와 레시피 카드처럼 `상단 이미지(또는 결과물 프리뷰) + 하단 텍스트` 구조를 쓰는 2열 카드는 같은 규격을 사용한다.
+- 카드 자체는 `radius 20`, `maxWidth 48.5%`, `overflow hidden`을 기본으로 한다.
+- 상단 비주얼 영역은 정사각형 `aspectRatio 1`을 사용한다.
+- 하단 본문은 `paddingHorizontal 12 / paddingVertical 12 / gap 7`을 기본으로 한다.
+- 카드 제목은 `16 / 700`, 보조 설명은 `12 / lineHeight 18`을 기본으로 한다.
+- 보조 pill은 카드 하단 본문 안에 두고, `paddingHorizontal 10 / paddingVertical 5 / fontSize 11` 규격을 사용한다.
+- 레시피 카드도 식재료 카드와 같은 그리드 리듬을 유지하고, 달라지는 것은 상단 비주얼 내용과 배지 문구뿐이어야 한다.
+
 ### 3.12 Content and Ad Slots
 - 정보/가이드 화면은 `hero -> 핵심 카드 -> FAQ -> 광고 슬롯` 순으로 읽히게 구성한다.
 - 광고는 콘텐츠처럼 위장하지 않고 반드시 `광고` 배지로 먼저 구분한다.

@@ -80,6 +80,12 @@ export default function MoreScreen() {
             <Text style={[styles.menuText, { color: theme.text }]}>{t('moreScreen.weaningStartGuideAction')}</Text>
             <IconSymbol name="chevron.right" size={20} color={theme.icon} />
           </Pressable>
+          <Pressable
+            onPress={() => router.push('/weaning-recipes')}
+            style={[styles.menuItem, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+            <Text style={[styles.menuText, { color: theme.text }]}>{t('moreScreen.recipeAction')}</Text>
+            <IconSymbol name="chevron.right" size={20} color={theme.icon} />
+          </Pressable>
         </View>
 
         <View style={[styles.card, styles.decorativeCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
@@ -168,6 +174,22 @@ export default function MoreScreen() {
             </Pressable>
           </View>
         </View>
+
+        {__DEV__ ? (
+          <View style={[styles.card, styles.decorativeCard, { backgroundColor: tones.lavender, borderColor: theme.border }]}>
+            <View style={[styles.decorBubble, styles.cardDecorBubble, { backgroundColor: tones.paper }]} />
+            <Text style={[styles.cardTitle, { color: theme.text }]}>{t('moreScreen.developerTitle')}</Text>
+            <Text style={[styles.cardBody, { color: theme.icon }]}>{t('moreScreen.developerBody')}</Text>
+            <View style={styles.menuList}>
+              <Pressable
+                onPress={() => router.push('/developer-toast-lab')}
+                style={[styles.menuItem, { backgroundColor: tones.paper, borderColor: theme.border }]}>
+                <Text style={[styles.menuText, { color: theme.text }]}>{t('moreScreen.devToastTestAction')}</Text>
+                <IconSymbol name="chevron.right" size={20} color={theme.icon} />
+              </Pressable>
+            </View>
+          </View>
+        ) : null}
         </Animated.View>
       </ScrollView>
     </SafeAreaView>

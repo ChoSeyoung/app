@@ -238,9 +238,90 @@ type Messages = {
     weaningStartGuide: string;
     weaningStartGuideBody: string;
     weaningStartGuideAction: string;
+    recipeAction: string;
     appInfoTitle: string;
     mealPreferences: string;
     weeklyInsights: string;
+    developerTitle: string;
+    developerBody: string;
+    devToastTestAction: string;
+  };
+  developerToastLabScreen: {
+    title: string;
+    subtitle: string;
+    levelTitle: string;
+    infoTitle: string;
+    infoBody: string;
+    infoMessage: string;
+    successTitle: string;
+    successBody: string;
+    successMessage: string;
+    warningTitle: string;
+    warningBody: string;
+    warningMessage: string;
+    errorTitle: string;
+    errorBody: string;
+    errorMessage: string;
+    highlightTitle: string;
+    highlightBody: string;
+    highlightMessage: string;
+    extraTitle: string;
+    longMessageTitle: string;
+    longMessageBody: string;
+    longMessageValue: string;
+    actionTitle: string;
+    actionBody: string;
+    actionMessage: string;
+    actionButton: string;
+    actionFollowupMessage: string;
+  };
+  recipeScreen: {
+    title: string;
+    subtitle: string;
+    cardHint: string;
+    ingredientsTitle: string;
+    stepsTitle: string;
+    savedMessage: string;
+    actionToggleFavorite: string;
+    stageInitial: string;
+    stageMiddle: string;
+    stageLate: string;
+    ricePumpkin: {
+      title: string;
+      summary: string;
+      ingredients: string[];
+      steps: string[];
+    };
+    oatApple: {
+      title: string;
+      summary: string;
+      ingredients: string[];
+      steps: string[];
+    };
+    beefBroccoli: {
+      title: string;
+      summary: string;
+      ingredients: string[];
+      steps: string[];
+    };
+    tofuZucchini: {
+      title: string;
+      summary: string;
+      ingredients: string[];
+      steps: string[];
+    };
+    riceBallTofuStick: {
+      title: string;
+      summary: string;
+      ingredients: string[];
+      steps: string[];
+    };
+    sweetPotatoFinger: {
+      title: string;
+      summary: string;
+      ingredients: string[];
+      steps: string[];
+    };
   };
   mealPlanPreferencesScreen: {
     title: string;
@@ -967,9 +1048,120 @@ const messages: Record<Locale, Messages> = {
       weaningStartGuide: '이유식 시작하기',
       weaningStartGuideBody: '처음 이유식을 시작할 때 필요한 기초 상식과 자주 묻는 질문을 한 번에 볼 수 있어요.',
       weaningStartGuideAction: '가이드 보러가기',
+      recipeAction: '이유식 레시피 보기',
       appInfoTitle: '앱 정보',
       mealPreferences: '식단 기준 설정',
       weeklyInsights: '주간 기록 요약',
+      developerTitle: '개발자 메뉴',
+      developerBody: '개발 중에 필요한 작은 기능 테스트를 여기서 빠르게 확인해요.',
+      devToastTestAction: '토스트 메시지 테스트',
+    },
+    developerToastLabScreen: {
+      title: '토스트 메시지 테스트',
+      subtitle: '하단 토스트의 색상, 문구 길이, 액션 버튼까지 빠르게 확인해보세요.',
+      levelTitle: '기본 레벨 테스트',
+      infoTitle: '정보 토스트',
+      infoBody: '기본 안내 톤과 하단 진입 모션을 확인해요.',
+      infoMessage: '오늘 화면 준비가 거의 끝났어요.',
+      successTitle: '성공 토스트',
+      successBody: '성공 색상과 아이콘 조합을 확인해요.',
+      successMessage: '변경 내용을 저장했어요.',
+      warningTitle: '주의 토스트',
+      warningBody: '주의 톤과 시각 강조가 적절한지 봐요.',
+      warningMessage: '새 식재료 반응을 한 번 더 확인해보세요.',
+      errorTitle: '에러 토스트',
+      errorBody: '에러 표현이 과하지 않으면서도 보이는지 확인해요.',
+      errorMessage: '잠시 후 다시 시도해주세요.',
+      highlightTitle: '강조 토스트',
+      highlightBody: '추천이나 축하처럼 돋보이는 톤을 확인해요.',
+      highlightMessage: '이번 주 추천 식단이 새로 준비됐어요.',
+      extraTitle: '추가 시나리오 테스트',
+      longMessageTitle: '긴 문구 테스트',
+      longMessageBody: '한 줄 안에서 얼마나 자연스럽게 잘리는지 확인해요.',
+      longMessageValue: '오늘 기록이 많아도 핵심 문구가 너무 답답하지 않게 보이는지 확인해보세요.',
+      actionTitle: '액션 버튼 테스트',
+      actionBody: '보조 액션이 붙은 토스트 동작을 확인해요.',
+      actionMessage: '바로 확인 버튼이 있는 토스트예요.',
+      actionButton: '확인',
+      actionFollowupMessage: '액션 버튼이 정상적으로 눌렸어요.',
+    },
+    recipeScreen: {
+      title: '이유식 레시피',
+      subtitle: '카드에서 먹이기 좋은 시기와 음식 이름을 보고, 눌러서 자세한 레시피를 확인해보세요.',
+      cardHint: '도입 순서와 반응 기록은 식단과 기록 화면을 함께 보며 조절해주세요.',
+      ingredientsTitle: '재료',
+      stepsTitle: '만드는 순서',
+      savedMessage: '레시피를 저장했어요.',
+      actionToggleFavorite: '레시피 저장',
+      stageInitial: '초기',
+      stageMiddle: '중기',
+      stageLate: '후기',
+      ricePumpkin: {
+        title: '쌀 단호박 미음',
+        summary: '처음 이유식을 시작할 때 무난하게 시도하기 좋은 부드러운 조합이에요.',
+        ingredients: ['불린 쌀 20g', '단호박 20g', '물 180ml'],
+        steps: [
+          '불린 쌀은 곱게 갈거나 잘게 다져 준비해요.',
+          '단호박은 속을 익힌 뒤 부드럽게 으깨요.',
+          '냄비에 쌀과 물을 넣고 약불에서 천천히 끓여요.',
+          '쌀이 충분히 퍼지면 단호박을 넣고 한 번 더 부드럽게 풀어주세요.',
+        ],
+      },
+      oatApple: {
+        title: '오트밀 사과죽',
+        summary: '곡물과 과일을 함께 익혀 산뜻하게 시작할 수 있는 초기용 메뉴예요.',
+        ingredients: ['오트밀 20g', '사과 25g', '물 160ml'],
+        steps: [
+          '사과는 껍질을 벗기고 잘게 썰어 준비해요.',
+          '냄비에 오트밀과 물을 넣고 약불에서 끓여요.',
+          '오트밀이 부드러워지면 사과를 넣고 함께 익혀요.',
+          '입자감이 남지 않도록 고르게 저어 마무리해요.',
+        ],
+      },
+      beefBroccoli: {
+        title: '소고기 브로콜리죽',
+        summary: '익숙한 곡물에 철분 식재료와 채소를 더해 넓혀가기 좋은 중기 레시피예요.',
+        ingredients: ['진밥 60g', '소고기 안심 20g', '브로콜리 20g', '물 120ml'],
+        steps: [
+          '소고기는 기름기 없는 부위를 잘게 다져 익혀요.',
+          '브로콜리는 꽃 부분 위주로 푹 삶아 잘게 다져요.',
+          '냄비에 진밥과 물을 넣고 풀어준 뒤 소고기를 먼저 넣어요.',
+          '브로콜리를 더해 한 번 더 끓이며 농도를 맞춰요.',
+        ],
+      },
+      tofuZucchini: {
+        title: '두부 애호박죽',
+        summary: '부드러운 단백질과 채소를 함께 담아 중기에 편하게 먹이기 좋은 메뉴예요.',
+        ingredients: ['진밥 60g', '부침용이 아닌 두부 30g', '애호박 20g', '물 120ml'],
+        steps: [
+          '두부는 끓는 물에 데친 뒤 물기를 빼고 으깨요.',
+          '애호박은 속까지 익힌 뒤 잘게 다져요.',
+          '진밥과 물을 냄비에 넣고 고르게 풀어 끓여요.',
+          '두부와 애호박을 넣고 잠시 더 끓여 부드럽게 맞춰요.',
+        ],
+      },
+      riceBallTofuStick: {
+        title: '주먹밥과 두부스틱',
+        summary: '손으로 쥐는 연습을 시작할 때 식사 리듬과 함께 써보기 좋은 후기 메뉴예요.',
+        ingredients: ['진밥 80g', '당근 15g', '두부 40g', '브로콜리 15g'],
+        steps: [
+          '당근과 브로콜리는 푹 익혀 잘게 다져요.',
+          '진밥에 당근을 섞어 한입 크기 주먹밥으로 빚어요.',
+          '두부는 길쭉하게 잘라 팬이나 에어프라이어로 겉면을 살짝 잡아줘요.',
+          '주먹밥과 두부스틱을 함께 담아 손으로 집기 좋게 내주세요.',
+        ],
+      },
+      sweetPotatoFinger: {
+        title: '고구마 핑거와 바나나',
+        summary: '간단한 손잡이 메뉴가 필요할 때 가볍게 준비하기 좋은 후기 레시피예요.',
+        ingredients: ['고구마 80g', '바나나 30g', '오트가루 10g'],
+        steps: [
+          '고구마는 푹 익혀 뜨거울 때 곱게 으깨요.',
+          '바나나는 잘 익은 것으로 골라 부드럽게 으깨요.',
+          '고구마와 바나나에 오트가루를 조금 섞어 형태를 잡아요.',
+          '손으로 쥘 수 있게 길쭉한 핑거 모양으로 만들어 내주세요.',
+        ],
+      },
     },
     mealPlanPreferencesScreen: {
       title: '식단 기준 설정',
@@ -1702,9 +1894,120 @@ const messages: Record<Locale, Messages> = {
       weaningStartGuide: 'Start weaning',
       weaningStartGuideBody: 'Browse the basics and common questions caregivers need when starting weaning for the first time.',
       weaningStartGuideAction: 'Open guide',
+      recipeAction: 'Open recipe cards',
       appInfoTitle: 'App info',
       mealPreferences: 'Meal preferences',
       weeklyInsights: 'Weekly insights',
+      developerTitle: 'Developer menu',
+      developerBody: 'Use this card to quickly verify small debug and UI test actions during development.',
+      devToastTestAction: 'Test toast message',
+    },
+    developerToastLabScreen: {
+      title: 'Toast lab',
+      subtitle: 'Quickly verify bottom toast colors, message length, and action buttons.',
+      levelTitle: 'Level tests',
+      infoTitle: 'Info toast',
+      infoBody: 'Check the base informational tone and motion.',
+      infoMessage: 'The screen is almost ready now.',
+      successTitle: 'Success toast',
+      successBody: 'Check the success color and icon pairing.',
+      successMessage: 'Your changes were saved.',
+      warningTitle: 'Warning toast',
+      warningBody: 'Check whether the caution tone feels visible enough.',
+      warningMessage: 'Take another look at the new ingredient reaction.',
+      errorTitle: 'Error toast',
+      errorBody: 'Check whether the error expression stays clear without feeling too harsh.',
+      errorMessage: 'Please try again in a moment.',
+      highlightTitle: 'Highlight toast',
+      highlightBody: 'Check the brighter tone used for recommendations or celebrations.',
+      highlightMessage: 'A new weekly recommendation is ready.',
+      extraTitle: 'Extra scenario tests',
+      longMessageTitle: 'Long message test',
+      longMessageBody: 'Check how neatly a longer message trims into a single line.',
+      longMessageValue: 'Check whether a longer message still feels readable without looking cramped in the bottom toast area.',
+      actionTitle: 'Action button test',
+      actionBody: 'Check a toast that includes a small follow-up action.',
+      actionMessage: 'This toast has a quick action button.',
+      actionButton: 'Open',
+      actionFollowupMessage: 'The toast action worked.',
+    },
+    recipeScreen: {
+      title: 'Weaning recipes',
+      subtitle: 'Browse recipe cards by stage, then tap a dish to open the full recipe.',
+      cardHint: 'Use the meal-plan and record screens together when adjusting introduction order and reactions.',
+      ingredientsTitle: 'Ingredients',
+      stepsTitle: 'Steps',
+      savedMessage: 'Recipe saved.',
+      actionToggleFavorite: 'Save recipe',
+      stageInitial: 'Initial',
+      stageMiddle: 'Middle',
+      stageLate: 'Late',
+      ricePumpkin: {
+        title: 'Rice pumpkin porridge',
+        summary: 'A soft first-stage combination that feels easy to start with.',
+        ingredients: ['20g soaked rice', '20g pumpkin', '180ml water'],
+        steps: [
+          'Grind or finely chop the soaked rice.',
+          'Steam the pumpkin until soft, then mash it well.',
+          'Simmer the rice and water on low heat until the rice opens up.',
+          'Stir in the pumpkin and cook a little longer until fully smooth.',
+        ],
+      },
+      oatApple: {
+        title: 'Oat apple porridge',
+        summary: 'A fresh early-stage option that mixes grain with fruit.',
+        ingredients: ['20g oats', '25g apple', '160ml water'],
+        steps: [
+          'Peel the apple and dice it into small pieces.',
+          'Simmer the oats with water on low heat.',
+          'Add the apple once the oats soften and cook together.',
+          'Stir until the texture feels smooth and even.',
+        ],
+      },
+      beefBroccoli: {
+        title: 'Beef broccoli porridge',
+        summary: 'A middle-stage recipe that widens a familiar grain base with iron-rich beef and vegetables.',
+        ingredients: ['60g soft cooked rice', '20g lean beef', '20g broccoli', '120ml water'],
+        steps: [
+          'Finely mince lean beef and cook it through first.',
+          'Steam broccoli until soft and chop it very finely.',
+          'Loosen the rice with water in a small pot.',
+          'Add the beef first, then finish with the broccoli and adjust the texture.',
+        ],
+      },
+      tofuZucchini: {
+        title: 'Tofu zucchini porridge',
+        summary: 'A gentle middle-stage menu built with soft protein and vegetables.',
+        ingredients: ['60g soft cooked rice', '30g soft tofu', '20g zucchini', '120ml water'],
+        steps: [
+          'Blanch the tofu briefly and mash it lightly.',
+          'Cook the zucchini until soft and chop it well.',
+          'Warm the rice with water until it loosens into porridge.',
+          'Add tofu and zucchini, then simmer a little more until smooth.',
+        ],
+      },
+      riceBallTofuStick: {
+        title: 'Rice balls and tofu sticks',
+        summary: 'A late-stage meal that supports self-feeding with hand-friendly shapes.',
+        ingredients: ['80g cooked rice', '15g carrot', '40g tofu', '15g broccoli'],
+        steps: [
+          'Cook the carrot and broccoli until soft and chop them small.',
+          'Mix the carrot into the rice and shape it into small rice balls.',
+          'Cut tofu into long sticks and lightly firm the outside.',
+          'Serve the rice balls and tofu sticks together in easy-to-grab shapes.',
+        ],
+      },
+      sweetPotatoFinger: {
+        title: 'Sweet potato fingers with banana',
+        summary: 'A simple late-stage finger-food style recipe for easy practice.',
+        ingredients: ['80g sweet potato', '30g banana', '10g oat flour'],
+        steps: [
+          'Steam the sweet potato until soft and mash it well.',
+          'Mash the ripe banana until smooth.',
+          'Mix in a little oat flour to help the shape hold.',
+          'Shape the mixture into long fingers that are easy to grasp.',
+        ],
+      },
     },
     mealPlanPreferencesScreen: {
       title: 'Meal preferences',
