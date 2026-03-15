@@ -1,3 +1,13 @@
+/**
+ * 탭 게이트 화면.
+ *
+ * 역할:
+ * - 프로필 존재 여부를 확인해 온보딩 또는 홈으로 즉시 분기한다.
+ * - 실제 콘텐츠는 없고 라우팅 전환만 담당한다.
+ *
+ * 유지보수 포인트:
+ * - 앱 초기 진입 조건이 늘어나면 이 게이트에서 판단하되, 화면 로직은 최소로 유지한다.
+ */
 import { Redirect } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

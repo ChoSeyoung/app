@@ -104,6 +104,7 @@ npx expo start
 - 디자인 시스템: `docs/design-system.md`
 - 언어 가이드: `docs/language-guide.md`
 - Git 커밋 정책: `docs/git-commit-policy.md`
+- 개발자 협업 가이드: `docs/developer-collaboration.md`
 - 식재료 PRD: `docs/prd-ingredient-management.md`
 
 ## 의사결정 원칙

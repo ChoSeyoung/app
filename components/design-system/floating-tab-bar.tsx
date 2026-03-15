@@ -1,3 +1,13 @@
+/**
+ * 플로팅 스타일의 커스텀 바텀 탭바.
+ *
+ * 역할:
+ * - 서비스 레퍼런스에 맞춘 크림색 pill 쉘과 이동형 활성 pill을 렌더링한다.
+ * - 선택 상태에 따라 아이콘 표현과 탭 간격 재분배를 함께 제어한다.
+ *
+ * 유지보수 포인트:
+ * - 탭 개수나 라벨 길이가 바뀌면 활성 pill 폭과 슬롯 분배 계산을 먼저 검토해야 한다.
+ */
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import * as Haptics from 'expo-haptics';
 import { useEffect, useMemo, useRef } from 'react';

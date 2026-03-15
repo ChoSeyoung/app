@@ -1,3 +1,13 @@
+/**
+ * 앱 전용 애니메이션 스플래시.
+ *
+ * 역할:
+ * - 네이티브 스플래시가 사라진 뒤 브랜드 톤을 가진 짧은 진입 화면을 보여준다.
+ * - 한 줄 카피와 부드러운 모션으로 앱 첫인상을 정리한다.
+ *
+ * 유지보수 포인트:
+ * - 어떤 언어에서도 한 줄로 보이도록 카피 길이와 폰트 스케일을 함께 점검해야 한다.
+ */
 import { useEffect } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

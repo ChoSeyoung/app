@@ -1,3 +1,13 @@
+/**
+ * 책갈피한 챕터 목록 화면.
+ *
+ * 역할:
+ * - 사용자가 저장해둔 챕터만 모아 다시 읽을 수 있는 개인 학습 서랍 역할을 한다.
+ * - 각 항목은 다시 챕터 상세 화면으로 연결된다.
+ *
+ * 유지보수 포인트:
+ * - 빈 상태 문구는 저장 동선을 다시 안내하는 방향으로 유지하는 편이 좋다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 import { ScrollView, Pressable, StyleSheet, Text, View } from 'react-native';

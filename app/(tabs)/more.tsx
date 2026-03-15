@@ -1,3 +1,13 @@
+/**
+ * 더보기 탭 화면.
+ *
+ * 역할:
+ * - 설정, 데이터 관리, 앱 정보, 가이드 진입점을 모아두는 보조 허브 역할을 한다.
+ * - 바텀 탭 안에서 서비스성 기능과 문서성 기능을 분리해 연결한다.
+ *
+ * 유지보수 포인트:
+ * - 더보기는 목록 허브에 집중하고, 실제 상세 설정은 반드시 개별 페이지로 분리한다.
+ */
 import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
 import { useRouter } from 'expo-router';

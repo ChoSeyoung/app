@@ -1,3 +1,13 @@
+/**
+ * 기록 탭 메인 화면.
+ *
+ * 역할:
+ * - 주간/월간 달력과 날짜별 이유식 기록 목록, 상세 팝업을 제공한다.
+ * - 빠른 조회와 수정 진입이 핵심인 기록 허브 화면이다.
+ *
+ * 유지보수 포인트:
+ * - 달력 선택 상태와 기록 필터 상태는 항상 같은 날짜 소스를 바라보게 유지해야 한다.
+ */
 import { useFocusEffect } from '@react-navigation/native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';

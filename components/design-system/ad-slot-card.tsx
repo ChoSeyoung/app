@@ -1,3 +1,13 @@
+/**
+ * 광고 슬롯 공통 카드.
+ *
+ * 역할:
+ * - 정보형 화면에서 광고를 디자인 시스템 톤 안에 담는 컨테이너 역할을 한다.
+ * - Expo Go에서는 플레이스홀더를, 네이티브 런타임에서는 실제 배너를 보여준다.
+ *
+ * 유지보수 포인트:
+ * - 실제 광고 단위 ID 교체 시 테스트 ID와 운영 ID 분기 규칙을 명확히 유지해야 한다.
+ */
 import Constants from 'expo-constants';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';

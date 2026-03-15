@@ -1,3 +1,13 @@
+/**
+ * 개인정보 처리방침 화면.
+ *
+ * 역할:
+ * - 앱이 어떤 데이터를 어떻게 다루는지 보호자에게 안내한다.
+ * - 서비스 이용약관과 함께 더보기의 앱 정보 영역에서 접근한다.
+ *
+ * 유지보수 포인트:
+ * - 저장 데이터 범위나 외부 SDK가 바뀌면 가장 먼저 이 문서를 점검해야 한다.
+ */
 import { useRouter } from 'expo-router';
 import { Animated, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

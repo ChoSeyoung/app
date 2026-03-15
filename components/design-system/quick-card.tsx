@@ -1,3 +1,10 @@
+/**
+ * 짧은 행동 유도용 공통 카드.
+ *
+ * 역할:
+ * - 홈처럼 빠른 행동이 필요한 영역에서 작은 카드 CTA를 같은 스타일로 반복 렌더링한다.
+ * - 제목, 본문, 메타 정보, 보조 라벨 조합을 통일한다.
+ */
 import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 
 import { t } from '@/constants/i18n';

@@ -1,3 +1,13 @@
+/**
+ * 알림 수신 설정 화면.
+ *
+ * 역할:
+ * - 기록, 식단, 관찰, 야간 알림처럼 서비스 알림 카테고리를 토글로 관리한다.
+ * - 사용자가 값을 바꾸면 로컬 저장과 실제 알림 스케줄 동기화가 이어진다.
+ *
+ * 유지보수 포인트:
+ * - 새 알림 종류를 추가할 때는 UI 토글, 저장 타입, 스케줄링 로직을 항상 같이 수정해야 한다.
+ */
 import { useRouter } from 'expo-router';
 import { Animated, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

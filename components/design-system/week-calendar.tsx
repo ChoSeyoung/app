@@ -1,3 +1,10 @@
+/**
+ * 주간 달력 공통 컴포넌트.
+ *
+ * 역할:
+ * - 홈과 기록/식단 계열 화면에서 동일한 주간 선택 버블 UI를 재사용한다.
+ * - 날짜 선택 상태와 점 표시만 입력으로 받아 화면별 로직과 분리한다.
+ */
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Fonts } from '@/constants/theme';

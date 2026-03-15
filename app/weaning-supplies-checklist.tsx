@@ -1,3 +1,13 @@
+/**
+ * 준비물 체크리스트 화면.
+ *
+ * 역할:
+ * - 이유식 시작 전에 필요한 도구와 기록 준비 상태를 점검한다.
+ * - 시작 신호 체크리스트와 함께 가이드 허브의 사전 준비 축을 담당한다.
+ *
+ * 유지보수 포인트:
+ * - 실제 준비물 정책이 바뀌어도 체크리스트 문구 톤은 안내형으로 유지한다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 import { ScrollView, Pressable, StyleSheet, Text, View } from 'react-native';

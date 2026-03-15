@@ -1,3 +1,13 @@
+/**
+ * 주간 인사이트 화면.
+ *
+ * 역할:
+ * - 최근 7일 기록을 요약해 기록 수, 새 식재료, 주의 반응 같은 회고 정보를 보여준다.
+ * - 기록이 쌓인 뒤 보호자가 패턴을 돌아보게 만드는 분석 진입점이다.
+ *
+ * 유지보수 포인트:
+ * - 통계 정의를 바꿀 때는 홈 요약 카드나 식단 제약과 의미가 충돌하지 않도록 확인한다.
+ */
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';

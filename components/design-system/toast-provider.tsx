@@ -1,3 +1,13 @@
+/**
+ * 전역 토스트 공급자.
+ *
+ * 역할:
+ * - 화면 하단에 한 줄 메시지 토스트를 띄우고, level별 색상과 아이콘을 공통 규격으로 관리한다.
+ * - 화면 어디서든 같은 훅으로 토스트를 호출하게 만드는 인프라 역할을 한다.
+ *
+ * 유지보수 포인트:
+ * - 토스트는 제목 없이 한 줄 메시지를 유지하는 것이 현재 프로젝트 규칙이다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import {
   createContext,

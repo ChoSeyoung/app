@@ -1,3 +1,10 @@
+/**
+ * 패럴랙스 헤더가 있는 스크롤 뷰 예제 컴포넌트.
+ *
+ * 역할:
+ * - Expo 템플릿 계열 화면에서 스크롤 기반 헤더 축소 효과를 제공한다.
+ * - 현재 서비스 핵심 화면보다는 예제/실험성 사용처에 가깝다.
+ */
 import type { PropsWithChildren, ReactElement } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {

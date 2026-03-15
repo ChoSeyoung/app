@@ -1,3 +1,10 @@
+/**
+ * 상단 히어로 카드 공통 컴포넌트.
+ *
+ * 역할:
+ * - 타이틀, 부제, 뒤로가기, 장식 버블을 공통 규격으로 묶는다.
+ * - 상세/설정/문서 화면의 헤더 스타일 드리프트를 줄이는 목적이다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 

@@ -1,3 +1,13 @@
+/**
+ * 접기/펼치기 가능한 공통 카드 컴포넌트.
+ *
+ * 역할:
+ * - FAQ, 주의 안내, 체크리스트 요약처럼 기본적으로 접혀 있는 정보를 재사용 가능한 카드로 만든다.
+ * - 화살표 회전과 본문 노출 애니메이션을 한 번에 캡슐화한다.
+ *
+ * 유지보수 포인트:
+ * - 펼침 모션은 과장되기보다 단정해야 하므로 속도와 easing을 크게 흔들지 않는 편이 좋다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {

@@ -1,3 +1,10 @@
+/**
+ * 화면 공통 파스텔 배경 레이어.
+ *
+ * 역할:
+ * - 모든 주요 화면 뒤에 둥근 오브 배경을 깔아 서비스 톤을 통일한다.
+ * - 콘텐츠와 상호작용하지 않는 purely decorative 레이어만 담당한다.
+ */
 import { StyleSheet, View } from 'react-native';
 
 type PageBackgroundProps = {

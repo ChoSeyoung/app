@@ -1,3 +1,13 @@
+/**
+ * 서비스 이용약관 화면.
+ *
+ * 역할:
+ * - 앱 내 기본 약관 문구를 읽기 좋은 카드형 섹션으로 보여준다.
+ * - 더보기 메뉴에서 법적 문서를 확인하는 진입점 중 하나다.
+ *
+ * 유지보수 포인트:
+ * - 실제 배포 전에는 법률 검토본과 문구를 반드시 맞춰야 한다.
+ */
 import { useRouter } from 'expo-router';
 import { Animated, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

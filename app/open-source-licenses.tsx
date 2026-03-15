@@ -1,3 +1,13 @@
+/**
+ * 오픈소스 라이선스 고지 화면.
+ *
+ * 역할:
+ * - 앱이 직접 사용하는 패키지의 이름, 버전, 라이선스를 목록으로 보여준다.
+ * - 더보기의 앱 정보 메뉴에서 접근하는 법적 고지 성격의 화면이다.
+ *
+ * 유지보수 포인트:
+ * - 패키지나 버전 표시 방식은 실제 notices 데이터와 같이 갱신해야 한다.
+ */
 import { useRouter } from 'expo-router';
 import { Animated, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

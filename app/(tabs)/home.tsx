@@ -1,3 +1,13 @@
+/**
+ * 홈 탭 메인 화면.
+ *
+ * 역할:
+ * - 오늘 식단, 오늘 기록 현황, 빠른 행동 카드, 주간 캘린더를 한 번에 보여준다.
+ * - 기록과 식단 엔진에서 가져온 신호를 바탕으로 오늘 해야 할 일을 가장 먼저 제안한다.
+ *
+ * 유지보수 포인트:
+ * - 홈 카드가 늘어나더라도 사용자의 첫 행동 유도 흐름이 흐려지지 않도록 우선순위를 유지한다.
+ */
 import { useFocusEffect } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';

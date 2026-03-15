@@ -1,3 +1,14 @@
+/**
+ * 아기 프로필 수정 화면.
+ *
+ * 역할:
+ * - 이름, 생년월일, 사진, 이유식 시작일처럼 보호자가 직접 관리하는 핵심 프로필만 수정한다.
+ * - 프로필 저장 후 더보기 기반의 설정 흐름으로 다시 돌아간다.
+ *
+ * 유지보수 포인트:
+ * - 프로필 필드가 늘어나더라도 이 화면은 최소 정보 편집 흐름을 유지하는 편이 좋다.
+ * - 사진 fallback은 홈/온보딩과 같은 기본 아바타 asset을 사용해야 시각 톤이 흔들리지 않는다.
+ */
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';

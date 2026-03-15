@@ -1,3 +1,13 @@
+/**
+ * 이유식 시작 신호 체크리스트 화면.
+ *
+ * 역할:
+ * - 보호자가 이유식 시작 가능 신호를 항목별로 점검하도록 돕는다.
+ * - 모든 항목 충족 시 가이드 허브로 다시 보내는 연결점 역할도 수행한다.
+ *
+ * 유지보수 포인트:
+ * - 체크 항목의 근거 문구와 참고 출처는 함께 움직여야 신뢰도가 유지된다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef } from 'react';

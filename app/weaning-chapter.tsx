@@ -1,3 +1,13 @@
+/**
+ * 이유식 가이드 챕터 상세 화면.
+ *
+ * 역할:
+ * - 특정 챕터의 요약, 세부 포인트, 메모성 안내를 읽기 좋은 구조로 보여준다.
+ * - 읽음 처리와 책갈피 같은 학습 상태를 직접 바꾸는 최종 읽기 화면이다.
+ *
+ * 유지보수 포인트:
+ * - 챕터 데이터 구조가 바뀌면 이 화면의 섹션 배치와 진행 상태 액션도 함께 검토해야 한다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, Pressable, StyleSheet, Text, View } from 'react-native';

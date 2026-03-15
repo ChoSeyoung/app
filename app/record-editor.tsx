@@ -1,3 +1,14 @@
+/**
+ * 이유식 기록 생성/수정 화면.
+ *
+ * 역할:
+ * - 식재료, 날짜/시간, 섭취량, 반응, 사진, 메모를 입력해 기록을 저장한다.
+ * - 식단 화면에서 넘어온 초안과 기존 기록 편집을 같은 폼에서 처리한다.
+ *
+ * 유지보수 포인트:
+ * - 저장 조건과 토스트 문구는 실제 저장소 규칙과 함께 바뀌어야 한다.
+ * - 하단 고정 버튼과 스크롤 하단 패딩은 항상 함께 조정해야 마지막 입력란이 가리지 않는다.
+ */
 import { useFocusEffect } from '@react-navigation/native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useLocalSearchParams, useRouter } from 'expo-router';

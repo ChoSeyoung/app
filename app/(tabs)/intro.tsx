@@ -1,3 +1,13 @@
+/**
+ * 초기 설정 온보딩 화면.
+ *
+ * 역할:
+ * - 보호자가 아기 이름, 생년월일, 사진, 이유식 기준 정보를 순차적으로 입력한다.
+ * - 프로필이 비어 있을 때만 노출되는 첫 진입 전용 흐름이다.
+ *
+ * 유지보수 포인트:
+ * - 단계 순서는 짧고 명확하게 유지하고, 홈 수준의 복잡한 설정을 이 화면에 다시 끌어오지 않는다.
+ */
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';

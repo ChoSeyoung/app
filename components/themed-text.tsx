@@ -1,3 +1,10 @@
+/**
+ * 테마 색을 자동 적용하는 기본 Text 래퍼.
+ *
+ * 역할:
+ * - 예제/공통 컴포넌트에서 라이트/다크 대응 텍스트를 쉽게 만들게 돕는다.
+ * - 타입 프리셋을 통해 제목/본문 수준 스타일을 빠르게 고를 수 있게 한다.
+ */
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
 import { Fonts } from '@/constants/theme';

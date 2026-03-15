@@ -1,3 +1,14 @@
+/**
+ * 이유식 시작하기 허브 화면.
+ *
+ * 역할:
+ * - 체크리스트, 학습 현황, 파트 목록, FAQ 미리보기를 한 곳에 모은다.
+ * - 긴 학습 콘텐츠로 들어가기 전 사용자가 현재 필요한 진입점을 빠르게 고르게 한다.
+ *
+ * 유지보수 포인트:
+ * - 허브에는 요약 정보만 남기고, 세부 내용은 전용 상세 화면으로 넘기는 구조를 유지한다.
+ * - FAQ, 책갈피, 파트 진입 동선이 중복되지 않도록 카드 역할을 명확히 나눠야 한다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

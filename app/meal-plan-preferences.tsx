@@ -1,3 +1,14 @@
+/**
+ * 식단 개인화 기준 편집 화면.
+ *
+ * 역할:
+ * - 이유식 단계, 식사 수, 선호/비선호 식재료, 제외 식재료 등 추천 엔진 입력값을 수정한다.
+ * - 식단 탭에서 추천 품질을 올리기 위한 프로필 보강 흐름을 담당한다.
+ *
+ * 유지보수 포인트:
+ * - 추천 엔진이 새로운 제약을 쓰기 시작하면 이 화면의 입력 항목도 함께 확장해야 한다.
+ * - 선택형 칩 상태는 프로필 저장 구조와 이름을 맞춰야 후속 리팩터링 비용이 줄어든다.
+ */
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

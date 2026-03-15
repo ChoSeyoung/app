@@ -1,3 +1,13 @@
+/**
+ * 식재료 탭 메인 화면.
+ *
+ * 역할:
+ * - 식재료 카드 목록, 상태 필터, 즐겨찾기, 상세 바텀시트를 제공한다.
+ * - 기록 기반 상태와 메모를 식재료 중심으로 다시 관리하는 화면이다.
+ *
+ * 유지보수 포인트:
+ * - 상태 필터와 저장소에서 합성하는 overlay 데이터가 항상 같은 의미를 써야 한다.
+ */
 import { useFocusEffect } from '@react-navigation/native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';

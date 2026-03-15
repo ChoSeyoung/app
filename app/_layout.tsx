@@ -1,3 +1,14 @@
+/**
+ * 앱 전역 루트 레이아웃.
+ *
+ * 역할:
+ * - 스택 라우터, 스플래시, 전역 토스트, 테마 공급자를 한 곳에서 묶는다.
+ * - 앱 시작 시 알림 스케줄 동기화와 광고 SDK 초기화를 처리한다.
+ *
+ * 유지보수 포인트:
+ * - 새로운 최상위 페이지를 추가할 때는 이 스택 등록 여부를 먼저 확인한다.
+ * - 전역 부작용은 가능한 한 여기에서만 시작하고, 화면 파일로 흩어지지 않게 유지한다.
+ */
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as SplashScreen from 'expo-splash-screen';

@@ -1,3 +1,14 @@
+/**
+ * 백업/복원 중심의 데이터 관리 화면.
+ *
+ * 역할:
+ * - 로컬 앱의 데이터를 JSON으로 내보내고 다시 가져오는 기능을 제공한다.
+ * - 서버 없는 운영 구조에서 사용자의 기록 보존 장치를 담당한다.
+ *
+ * 유지보수 포인트:
+ * - 백업 payload 구조가 바뀌면 export/import 양쪽을 동시에 수정해야 한다.
+ * - 위험한 초기화 기능을 추가할 경우에는 별도 확인 절차를 두는 편이 좋다.
+ */
 import { useRouter } from 'expo-router';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

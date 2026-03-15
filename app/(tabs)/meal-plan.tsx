@@ -1,3 +1,13 @@
+/**
+ * 식단 탭 메인 화면.
+ *
+ * 역할:
+ * - 오늘 추천 식단과 주간 계획, 추천 근거, 개인화 기준 편집 진입점을 제공한다.
+ * - 기록과 식재료 상태를 바탕으로 추천 엔진 결과를 시각화한다.
+ *
+ * 유지보수 포인트:
+ * - 추천 이유 문구와 실제 엔진 제약은 언제나 같이 갱신해야 설명과 결과가 어긋나지 않는다.
+ */
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';

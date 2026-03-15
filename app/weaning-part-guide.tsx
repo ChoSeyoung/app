@@ -1,3 +1,13 @@
+/**
+ * 파트별 챕터 목록 화면.
+ *
+ * 역할:
+ * - 초기/중기/후기 같은 파트 단위로 챕터 카드 목록을 보여준다.
+ * - 각 챕터 카드는 상세 읽기 화면으로 연결되는 목차 역할만 수행한다.
+ *
+ * 유지보수 포인트:
+ * - 카드 안에 설명을 과하게 넣기보다, 챕터 상세 페이지의 정보량을 늘리는 방향을 유지한다.
+ */
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, Pressable, StyleSheet, Text, View } from 'react-native';

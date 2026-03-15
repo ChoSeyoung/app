@@ -1,3 +1,13 @@
+/**
+ * 이유식 시작 FAQ 전체 목록 화면.
+ *
+ * 역할:
+ * - 카테고리 필터와 검색으로 FAQ를 빠르게 탐색하게 한다.
+ * - 메인 허브의 5개 미리보기보다 더 깊은 탐색 전용 화면이다.
+ *
+ * 유지보수 포인트:
+ * - FAQ 데이터는 계속 늘어날 수 있으므로 화면은 데이터 소스 변경에 최대한 얇게 유지한다.
+ */
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
