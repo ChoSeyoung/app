@@ -12,7 +12,26 @@
 
 const INGREDIENT_IMAGE_SOURCES: Record<string, number> = {
   'seed-rice': require('../assets/images/ingredients/rice.png'),
+  'seed-oatmeal': require('../assets/images/ingredients/oatmeal.png'),
+  'seed-barley': require('../assets/images/ingredients/barley.png'),
+  'seed-glutinous-rice': require('../assets/images/ingredients/glutinous-rice.png'),
+  'seed-brown-rice': require('../assets/images/ingredients/brown-rice.png'),
+  'seed-millet': require('../assets/images/ingredients/millet.png'),
+  'seed-quinoa': require('../assets/images/ingredients/quinoa.png'),
+  'seed-sweet-potato': require('../assets/images/ingredients/sweet-potato.png'),
+  'seed-pumpkin': require('../assets/images/ingredients/pumpkin.png'),
+  'seed-potato': require('../assets/images/ingredients/potato.png'),
+  'seed-carrot': require('../assets/images/ingredients/carrot.png'),
+  'seed-broccoli': require('../assets/images/ingredients/broccoli.png'),
+  'seed-cauliflower': require('../assets/images/ingredients/cauliflower.png'),
+  'seed-zucchini': require('../assets/images/ingredients/zucchini.png'),
+  'seed-spinach': require('../assets/images/ingredients/spinach.png'),
+  'seed-cabbage': require('../assets/images/ingredients/cabbage.png'),
+  'seed-onion': require('../assets/images/ingredients/onion.png'),
+  'seed-bok-choy': require('../assets/images/ingredients/bok-choy.png'),
+  'seed-apple': require('../assets/images/ingredients/apple.png'),
   'seed-chicken': require('../assets/images/ingredients/chicken.png'),
+  'seed-beef': require('../assets/images/ingredients/beef.png'),
 };
 
 export function getIngredientImageSource(ingredientId?: string): number | null {

@@ -1,6 +1,27 @@
+import type { FeedingStage } from '@/constants/baby-profile';
+
 export type IngredientStatus = 'NOT_TRIED' | 'TRIED' | 'CAUTION' | 'ALLERGY';
 
 export type IngredientCategory = 'GRAIN' | 'VEGETABLE' | 'FRUIT' | 'PROTEIN' | 'DAIRY' | 'OTHER';
+
+export type IngredientNutritionTag =
+  | 'CARB'
+  | 'FIBER'
+  | 'IRON'
+  | 'PROTEIN'
+  | 'CALCIUM'
+  | 'VITAMIN_C'
+  | 'BETA_CAROTENE'
+  | 'HEALTHY_FAT'
+  | 'PROBIOTIC';
+
+export type IngredientRecipeId =
+  | 'ricePumpkin'
+  | 'oatApple'
+  | 'beefBroccoli'
+  | 'tofuZucchini'
+  | 'riceBallTofuStick'
+  | 'sweetPotatoFinger';
 
 export type IngredientBase = {
   id: string;
@@ -16,6 +37,11 @@ export type MasterIngredient = IngredientBase & {
   isCommon?: boolean;
   sortOrder?: number;
   imageUri?: string;
+  minStage?: FeedingStage;
+  allergyWatch?: boolean;
+  observationDays?: number;
+  nutritionTags?: IngredientNutritionTag[];
+  relatedRecipeIds?: IngredientRecipeId[];
 };
 
 export type IngredientStatusEntry = {
@@ -32,6 +58,11 @@ export type Ingredient = IngredientBase & {
   firstTriedDate?: string; // YYYY-MM-DD
   isFavorite: boolean;
   imageUri?: string;
+  minStage?: FeedingStage;
+  allergyWatch?: boolean;
+  observationDays?: number;
+  nutritionTags?: IngredientNutritionTag[];
+  relatedRecipeIds?: IngredientRecipeId[];
   latestNote?: string;
   lastReactionDate?: string;
   lastReactionType?: IngredientReactionType;
