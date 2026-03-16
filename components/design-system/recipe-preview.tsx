@@ -7,12 +7,9 @@
  *
  * 유지보수 포인트:
  * - 레시피가 늘어나면 recipeId별 색상과 토핑 배치만 추가하고 레이아웃 구조는 유지한다.
- * - 생성된 실사 이미지가 있으면 우선 사용하고, 없을 때만 현재 플레이스홀더를 fallback으로 유지한다.
+ * - 외부 이미지 에셋에 의존하지 않고도 화면 톤이 유지되도록 플레이스홀더 완성도를 유지한다.
  */
-import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
-
-import { getRecipeImageSource } from '@/constants/food-image-assets';
 
 type RecipePreviewProps = {
   recipeId: string;
@@ -120,13 +117,10 @@ const RECIPE_VISUALS: Record<string, RecipeVisual> = {
 export function RecipePreview({ recipeId, size = 'card' }: RecipePreviewProps) {
   const visual = RECIPE_VISUALS[recipeId] ?? RECIPE_VISUALS.ricePumpkin;
   const isDetail = size === 'detail';
-  const generatedSource = getRecipeImageSource(recipeId);
 
   return (
     <View style={[styles.wrap, { backgroundColor: visual.background }, isDetail ? styles.wrapDetail : styles.wrapCard]}>
-      {generatedSource ? <Image source={generatedSource} style={styles.generatedImage} contentFit="cover" /> : null}
-      {!generatedSource ? (
-        <>
+      <>
       <View style={[styles.shadowBlob, { backgroundColor: visual.garnish }]} />
       <View style={[styles.plate, { backgroundColor: visual.plate }]}>
         <View style={[styles.foodBase, { backgroundColor: visual.food }]}>
@@ -152,8 +146,7 @@ export function RecipePreview({ recipeId, size = 'card' }: RecipePreviewProps) {
       </View>
       <View style={[styles.sparkle, styles.sparkleLeft, { backgroundColor: `${visual.garnish}55` }]} />
       <View style={[styles.sparkle, styles.sparkleRight, { backgroundColor: `${visual.garnish}66` }]} />
-        </>
-      ) : null}
+      </>
     </View>
   );
 }
@@ -164,10 +157,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  generatedImage: {
-    width: '100%',
-    height: '100%',
   },
   wrapCard: {
     aspectRatio: 1,

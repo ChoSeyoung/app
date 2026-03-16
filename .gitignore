@@ -48,7 +48,3 @@ app-example
 .continue-here
 
 # local image generation artifacts
-.image-generation-cache/
-.image-generation-home/
-/tools/
-/scripts/image-generation/food-image-jobs.json

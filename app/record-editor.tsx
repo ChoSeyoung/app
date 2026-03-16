@@ -20,7 +20,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
-import { getIngredientImageSource } from '@/constants/food-image-assets';
+import { getIngredientImageSource } from '@/constants/ingredient-image-assets';
 import { t, tList } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
 import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
