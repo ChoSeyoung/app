@@ -28,6 +28,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PageBackground } from '@/components/design-system/page-background';
+import { getIngredientImageSource } from '@/constants/food-image-assets';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
 import type {
@@ -267,6 +268,7 @@ export default function IngredientsScreen() {
     ({ item }: { item: Ingredient }) => {
       const tone = statusTone(item.status);
       const visual = categoryVisual(item.category);
+      const imageSource = item.imageUri ? { uri: item.imageUri } : getIngredientImageSource(item.id);
       const cardTone =
         item.status === 'ALLERGY'
           ? '#fff1eb'
@@ -288,8 +290,8 @@ export default function IngredientsScreen() {
             ]}
           />
           <View style={[styles.cardImageWrap, { backgroundColor: visual.bg }]}>
-            {item.imageUri ? (
-              <Image source={{ uri: item.imageUri }} style={styles.cardImage} contentFit="cover" />
+            {imageSource ? (
+              <Image source={imageSource} style={styles.cardImage} contentFit="cover" />
             ) : (
               <Text style={styles.cardEmoji}>{visual.emoji}</Text>
             )}
@@ -445,8 +447,18 @@ export default function IngredientsScreen() {
                   <View style={[styles.decorBubble, styles.sheetDecorBubble, { backgroundColor: tones.blush }]} />
                   <View style={styles.detailHero}>
                     <View style={[styles.detailThumb, { backgroundColor: categoryVisual(selectedIngredient.category).bg }]}>
-                      {selectedIngredient.imageUri ? (
-                        <Image source={{ uri: selectedIngredient.imageUri }} style={styles.cardImage} contentFit="cover" />
+                      {(selectedIngredient.imageUri
+                        ? { uri: selectedIngredient.imageUri }
+                        : getIngredientImageSource(selectedIngredient.id)) ? (
+                        <Image
+                          source={
+                            selectedIngredient.imageUri
+                              ? { uri: selectedIngredient.imageUri }
+                              : getIngredientImageSource(selectedIngredient.id)
+                          }
+                          style={styles.cardImage}
+                          contentFit="cover"
+                        />
                       ) : (
                         <Text style={styles.detailEmoji}>{categoryVisual(selectedIngredient.category).emoji}</Text>
                       )}

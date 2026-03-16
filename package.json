@@ -8,7 +8,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "image:jobs": "node ./scripts/image-generation/build-food-image-jobs.mjs",
+    "image:coreml": "node ./scripts/image-generation/run-coreml-food-batch.mjs",
+    "image:sync": "node ./scripts/image-generation/sync-generated-food-assets.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

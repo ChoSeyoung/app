@@ -20,6 +20,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { HeroHeaderCard } from '@/components/design-system/hero-header-card';
 import { PageBackground } from '@/components/design-system/page-background';
+import { getIngredientImageSource } from '@/constants/food-image-assets';
 import { t, tList } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
 import { Colors, DecorativeTones, Fonts } from '@/constants/theme';
@@ -569,6 +570,7 @@ export default function RecordEditorScreen() {
                   <View style={[styles.searchResultCard, { backgroundColor: tones.paper, borderColor: theme.border }]}>
                     {filteredIngredients.slice(0, 8).map((item, index) => {
                       const visual = categoryVisual(item.category);
+                      const imageSource = item.imageUri ? { uri: item.imageUri } : getIngredientImageSource(item.id);
                       return (
                         <Pressable
                           key={item.id}
@@ -578,8 +580,8 @@ export default function RecordEditorScreen() {
                             index === filteredIngredients.slice(0, 8).length - 1 ? styles.searchResultItemLast : null,
                           ]}>
                           <View style={styles.searchResultMain}>
-                            {item.imageUri ? (
-                              <Image source={{ uri: item.imageUri }} style={styles.searchResultImage} contentFit="cover" />
+                            {imageSource ? (
+                              <Image source={imageSource} style={styles.searchResultImage} contentFit="cover" />
                             ) : (
                               <View style={[styles.searchResultPlaceholder, { backgroundColor: visual.bg }]}>
                                 <Text style={styles.searchResultPlaceholderEmoji}>{visual.emoji}</Text>
