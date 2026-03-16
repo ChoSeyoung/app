@@ -109,7 +109,8 @@ npx expo start
 - 언어 가이드: `docs/language-guide.md`
 - Git 커밋 정책: `docs/git-commit-policy.md`
 - 개발자 협업 가이드: `docs/developer-collaboration.md`
-- 로컬 이미지 생성 가이드: `docs/local-image-generation.md`
+- 수동 이미지 프롬프트 킷: `docs/manual-image-prompt-kit.md`
+- 식재료 이미지 체크리스트: `docs/ingredient-image-checklist.md`
 - 식재료 PRD: `docs/prd-ingredient-management.md`
 
 ## 의사결정 원칙
