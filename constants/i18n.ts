@@ -806,6 +806,13 @@ type Messages = {
     categoryOther: string;
     emptyTitle: string;
     emptyBody: string;
+    requestTitle: string;
+    requestBody: string;
+    requestHint: string;
+    requestAction: string;
+    requestEmailSubject: string;
+    requestEmailBodyTemplate: string;
+    requestEmailFailed: string;
     duplicateNameError: string;
     nameRequiredError: string;
     statusNotTried: string;
@@ -1681,7 +1688,15 @@ const messages: Record<Locale, Messages> = {
       categoryDairy: '유제품',
       categoryOther: '기타',
       emptyTitle: '검색 결과가 없어요',
-      emptyBody: '새 식재료를 추가해보세요.',
+      emptyBody: '검색어를 바꾸거나 필터를 다시 확인해주세요.',
+      requestTitle: '찾는 식재료가 없나요?',
+      requestBody: '"{{query}}" 식재료 추가 요청 메일을 바로 보낼 수 있어요.',
+      requestHint: '메일 초안에 검색어와 앱 버전을 미리 채워둘게요.',
+      requestAction: '식재료 추가 요청 메일 보내기',
+      requestEmailSubject: '[Weaning Diary] 식재료 추가 요청 · {{query}}',
+      requestEmailBodyTemplate:
+        '안녕하세요.\n\n아래 식재료 추가를 요청드립니다.\n\n- 요청 식재료: {{query}}\n- 참고 메모:\n- 사용 기기:\n- 앱 버전: {{appVersion}}\n',
+      requestEmailFailed: '메일 앱을 열 수 없어요. 기기 설정을 확인해주세요.',
       duplicateNameError: '동일한 이름의 식재료가 이미 있어요.',
       nameRequiredError: '식재료 이름을 입력해주세요.',
       statusNotTried: '아직 안먹어봄',
@@ -2555,7 +2570,15 @@ const messages: Record<Locale, Messages> = {
       categoryDairy: 'Dairy',
       categoryOther: 'Other',
       emptyTitle: 'No search results',
-      emptyBody: 'Try adding a new ingredient.',
+      emptyBody: 'Try another keyword or review the selected filters.',
+      requestTitle: 'Can’t find the ingredient?',
+      requestBody: 'You can send an ingredient request email for "{{query}}".',
+      requestHint: 'The draft will include the search term and app version.',
+      requestAction: 'Send ingredient request email',
+      requestEmailSubject: '[Weaning Diary] Ingredient request · {{query}}',
+      requestEmailBodyTemplate:
+        'Hello,\n\nI would like to request the ingredient below.\n\n- Requested ingredient: {{query}}\n- Notes:\n- Device:\n- App version: {{appVersion}}\n',
+      requestEmailFailed: 'Unable to open the mail app. Please check your device settings.',
       duplicateNameError: 'Ingredient with the same name already exists.',
       nameRequiredError: 'Please enter ingredient name.',
       statusNotTried: 'Not tried',

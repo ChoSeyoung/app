@@ -9,8 +9,10 @@
  * - 상태 필터와 저장소에서 합성하는 overlay 데이터가 항상 같은 의미를 써야 한다.
  */
 import { useFocusEffect } from '@react-navigation/native';
+import Constants from 'expo-constants';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
+import * as Linking from 'expo-linking';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
@@ -28,6 +30,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PageBackground } from '@/components/design-system/page-background';
+import { SUPPORT_EMAIL } from '@/constants/app-info';
 import { getIngredientImageSource } from '@/constants/ingredient-image-assets';
 import { t } from '@/constants/i18n';
 import { Spacing } from '@/constants/spacing';
@@ -112,6 +115,7 @@ export default function IngredientsScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
   const tones = DecorativeTones;
+  const appVersion = Constants.expoConfig?.version ?? '1.0.0';
   const { height: windowHeight } = useWindowDimensions();
   const { ingredients, isLoading, refresh, setStatus, toggleFavorite, addReaction } =
     useIngredients();
@@ -126,6 +130,8 @@ export default function IngredientsScreen() {
   const sheetTranslateY = useRef(new Animated.Value(0)).current;
   const closeThreshold = 72;
   const sheetHeight = Math.round(windowHeight * 0.5);
+  const trimmedQuery = query.trim();
+  const hasSearchQuery = trimmedQuery.length > 0;
 
   useFocusEffect(
     useCallback(() => {
@@ -263,6 +269,125 @@ export default function IngredientsScreen() {
       variant: 'success',
     });
   };
+
+  const handleRequestIngredient = useCallback(async () => {
+    if (!hasSearchQuery) return;
+
+    const subject = t('ingredientScreen.requestEmailSubject', {
+      query: trimmedQuery,
+    });
+    const body = t('ingredientScreen.requestEmailBodyTemplate', {
+      query: trimmedQuery,
+      appVersion,
+    });
+    const url = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    try {
+      const canOpen = await Linking.canOpenURL(url);
+
+      if (!canOpen) {
+        showToast({
+          message: t('ingredientScreen.requestEmailFailed'),
+          level: 'error',
+        });
+        return;
+      }
+
+      await Linking.openURL(url);
+    } catch {
+      showToast({
+        message: t('ingredientScreen.requestEmailFailed'),
+        level: 'error',
+      });
+    }
+  }, [appVersion, hasSearchQuery, showToast, trimmedQuery]);
+
+  const renderEmptyState = useCallback(() => {
+    if (hasSearchQuery) {
+      return (
+        <View
+          style={[
+            styles.listCard,
+            styles.emptyWrap,
+            styles.decorativeCard,
+            { backgroundColor: tones.lavender, borderColor: theme.border },
+          ]}>
+          <View
+            style={[
+              styles.decorBubble,
+              styles.emptyDecorBubble,
+              { backgroundColor: tones.paper },
+            ]}
+          />
+          <View style={[styles.emptyIconChip, { backgroundColor: tones.paper }]}>
+            <MaterialIcons name="search-off" size={20} color={theme.text} />
+          </View>
+          <Text style={[styles.emptyTitle, { color: theme.text }]}>
+            {t('ingredientScreen.requestTitle')}
+          </Text>
+          <Text style={[styles.emptyBody, { color: theme.icon }]}>
+            {t('ingredientScreen.requestBody', { query: trimmedQuery })}
+          </Text>
+          <View
+            style={[
+              styles.emptyQueryChip,
+              { backgroundColor: tones.paper, borderColor: theme.border },
+            ]}>
+            <Text style={[styles.emptyQueryText, { color: theme.text }]}>
+              {trimmedQuery}
+            </Text>
+          </View>
+          <Pressable
+            onPress={() => void handleRequestIngredient()}
+            style={[styles.emptyButton, { backgroundColor: theme.accentSoft }]}>
+            <View style={styles.emptyButtonContent}>
+              <MaterialIcons name="mail-outline" size={16} color="#1c1c1c" />
+              <Text style={styles.emptyButtonText}>
+                {t('ingredientScreen.requestAction')}
+              </Text>
+            </View>
+          </Pressable>
+          <Text style={[styles.emptyHint, { color: theme.icon }]}>
+            {t('ingredientScreen.requestHint')}
+          </Text>
+        </View>
+      );
+    }
+
+    return (
+      <View
+        style={[
+          styles.listCard,
+          styles.emptyWrap,
+          styles.decorativeCard,
+          { backgroundColor: tones.lavender, borderColor: theme.border },
+        ]}>
+        <View
+          style={[
+            styles.decorBubble,
+            styles.emptyDecorBubble,
+            { backgroundColor: tones.paper },
+          ]}
+        />
+        <Text style={[styles.emptyTitle, { color: theme.text }]}>
+          {t('ingredientScreen.emptyTitle')}
+        </Text>
+        <Text style={[styles.emptyBody, { color: theme.icon }]}>
+          {t('ingredientScreen.emptyBody')}
+        </Text>
+      </View>
+    );
+  }, [
+    handleRequestIngredient,
+    hasSearchQuery,
+    theme.accentSoft,
+    theme.border,
+    theme.icon,
+    theme.text,
+    tones.lavender,
+    tones.paper,
+    trimmedQuery,
+  ]);
 
   const renderIngredientCard = useCallback(
     ({ item }: { item: Ingredient }) => {
@@ -406,11 +531,7 @@ export default function IngredientsScreen() {
           isLoading ? (
             <Text style={[styles.loadingText, { color: theme.icon }]}>{t('common.loading')}</Text>
           ) : (
-            <View style={[styles.listCard, styles.emptyWrap, styles.decorativeCard, { backgroundColor: tones.lavender, borderColor: theme.border }]}>
-              <View style={[styles.decorBubble, styles.emptyDecorBubble, { backgroundColor: tones.paper }]} />
-              <Text style={[styles.emptyTitle, { color: theme.text }]}>{t('ingredientScreen.emptyTitle')}</Text>
-              <Text style={[styles.emptyBody, { color: theme.icon }]}>{t('ingredientScreen.emptyBody')}</Text>
-            </View>
+            renderEmptyState()
           )
         }
         showsVerticalScrollIndicator={false}
@@ -655,6 +776,25 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.sans,
     fontSize: 13,
     textAlign: 'center',
+    lineHeight: 20,
+  },
+  emptyIconChip: {
+    width: 42,
+    height: 42,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyQueryChip: {
+    borderWidth: 1,
+    borderRadius: Spacing.chipRadius,
+    paddingHorizontal: Spacing.chipHorizontal,
+    paddingVertical: Spacing.chipVertical,
+  },
+  emptyQueryText: {
+    fontFamily: Fonts.sans,
+    fontSize: 12,
+    fontWeight: '700',
   },
   emptyButton: {
     marginTop: 8,
@@ -662,11 +802,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
+  emptyButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   emptyButtonText: {
     fontFamily: Fonts.sans,
     fontSize: 13,
     fontWeight: '700',
     color: '#1c1c1c',
+  },
+  emptyHint: {
+    fontFamily: Fonts.sans,
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
   },
   gridRow: {
     justifyContent: 'space-between',
