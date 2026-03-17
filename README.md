@@ -1,83 +1,75 @@
 # Weaning Diary
 
-이유식 시작부터 정착까지의 기록을 구조화해, 보호자의 의사결정을 더 안전하고 덜 스트레스 받게 만드는 앱입니다.
+이유식 도입부터 식단 추천, 식재료 관리, 기록, 가이드까지 한 흐름으로 연결하는 모바일 앱입니다.
 
-## 프로젝트 목적
+이 프로젝트는 보호자가 아래를 더 쉽게 할 수 있도록 설계되어 있습니다.
 
-`weaning-diary`의 목적은 이유식 기간 동안 보호자가 식단, 섭취 반응, 알레르기/배변/수면 변화를 간편하게 기록하고 패턴을 확인해, 육아 의사결정을 더 안전하고 덜 스트레스 받게 만드는 것입니다.
+- 오늘 무엇을 먹일지 바로 결정하기
+- 먹인 식재료와 반응을 빠르게 기록하기
+- 주의 식재료와 미도전 식재료를 한눈에 관리하기
+- 이유식 시작 전후의 기초 정보를 차분하게 확인하기
 
-## 문제 정의
+## 핵심 기능
 
-- 이유식 기록이 메모, 사진, 채팅 등에 흩어져 추적이 어렵다.
-- 특정 식재료와 반응(알레르기 의심, 변 상태, 수면 변화)의 연관성을 빠르게 확인하기 어렵다.
-- 병원 상담이나 가족 간 공유 시 근거 있는 기록 정리가 어렵다.
+### 홈
+- 오늘 식단 요약
+- 오늘 기록 현황
+- 주의 반응 알림
+- 지금 해야 할 행동 카드
 
-## 대상 사용자
+### 식단
+- 오늘 추천 식단
+- 주간 계획
+- 추천 이유 요약
+- 식단 기준 입력/수정
+- 식단에서 기록 화면으로 전환
 
-- 0~24개월 영유아를 돌보는 보호자(부모/양육자)
-- 이유식 도입 초기라 관찰 항목이 많은 사용자
-- 여러 보호자가 함께 기록을 공유해야 하는 가정
+### 기록
+- 날짜별 이유식 기록 조회
+- 주간/월간 캘린더 탐색
+- 기록 상세 확인
+- 별도 기록 추가 페이지
 
-## 핵심 가치
+### 식재료
+- 코어 식재료 마스터
+- 상태 관리: `NOT_TRIED / TRIED / CAUTION / ALLERGY`
+- 즐겨찾기
+- 메모
+- 재시도 제안
 
-- 기록 간소화: 빠른 입력으로 기록 부담 최소화
-- 변화 추적: 날짜/식재료/반응 기준으로 패턴 확인
-- 이상 신호 인지: 위험 징후를 놓치지 않도록 맥락 제공
+### 가이드/레시피
+- 이유식 시작하기 가이드
+- 파트별 챕터 탐색
+- FAQ
+- 준비물/시작 신호 체크리스트
+- 이유식 레시피 목록/상세
 
-## 성공 지표 (초기)
+### 더보기/운영
+- 알림 설정
+- 데이터 관리
+- 오픈소스 라이선스
+- 서비스 이용약관
+- 개인정보 처리방침
+- 개발 환경 전용 테스트 메뉴
 
-- 주 5일 이상 기록 사용자 비율
-- 기록 1건 평균 입력 시간 30초 이내
-- 사용자 인터뷰/설문 기반 체감 불안 감소
+## 기술 스택
 
-## MVP 기능 우선순위
+- Expo SDK 54
+- React Native 0.81
+- Expo Router
+- Expo SQLite
+- AsyncStorage
+- TypeScript
 
-### Must
+주요 라이브러리:
 
-- 식단 기록: 날짜, 시간, 식재료, 형태(죽/퓨레/BLW 등)
-- 섭취량/섭취 반응 기록: 섭취량, 거부 여부, 특이사항
-- 반응 기록: 피부/소화/배변/수면 변화
-- 일자별 타임라인 조회
-- 기본 검색/필터: 날짜, 식재료, 반응 유형
+- `expo-router`
+- `expo-image`
+- `expo-image-picker`
+- `expo-notifications`
+- `react-native-google-mobile-ads`
 
-### Should
-
-- 주간 요약 리포트
-- 식재료별 반응 히스토리
-- 다중 보호자 공유(최소 읽기 공유)
-
-### Could
-
-- 성장/수유/수면 통합 대시보드
-- 병원 상담용 내보내기(PDF/이미지)
-- 알림/리마인더 자동화
-
-## Sprint 1 백로그 (초안)
-
-### 1) 데이터 모델
-
-- 기록 엔티티 정의: MealEntry, Ingredient, Reaction, Note
-- 로컬 저장소 구조 설계(예: SQLite 또는 AsyncStorage)
-- 기본 검증 규칙 정의(필수값, 반응 타입 enum)
-
-### 2) 기록 화면
-
-- 빠른 기록 입력 폼 구현
-- 반복 입력을 줄이는 기본값/최근값 UX
-- 입력 완료 후 즉시 피드백(저장 성공/실패)
-
-### 3) 타임라인 화면
-
-- 일자별 기록 목록 UI
-- 항목 클릭 시 상세 보기
-- 날짜/식재료/반응 필터 연결
-
-### 4) 품질 기준
-
-- 핵심 입력/조회 흐름 수동 테스트 시나리오 작성
-- 타입 안정성 및 lint 기준 충족
-
-## 개발 실행
+## 실행 방법
 
 ```bash
 npm install
@@ -85,47 +77,98 @@ npm run lint
 npx expo start
 ```
 
+자주 쓰는 명령:
+
+```bash
+npm run ios
+npm run android
+npm run web
+```
+
 ## 현재 화면 구조
 
-- `app/(tabs)/index.tsx`: 라우팅 게이트 (프로필 입력 여부에 따라 분기)
-- `app/(tabs)/intro.tsx`: 아기 프로필 입력 화면 (이름/생년월일/사진 순차 입력)
-- `app/(tabs)/home.tsx`: 홈 서비스 화면 (오늘 식단, 기록 현황, 빠른 행동 카드)
-- `app/(tabs)/meal-plan.tsx`: 식단 추천 및 주간 계획 화면
-- `app/(tabs)/journey.tsx`: 날짜별 이유식 기록 화면
-- `app/(tabs)/ingredients.tsx`: 식재료 상태와 메모 관리 화면
-- `app/(tabs)/more.tsx`: 설정, 앱 정보, 가이드 허브 화면
-- `app/_layout.tsx`: 탭 외 상세/설정/문서 화면을 등록하는 루트 스택
+### 탭 화면
+- `app/(tabs)/home.tsx`
+- `app/(tabs)/meal-plan.tsx`
+- `app/(tabs)/journey.tsx`
+- `app/(tabs)/ingredients.tsx`
+- `app/(tabs)/more.tsx`
 
-## 로컬라이제이션 정책
+### 루트/게이트
+- `app/(tabs)/index.tsx`: 초기 진입 분기
+- `app/(tabs)/intro.tsx`: 온보딩
+- `app/_layout.tsx`: 스택 라우트 등록
 
-- 기본 언어: 한국어(`ko`)
-- 확장 언어: 영어(`en`)
-- UI 문구 소스: `constants/i18n.ts`
+### 상세/보조 화면
+- `app/record-editor.tsx`
+- `app/profile-editor.tsx`
+- `app/meal-plan-preferences.tsx`
+- `app/notification-settings.tsx`
+- `app/data-management.tsx`
+- `app/weekly-insights.tsx`
+- `app/weaning-start-guide.tsx`
+- `app/weaning-part-guide.tsx`
+- `app/weaning-chapter.tsx`
+- `app/weaning-bookmarks.tsx`
+- `app/weaning-faq.tsx`
+- `app/weaning-readiness-checklist.tsx`
+- `app/weaning-supplies-checklist.tsx`
+- `app/weaning-recipes.tsx`
+- `app/weaning-recipe-detail.tsx`
+- `app/open-source-licenses.tsx`
+- `app/terms-of-service.tsx`
+- `app/privacy-policy.tsx`
 
-## 계획 문서
+## 데이터 구조 요약
 
-- Sprint 1 백로그: `docs/backlog.md`
-- 디자인 시스템: `docs/design-system.md`
-- 언어 가이드: `docs/language-guide.md`
-- Git 커밋 정책: `docs/git-commit-policy.md`
-- 개발자 협업 가이드: `docs/developer-collaboration.md`
-- 수동 이미지 프롬프트 킷: `docs/manual-image-prompt-kit.md`
-- 식재료 이미지 체크리스트: `docs/ingredient-image-checklist.md`
-- 식재료 PRD: `docs/prd-ingredient-management.md`
+### 식재료
+- 고정형 `seed` 마스터를 사용합니다.
+- 사용자 식재료 직접 추가는 지원하지 않습니다.
+- 식재료 메타데이터에는 아래 정보가 포함됩니다.
+  - `minStage`
+  - `allergyWatch`
+  - `observationDays`
+  - `nutritionTags`
+  - `relatedRecipeIds`
 
-## 의사결정 원칙
+### 기록
+- 실제 섭취/반응 데이터는 기록 저장소에서 관리합니다.
+- 식단에서 넘어오는 기록 초안(`RecordDraft`)을 별도로 사용합니다.
 
-- 기록 시간 단축이 기능 추가보다 우선
-- 보호자가 해석 가능한 정보 제공을 우선
-- 의료 판단 대체가 아닌 관찰/기록 보조 도구로 설계
-- 식단(계획)과 기록(실제)은 도메인/저장소를 분리해 관리
-  - 식단은 "계획" 데이터
-  - 기록은 "실제 섭취/반응" 데이터
-  - 예: 계획 `단호박 50g` vs 실제 `단호박 20g + 고구마 추가`, 반응은 실제 기록에 귀속
+### 식단
+- 식단은 규칙 기반 추천 엔진으로 생성됩니다.
+- 프로필, 식재료 상태, 최근 기록 시그널을 함께 사용합니다.
 
-## 도메인 모델 기준
+## 문서 맵
 
-- `features/records/model.ts`에서 아래 엔티티를 분리 정의
-  - `PlannedMeal` (계획)
-  - `MealRecord` (실제)
-  - `RecordDraft` (식단에서 가져온 기록 초안)
+### 제품/기획
+- [식재료 PRD](/Users/sy/VSCodeProjects/weaning-diary/docs/prd-ingredient-management.md)
+- [식단 PRD](/Users/sy/VSCodeProjects/weaning-diary/docs/prd-meal-plan.md)
+- [백로그](/Users/sy/VSCodeProjects/weaning-diary/docs/backlog.md)
+
+### 디자인/문구
+- [디자인 시스템](/Users/sy/VSCodeProjects/weaning-diary/docs/design-system.md)
+- [언어 가이드](/Users/sy/VSCodeProjects/weaning-diary/docs/language-guide.md)
+
+### 협업/운영
+- [개발자 협업 가이드](/Users/sy/VSCodeProjects/weaning-diary/docs/developer-collaboration.md)
+- [Git 커밋 정책](/Users/sy/VSCodeProjects/weaning-diary/docs/git-commit-policy.md)
+
+### 이미지 운영
+- [수동 이미지 프롬프트 킷](/Users/sy/VSCodeProjects/weaning-diary/docs/manual-image-prompt-kit.md)
+- [식재료 이미지 체크리스트](/Users/sy/VSCodeProjects/weaning-diary/docs/ingredient-image-checklist.md)
+
+## 개발 원칙
+
+- UI/디자인 작업 전 `docs/design-system.md`를 먼저 확인합니다.
+- 사용자 노출 문구는 `constants/i18n.ts`를 통해 관리합니다.
+- 모든 화면 루트 컨테이너는 `SafeAreaView` 기준으로 구성합니다.
+- 공통 패턴은 `components/design-system/*`를 우선 재사용합니다.
+- 커밋 메시지는 `type(scope): 한국어 요약` 형식을 따릅니다.
+
+## 현재 운영 방향
+
+- 식재료는 `코어 식재료 마스터` 중심으로 관리합니다.
+- 이미지 생성은 자동 ML 파이프라인이 아니라 수동 검수 기반으로 운영합니다.
+- 알림과 광고는 개발/배포 환경 차이를 고려해 점진적으로 사용합니다.
+- 의료 판단 도구가 아니라 관찰/기록/정리 도구를 목표로 합니다.
